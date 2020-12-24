@@ -10,5 +10,55 @@
 		select * from option_tbl ;
 	</select> 
 	
+	<select id="findOrderByIdandState" resultType="com.spring.bae2020.vo.OrderVo">
+		select * from order_tbl where mid=#{mid} and state_code=#{state} ;
+	</select> 
+	
+	<insert id="insertOrder">
+		insert into order_tbl value (default, #{mid}, #{price}, default, default, #{state});
+	</insert>
+	
+	<insert id="insertOrderDetail">
+		insert into order_detail value (default,#{orderId}, #{product_code},#{price}, #{options});
+	</insert>
+	
+	<update id="updateOrder">
+		update order_tbl set total = total+#{price} where order_id=#{orderId} and mid=#{mid} and state_code =#{state};
+	</update>
+	
+	<select id="findOrderDetailByOrderId" resultType="com.spring.bae2020.vo.OrderDetailVo">
+		select order_d.*, prod.product_name, count(*) as cnt
+		from order_detail as order_d
+		inner join product as prod 
+		on order_d.product_code = prod.product_code
+		where order_id =#{orderId}
+		group by order_d.options, order_d.product_code
+		order by order_detail_id;
+	</select>
+	
+	<select id="findProductByCode" resultType="com.spring.bae2020.vo.ProductVo">
+		select * from product where product_code = #{product_code};
+	</select>
+	
+	<select id="findOrderDetailForMaxidx" resultType="int">
+		select max(order_detail_id) from order_detail where order_id=#{orderId} and product_code=#{product_code} and options=#{options};
+	</select>
+	
+	<delete id="deleteOrderDetail">
+		delete from order_detail where order_detail_id=#{maxIdx};
+	</delete>
 	
 </mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+

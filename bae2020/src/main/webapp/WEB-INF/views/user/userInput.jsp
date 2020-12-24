@@ -6,7 +6,7 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>title</title>
+	<title>SUBWAY</title>
 	<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 	<script src="${contextPath}/resources/js/woo.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -156,7 +156,7 @@
     </style>
 </head>
 <body>
-	<div class="w3-content" style="max-width: 1200px; margin-top: 100px">
+	<div class="w3-content" style="max-width: 1200px; margin-top: 250px">
 		<form name="myform" method="post">
 			<table>
 			    <tr>

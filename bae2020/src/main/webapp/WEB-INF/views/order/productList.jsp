@@ -6,23 +6,69 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>title</title>
+	<title>SUBWAY</title>
+	<style>
+	.main_title{
+	text-align: center;
+	}
+	
+	.main_list {
+	    width: 1000px;
+	    margin: 0 auto;
+	}
+	
+	.list_start {
+	    text-align: center;
+	}
+	
+	.list_detail {
+	    display: inline-block;
+	    width: 280px;
+	    height: 280px;
+		border: 0px solid;
+	    margin-bottom: 5px;
+	    padding : 15px 15px 15px 15px;
+	}
+	.list_detail:hover {
+	    background-color: #ffce32;
+	}
+	button {
+			background-color: #009223; /* Green */
+			border: none;
+			color: #ffce32;
+			padding: 7px 15px;
+			text-align: center;
+			text-decoration: none;
+			display: inline-block;
+			font-size: 16px;
+			margin: 4px 2px;
+			cursor: pointer;
+			font-weight: bold;
+		}
+	</style>
 </head>
 <body>
-	<div class="w3-content" style="max-width: 1200px; margin-top: 100px">
-		<div class="order_con">
-			<table class="table table-bordered">
-			    <tbody>
-			    	<c:forEach var="vo" items="${vos }">
-				    	<tr>
-					        <td><img src="${contextPath }/content/${vo.image}" style="width:100px;"></td>
-					        <td>${vo.product_name }</td>
-					        <td>${vo.price }</td>
-					        <td><button onclick="location.href='${contextPath}/order/productOrder?image=${vo.image}&product_name=${vo.product_name }&price=${vo.price }'">주문하기</button></td>
-				     	 </tr>
-			    	</c:forEach>
-			    </tbody>  
-		  	</table>
+	<div class="w3-content" style="max-width: 1200px; margin-top: 250px">
+		<div class="main_list" >
+			<!-- 상단 제목 -->
+			<div class="main_title">
+				<p></p>
+				<h2>메뉴선택</h2>
+				<p></p>
+			</div>
+			<!-- 리스트 -->
+			<div class="list_start">
+				<c:forEach var="vo" items="${vos }">
+					<div class="list_detail">
+						<p></p>
+						<img src="${contextPath }/content/${vo.image}" style="width:200px;">
+						<p></p>
+						<p>${vo.product_name }<br/>${vo.price }</p>
+						<button class="w3-round-xlarge" onclick="location.href='${contextPath}/order/productOrder?product_code=${vo.product_code }'">주문하기</button>
+					</div>
+					    	
+				</c:forEach>
+			</div>
 		</div>
 	</div>
 </body>
