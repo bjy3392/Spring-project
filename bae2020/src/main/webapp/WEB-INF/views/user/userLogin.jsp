@@ -6,7 +6,7 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>title</title>
+	<title>SUBWAY</title>
 	<style>
 		button {
 			background-color: #009223; /* Green */
@@ -23,7 +23,7 @@
 	</style>
 </head>
 <body>
-	<div class="w3-content" style="max-width: 300px; margin-top: 100px">
+	<div class="w3-content" style="max-width: 300px; margin-top: 250px">
 		<h2 class="w3-wide w3-center">LOGIN</h2>
 		<form method="post">
 	          <div class="w3-row-padding" style="margin:0 -16px 8px -16px">
