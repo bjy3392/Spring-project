@@ -64,7 +64,7 @@
 						<img src="${contextPath }/content/${vo.image}" style="width:200px;">
 						<p></p>
 						<p>${vo.product_name }<br/>${vo.price }</p>
-						<button class="w3-round-xlarge" onclick="location.href='${contextPath}/order/productOrder?product_code=${vo.product_code }'">주문하기</button>
+						<button class="w3-round-xlarge" onclick="location.href='${contextPath}/order/viewOptionList?product_code=${vo.product_code }'">주문하기</button>
 					</div>
 					    	
 				</c:forEach>

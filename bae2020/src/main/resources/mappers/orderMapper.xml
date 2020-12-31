@@ -10,50 +10,94 @@
 		select * from option_tbl ;
 	</select> 
 	
-	<select id="findOrderByIdandState" resultType="com.spring.bae2020.vo.OrderVo">
-		select * from order_tbl where mid=#{mid} and state_code=#{state} ;
-	</select> 
-	
-	<insert id="insertOrder">
-		insert into order_tbl value (default, #{mid}, #{price}, default, default, #{state});
-	</insert>
-	
-	<insert id="insertOrderDetail">
-		insert into order_detail value (default,#{orderId}, #{product_code},#{price}, #{options});
-	</insert>
-	
-	<update id="updateOrder">
-		update order_tbl set total = total+#{price} where order_id=#{orderId} and mid=#{mid} and state_code =#{state};
-	</update>
-	
-	<select id="findOrderDetailByOrderId" resultType="com.spring.bae2020.vo.OrderDetailVo">
-		select order_d.*, prod.product_name, count(*) as cnt
-		from order_detail as order_d
-		inner join product as prod 
-		on order_d.product_code = prod.product_code
-		where order_id =#{orderId}
-		group by order_d.options, order_d.product_code
-		order by order_detail_id;
-	</select>
-	
 	<select id="findProductByCode" resultType="com.spring.bae2020.vo.ProductVo">
 		select * from product where product_code = #{product_code};
 	</select>
 	
-	<select id="findOrderDetailForMaxidx" resultType="int">
-		select max(order_detail_id) from order_detail where order_id=#{orderId} and product_code=#{product_code} and options=#{options};
+	<insert id="insertCart">
+		insert into cart value (default, #{mid}, #{product}, #{options}, #{price}, default, default, default);
+	</insert>
+	
+	<select id="findCartByMid" resultType="com.spring.bae2020.vo.CartVo">
+		select cart.*, prod.product_name, prod.image
+		  from cart cart
+		 inner join product prod
+		    on cart.product = prod.product_code
+		 where mid=#{mid}
+		 order by cart_idx;
 	</select>
 	
-	<delete id="deleteOrderDetail">
-		delete from order_detail where order_detail_id=#{maxIdx};
+	<update id="updateCart" >
+		update cart set cnt = cnt +#{purpose} where mid=#{mid} and cart_idx = #{cart_idx};
+	</update>
+	
+	<delete id="deleteCartByIdx">
+		delete from cart where mid = #{mid}
+		   and cart_idx in
+		<foreach collection="arrayCartIdx" item="cart_idx" index="index" open="(" separator="," close=")">
+       		#{cart_idx}
+       	</foreach>  
 	</delete>
+	
+	<select id="findCartByIdx" resultType="com.spring.bae2020.vo.CartVo">
+		select cart.*, prod.product_name, prod.image
+		  from cart cart
+		 inner join product prod
+		    on cart.product = prod.product_code
+		 where mid=#{mid}
+		   and cart_idx in
+		<foreach collection="arrayCartIdx" item="cart_idx" index="index" open="(" separator="," close=")">
+       		#{cart_idx}
+       	</foreach>  
+		order by cart_idx;
+	</select>
+	
+	<select id="findCartByProduct" resultType="com.spring.bae2020.vo.CartVo">
+		select * from cart where mid=#{mid} and product=#{product} and options=#{options} and price=#{price};
+	</select>
+	
+	<insert id="insertOrders" parameterType="com.spring.bae2020.vo.OrdersVo" useGeneratedKeys="true" keyProperty="vo.order_idx" keyColumn="order_idx">
+		insert into orders value (default, #{vo.mid}, #{vo.total}, #{vo.payment}, #{vo.postcode}, #{vo.roadAddress}, #{vo.detailAddress}, #{vo.tel}, #{vo.demand}, #{vo.store}, #{vo.delivery}, #{vo.coupon}, #{vo.point}, default, default, default);	
+	</insert>
+	
+	<insert id="insertItem">
+		insert into item (order_idx ,product, options, price, cnt)
+			(select #{order_idx} as order_idx, product, options, price, cnt 
+		  	from cart 
+		  	where cart_idx in 
+		  	<foreach collection="arrayCartIdx" item="cart_idx" index="index" open="(" separator="," close=")">
+       			#{cart_idx}
+       	  	</foreach> )
+       	 <!-- 이렇게 한번에 여러값을 insert 할 경우 auto_increment가 값을 건너뛰고 들어갈수도 있다. --> 	
+	</insert>
+	
+	<select id="findItemGroupByIdx"  resultType="com.spring.bae2020.vo.ItemVo">
+		select orders.order_idx, prod.product_name , count(*) as cnt
+		  from item
+		 inner join orders 
+		    on item.order_idx = orders.order_idx
+		   and orders.mid = #{mid}
+		 inner join product prod
+		    on item.product = prod.product_code
+		 group by orders.order_idx
+	</select>
+	
+	<select id="findItemByMid"  resultType="com.spring.bae2020.vo.ItemVo">
+		select item.* , prod.product_name
+		  from item
+		 inner join orders 
+		    on item.order_idx = orders.order_idx
+		   and orders.mid = #{mid}
+		 inner join product prod
+		    on item.product = prod.product_code
+	</select>
 	
 </mapper>
 
 
 
 
-
+ 
 
 
 

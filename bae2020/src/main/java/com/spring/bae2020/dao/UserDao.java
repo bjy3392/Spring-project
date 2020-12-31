@@ -6,7 +6,7 @@ import com.spring.bae2020.vo.UserVo;
 
 public interface UserDao {
 
-	UserVo findUserById(@Param("mid")String mid);
+	UserVo findUserByMid(@Param("mid")String mid);
 
 	void insertUser(@Param("vo")UserVo vo);
 

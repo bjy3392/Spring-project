@@ -2,9 +2,10 @@ package com.spring.bae2020.service;
 
 import java.util.List;
 
+import com.spring.bae2020.vo.CartVo;
+import com.spring.bae2020.vo.ItemVo;
 import com.spring.bae2020.vo.OptionVo;
-import com.spring.bae2020.vo.OrderDetailVo;
-import com.spring.bae2020.vo.OrderVo;
+import com.spring.bae2020.vo.OrdersVo;
 import com.spring.bae2020.vo.ProductVo;
 
 public interface OrderService {
@@ -17,19 +18,26 @@ public interface OrderService {
 
 	List<OptionVo> findOptionByCategory(List<OptionVo> vos, String category);
 
-	OrderVo findOrderByIdandState(String mid, String state);
-
-	void insertOrder(String mid, String price, String state);
-
-	void insertOrderDetail(String orderId, String product_code, String price, String options);
-
-	void updateOrder(String orderId, String mid, String price, String state);
-
-	List<OrderDetailVo> findOrderDetailByOrderId(String orderId);
-
 	ProductVo findProductByCode(String product_code);
 
-	void deleteOrderDetail(String orderId, String product_code, String options);
+	void insertCart(String mid, String product, String options, String price);
 
+	List<CartVo> findCartByMid(String mid);
+
+	void updateCart(String mid, String cart_idx, String purpose);
+
+	void deleteCartByIdx(String mid, String[] arrayCartIdx);
+
+	List<CartVo> findCartByIdx(String mid, String[] arrayCartIdx);
+
+	CartVo findCartByProduct(String mid, String product, String options, String price);
+
+	void insertOrders(OrdersVo vo);
+
+	void insertItem(String order_idx, String[] addCartIdx);
+
+	List<ItemVo> findItemGroupByIdx(String mid);
+
+	List<ItemVo> findItemByMid(String mid);
 
 }

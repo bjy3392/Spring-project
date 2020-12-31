@@ -12,8 +12,8 @@ public class UserServiceImp implements UserService {
 	UserDao userDao;
 
 	@Override
-	public UserVo findUserById(String mid) {
-		return userDao.findUserById(mid);
+	public UserVo findUserByMid(String mid) {
+		return userDao.findUserByMid(mid);
 	}
 
 	@Override

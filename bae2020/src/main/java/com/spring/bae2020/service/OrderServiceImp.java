@@ -7,9 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.spring.bae2020.dao.OrderDao;
+import com.spring.bae2020.vo.CartVo;
+import com.spring.bae2020.vo.ItemVo;
 import com.spring.bae2020.vo.OptionVo;
-import com.spring.bae2020.vo.OrderDetailVo;
-import com.spring.bae2020.vo.OrderVo;
+import com.spring.bae2020.vo.OrdersVo;
 import com.spring.bae2020.vo.ProductVo;
 
 @Service
@@ -54,40 +55,60 @@ public class OrderServiceImp implements OrderService {
 	}
 
 	@Override
-	public OrderVo findOrderByIdandState(String mid, String state) {
-		return orderDao.findOrderByIdandState(mid, state);
-	}
-
-	@Override
-	public void insertOrder(String mid, String price, String state) {
-		orderDao.insertOrder(mid, price, state);
-	}
-
-	@Override
-	public void insertOrderDetail(String orderId, String product_code, String price, String options) {
-		orderDao.insertOrderDetail(orderId, product_code, price, options);
-	}
-
-	@Override
-	public void updateOrder(String orderId, String mid, String price, String state) {
-		orderDao.updateOrder(orderId, mid, price, state);
-	}
-
-	@Override
-	public List<OrderDetailVo> findOrderDetailByOrderId(String orderId) {
-		return orderDao.findOrderDetailByOrderId(orderId);
-	}
-
-	@Override
 	public ProductVo findProductByCode(String product_code) {
 		return orderDao.findProductByCode(product_code);
 	}
+	
+	@Override
+	public void insertCart(String mid, String product, String options, String price) {
+		orderDao.insertCart(mid, product, options, price);
+	}
 
 	@Override
-	public void deleteOrderDetail(String orderId, String product_code, String options) {
-		int maxIdx = orderDao.findOrderDetailForMaxidx(orderId,product_code,options);
-		orderDao.deleteOrderDetail(maxIdx);
+	public List<CartVo> findCartByMid(String mid) {
+		return orderDao.findCartByMid(mid);
 	}
+
+	@Override
+	public void updateCart(String mid, String cart_idx, String purpose) {
+		orderDao.updateCart(mid,cart_idx, purpose);		
+	}
+
+	@Override
+	public void deleteCartByIdx(String mid, String[] arrayCartIdx) {
+		orderDao.deleteCartByIdx(mid, arrayCartIdx);
+	}
+
+	@Override
+	public List<CartVo> findCartByIdx(String mid, String[] arrayCartIdx) {
+		return orderDao.findCartByIdx(mid, arrayCartIdx);
+	}
+
+	@Override
+	public CartVo findCartByProduct(String mid, String product, String options, String price) {
+		return orderDao.findCartByProduct(mid, product, options, price);
+	}
+
+	@Override
+	public void insertOrders(OrdersVo vo) {
+		orderDao.insertOrders(vo);
+	}
+
+	@Override
+	public void insertItem(String order_idx, String[] addCartIdx) {
+		orderDao.insertItem(order_idx,addCartIdx);
+	}
+
+	@Override
+	public List<ItemVo> findItemGroupByIdx(String mid) {
+		return orderDao.findItemGroupByIdx(mid);
+	}
+
+	@Override
+	public List<ItemVo> findItemByMid(String mid) {
+		return orderDao.findItemByMid(mid);
+	}
+
 
 	
 }

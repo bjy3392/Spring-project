@@ -29,21 +29,21 @@ public class UserController {
 	}
 	
 	//아이디 중복 체크(ajax처리 @ResponseBody 사용)
-	@RequestMapping(value="/idCheck", method=RequestMethod.GET)
+	@RequestMapping(value="/findUserAjax", method=RequestMethod.GET)
 	@ResponseBody
-	public int idCheckGet(String mid) {
-		UserVo res = userService.findUserById(mid);
-		if(res != null) {
-			return 1;
-		}
-		return 0;
+	public UserVo findUserAjaxGet(String mid) {
+		UserVo vo = userService.findUserByMid(mid);
+//		if(vo != null) {
+//			return 1;
+//		}
+		return vo;
 	}
 	
 	//중복체크 한번더 해주고 회원input을 한다.
 	@RequestMapping(value="/userInput", method=RequestMethod.POST)
 	public String userInputPost(UserVo vo) {
 		//아이디 중복체크
-		if(userService.findUserById(vo.getMid()) != null) {
+		if(userService.findUserByMid(vo.getMid()) != null) {
 			msgFlag= "alreadyHaveUser";
 			return "redirect:/msg/" + msgFlag;
 		}
@@ -52,7 +52,6 @@ public class UserController {
 		String encPwd = passwordEncoder.encode(vo.getPwd());
 		vo.setPwd(encPwd);
 		
-		System.out.println(vo);
 		
 		//체크한 회원정보를 담은 vo를 DB에 저장처리 할 수 있게 한다.
 		userService.insertUser(vo);
@@ -71,14 +70,14 @@ public class UserController {
 	//로그인. 세션에 추가하기.
 	@RequestMapping(value="/userLogin", method=RequestMethod.POST)
 	public String userLoginPost(HttpSession session ,String mid, String pwd) {
-		UserVo vo = userService.findUserById(mid);
+		UserVo vo = userService.findUserByMid(mid);
 		
 		//아이디가 있는 경우
 		if(vo != null) {
 			if(passwordEncoder.matches(pwd, vo.getPwd())) {				
 				session.setAttribute("smid", vo.getMid());
-				session.setAttribute("slevel", vo.getLevel_code());
-				session.setAttribute("sgroup", vo.getGroup_code());
+				session.setAttribute("slevel", vo.getLevel());
+				session.setAttribute("sgroup", vo.getGroups());
 				return "redirect:/";
 			}
 			else {
