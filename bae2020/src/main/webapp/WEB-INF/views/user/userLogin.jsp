@@ -33,7 +33,7 @@
 	          	<input class="w3-input w3-border" type="password" placeholder="Password" required name="pwd">
 	          </div>
 	          <div class="w3-row-padding" style="margin:0 -16px 8px -16px">
-	         	<button class="w3-round-xlarge" type="submit">LOGIN</button>  
+	         	<button class="w3-round-xlarge" type="submit" >LOGIN</button>  
 	         	<button class="w3-round-xlarge" type="button" onclick="location.href='${contextPath}/user/userInput'">JOIN</button>  
 	          </div>   
 	     </form>

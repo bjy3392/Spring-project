@@ -4,9 +4,10 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.spring.bae2020.vo.CartVo;
+import com.spring.bae2020.vo.ItemVo;
 import com.spring.bae2020.vo.OptionVo;
-import com.spring.bae2020.vo.OrderDetailVo;
-import com.spring.bae2020.vo.OrderVo;
+import com.spring.bae2020.vo.OrdersVo;
 import com.spring.bae2020.vo.ProductVo;
 
 public interface OrderDao {
@@ -15,21 +16,27 @@ public interface OrderDao {
 
 	List<OptionVo> findOptionAll();
 
-	OrderVo findOrderByIdandState(@Param("mid")String mid, @Param("state")String state);
-
-	void insertOrder(@Param("mid")String mid, @Param("price")String price, @Param("state")String state);
-
-	void insertOrderDetail(@Param("orderId")String orderId, @Param("product_code")String product_code, @Param("price")String price, @Param("options")String options);
-
-	void updateOrder(@Param("orderId")String orderId, @Param("mid")String mid, @Param("price")String price,  @Param("state")String state);
-
-	List<OrderDetailVo> findOrderDetailByOrderId(@Param("orderId")String orderId);
-
 	ProductVo findProductByCode(@Param("product_code") String product_code);
+	
+	void insertCart(@Param("mid")String mid, @Param("product")String product, @Param("options")String options, @Param("price")String price);
 
-	int findOrderDetailForMaxidx(@Param("orderId")String orderId, @Param("product_code")String product_code, @Param("options")String options);
+	List<CartVo> findCartByMid(@Param("mid")String mid);
 
-	void deleteOrderDetail(@Param("maxIdx")int maxIdx);
+	void updateCart(@Param("mid")String mid, @Param("cart_idx")String cart_idx, @Param("purpose")String purpose);
+
+	void deleteCartByIdx(@Param("mid")String mid, @Param("arrayCartIdx")String[] arrayCartIdx);
+
+	List<CartVo> findCartByIdx(@Param("mid")String mid, @Param("arrayCartIdx")String[] arrayCartIdx);
+
+	CartVo findCartByProduct(@Param("mid")String mid, @Param("product")String product, @Param("options")String options, @Param("price")String price);
+
+	void insertOrders(@Param("vo")OrdersVo vo);
+
+	void insertItem(@Param("order_idx")String order_idx, @Param("arrayCartIdx")String[] addCartIdx);
+
+	List<ItemVo> findItemGroupByIdx(@Param("mid")String mid);
+
+	List<ItemVo> findItemByMid(@Param("mid")String mid);
 
 
 }

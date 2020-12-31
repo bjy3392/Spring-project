@@ -29,7 +29,10 @@ public class MsgController {
 			model.addAttribute("msg", "회원가입이 완료되었습니다.");
 			model.addAttribute("url", "user/userLogin");
 		}
-		
+		else if(msgFlag.equals("notProduct")) {
+			model.addAttribute("msg", "선택한 제품이 없습니다.");
+			model.addAttribute("url", "order/viewCartList");
+		}
 		return "include/msg";
 	}	
 }

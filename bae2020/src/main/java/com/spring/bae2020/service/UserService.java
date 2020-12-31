@@ -4,7 +4,7 @@ import com.spring.bae2020.vo.UserVo;
 
 public interface UserService {
 
-	UserVo findUserById(String mid);
+	UserVo findUserByMid(String mid);
 
 	void insertUser(UserVo vo);
 

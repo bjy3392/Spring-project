@@ -67,11 +67,11 @@
 				}
 				
 				$.ajax({
-					url : "${contextPath}/user/idCheck",
+					url : "${contextPath}/user/findUserAjax",
 					type : "get",
 					data : query,
 					success : function(data){
-						if(data == 1 ){
+						if(data.mid == query.mid){
 							alert("사용중인 ID입니다.");
 							$("#mid").focus();
 						}
@@ -208,7 +208,6 @@
 			    </tr>
 			</table>
   			<input type="hidden" name="tel"/>
-  			<input type="hidden" name="hobby"/>
 		</form>	
 	</div>
 </body>

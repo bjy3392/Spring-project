@@ -45,11 +45,17 @@
 		
 		
 		//장바구니에 넣기
-		function insertOrderAjax(){
-			var prod_code = myform.prod_code.value;
+		function insertCartAjax(){
+			if ( $("#myform").find('[name=bread]:checked').length < 1 ) {
+			     alert("빵은 필수 선택입니다.");
+			     return false;
+			}
+			
+			var product = myform.product.value;
 			var totPrice = myform.totPriceVal.value;
 			var options =""
 			var count = document.getElementsByName("bread").length;
+			
 	        for (var i=0; i<count; i++) {
 	            if (document.getElementsByName("bread")[i].checked == true) {
 	            	options += document.getElementsByName("bread")[i].value +"/";
@@ -76,26 +82,26 @@
 	            }
 	        }
 	        var order ={
-	        		prod_code: prod_code,
+	        		product: product,
 	        		options : options,
-	        		price : totPrice,
-	        		mid : "${smid}"
+	        		price : totPrice
 	        }
 	        
 	        $.ajax({
-				url: "${contextPath}/order/insertOrderAjax",
+				url: "${contextPath}/order/insertCartAjax",
 				type: "post",
 				data: order,
 				success:function(data){
 					var res = confirm("장바구니에 추가되었습니다. 장바구니로 이동하시겠습니까?");
 					if(!res){
-						location.href = "${contextPath}/order/productList";
+						location.href = "${contextPath}/order/viewProductList";
 					}
 					else{
-						location.href = "${contextPath}/order/cartList";
+						location.href = "${contextPath}/order/viewCartList";
 					}
 				}
 			}); 
+			
 		}
 		
 		
@@ -118,6 +124,11 @@
 		/* input[type='checkbox']{
        	display: none;
        	} */
+       	.order_con{
+       		width:1000px;
+       		align: center;
+       	}
+       	
 		#menuImg {
 		  margin: 0;
 		  position: absolute;
@@ -194,9 +205,9 @@
 				    </tbody>  
 			  	</table>	
 			  	총 결제 금액 : <div id="totPrice">${prod.price }원</div>
-			  	<button class="w3-round-xlarge" type="button" onclick="javascript:insertOrderAjax()">주문하기</button> 
-			  	<button class="w3-round-xlarge" type="button" onclick="javascript:insertOrderAjax()">장바구니</button> 
-			  	<input name="prod_code" type="hidden" value="${prod.product_code }"/>
+			  	<button class="w3-round-xlarge" type="button" onclick="javascript:insertCartAjax()">주문하기</button> 
+			  	<button class="w3-round-xlarge" type="button" onclick="javascript:insertCartAjax()">장바구니</button> 
+			  	<input name="product" type="hidden" value="${prod.product_code }"/>
 			  	<input name="totPriceVal" type="hidden" value="${prod.price }"/>
 		  	</form>
 		</div>

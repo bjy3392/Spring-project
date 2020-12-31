@@ -2,11 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.spring.bae2020.dao.UserDao">
 
-	<select id="findUserById" resultType="com.spring.bae2020.vo.UserVo">
-		select * from user_info where mid=#{mid} ;
+	<select id="findUserByMid" resultType="com.spring.bae2020.vo.UserVo">
+		select * from user where mid=#{mid} ;
 	</select>
 	
 	<insert id="insertUser">
-		insert into user_info values (#{vo.mid},#{vo.pwd},#{vo.name},#{vo.tel},#{vo.postcode},#{vo.roadAddress},#{vo.detailAddress},default,default,default)
+		insert into user values (#{vo.mid},#{vo.pwd},#{vo.name},#{vo.tel},#{vo.postcode},#{vo.roadAddress},#{vo.detailAddress},default,default,default)
 	</insert>
 </mapper>

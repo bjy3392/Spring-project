@@ -13,19 +13,21 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.spring.bae2020.service.OrderService;
+import com.spring.bae2020.vo.CartVo;
+import com.spring.bae2020.vo.ItemVo;
 import com.spring.bae2020.vo.OptionVo;
-import com.spring.bae2020.vo.OrderDetailVo;
-import com.spring.bae2020.vo.OrderVo;
+import com.spring.bae2020.vo.OrdersVo;
 import com.spring.bae2020.vo.ProductVo;
 
 @Controller
 @RequestMapping("/order")
 public class OrderController {
+	String msgFlag;
 	@Autowired
 	OrderService orderService;
 	
-	@RequestMapping(value="/productList", method = RequestMethod.GET)
-	public String productListGet(Model model) {
+	@RequestMapping(value="/viewProductList", method = RequestMethod.GET)
+	public String viewProductListGet(Model model) {
 		List<ProductVo> vos  = orderService.findProductAll();
 		List<ProductVo> vosM = orderService.findProductByCategory(vos,"m");
 		
@@ -34,8 +36,8 @@ public class OrderController {
 		return "order/productList";
 	}
 	
-	@RequestMapping(value="/productOrder", method = RequestMethod.GET)
-	public String productOrderGet(Model model, String product_code ) {
+	@RequestMapping(value="/viewOptionList", method = RequestMethod.GET)
+	public String viewOptionListGet(Model model, String product_code ) {
 
 		List<OptionVo> vos  = orderService.findOptionAll(); //한번에 모든 옵션을 가져와서 분류할때는 DB에 다녀오지 않고 분류
 		ProductVo prod = orderService.findProductByCode(product_code);
@@ -51,71 +53,110 @@ public class OrderController {
 		model.addAttribute("vosS", vosS);
 		model.addAttribute("vosA", vosA);
 		
-		return "order/productOrder";
+		return "order/optionList";
 	}
 
 	
-	@RequestMapping(value="/insertOrderAjax", method = RequestMethod.POST)
+	@RequestMapping(value="/insertCartAjax", method = RequestMethod.POST)
 	@ResponseBody
-	public String insertOrderAjaxPost(@RequestParam(value="orderId", required = false, defaultValue ="") String orderId,
-									  String prod_code, String options, String price, String mid) {
-		
-		//주문창에서 접근할 경우 : 장바구니 유무 확인 후 삽입 및 업데이트
-		if(orderId.equals("")) {
-			OrderVo vo = orderService.findOrderByIdandState(mid, "0"); //같은아이디 중 장바구니인 상태가 있나 없나 검색		
-			if(vo == null) {
-				orderService.insertOrder(mid,price,"0");  //장바구니 상태인 주문을 추가 return 값을 orderid을 가져올까???,, 
-				vo = orderService.findOrderByIdandState(mid, "0");  //이 함수가 재사용 가능성이 있어서 따로 뺏음..
-				orderId = vo.getOrder_id();
-			}else {
-				orderId = vo.getOrder_id();
-				orderService.updateOrder(orderId,mid,price,"0"); //가격을 업데이트한다.
-			}
-		}
-		//장바구니에 insert를 실행하는 경우 : 장바구니가 무조건 있는 경우이므로 확인이 필요없음
-		else {
-			orderService.updateOrder(orderId,mid,price,"0"); //가격을 업데이트한다.
-		}
-		
-		orderService.insertOrderDetail(orderId,prod_code,price,options);
-		
-		return "";
-	}
-	
-	
-	@RequestMapping(value="/deleteOrderAjax", method = RequestMethod.POST)
-	@ResponseBody
-	public String deleteOrderAjaxPost(String orderId, String prod_code, String options, String price, String mid) {
-
-		String subPrice = "-"+price;
-		orderService.updateOrder(orderId,mid,subPrice,"0"); //가격을 업데이트한다.
-		orderService.deleteOrderDetail(orderId,prod_code,options);
-		
-		return "";
-	}
-	
-	@RequestMapping(value="/cartList", method = RequestMethod.GET)
-	public String cartListGet(HttpSession session, Model model) {
-		String orderId;
+	public String insertCartAjaxPost(HttpSession session, String product, String options, String price) {
 		String mid = (String)session.getAttribute("smid");
-		OrderVo vo = orderService.findOrderByIdandState(mid, "0");
-		if(vo != null) {
-			orderId = vo.getOrder_id();
-			List<OrderDetailVo> vos = orderService.findOrderDetailByOrderId(orderId);
-			model.addAttribute("orderId", orderId);
-			model.addAttribute("vos", vos);
+		CartVo vo = orderService.findCartByProduct(mid,product,options,price);
+		
+		if(vo!=null) {
+			String cart_idx = vo.getCart_idx();
+			String purpose = "1";
+			orderService.updateCart(mid, cart_idx, purpose);
 		}
+		else {
+			orderService.insertCart(mid,product,options,price);			
+		}
+		
+		return "";
+	}
+	
+	@RequestMapping(value="/viewCartList", method = RequestMethod.GET)
+	public String viewCartListGet(HttpSession session, Model model) {
+		String mid = (String)session.getAttribute("smid");
+		List<CartVo> vos = orderService.findCartByMid(mid);
+		model.addAttribute("vos", vos);
 		
 		return "order/cartList";
 	}
 	
-	@RequestMapping(value="/orderInput", method = RequestMethod.GET)
-	public String orderInputtGet(Model model) {
+	@RequestMapping(value="/updateCartAjax", method = RequestMethod.POST)
+	@ResponseBody
+	public String updateCartAjaxPost(HttpSession session, String cart_idx, String purpose) {
+		String mid = (String)session.getAttribute("smid");
 		
+		orderService.updateCart(mid, cart_idx, purpose); //개수를 업데이트한다.
 		
-		
-		return "order/orderInput";
+		return "";
 	}
+	
+	@RequestMapping(value="/deleteCartAjax", method = RequestMethod.POST)
+	@ResponseBody
+	public String deleteCartAjaxPost(HttpSession session, @RequestParam("arrayCartIdx[]") String[] arrayCartIdx) {
+		String mid = (String)session.getAttribute("smid");
+				
+		orderService.deleteCartByIdx(mid, arrayCartIdx);
+		
+		return "";
+	}
+	
+	
+	@RequestMapping(value="/viewOrderInput", method = RequestMethod.POST)
+	public String viewOrderInputPost(Model model,HttpSession session, @RequestParam("arrayCartIdx[]") String[] arrayCartIdx) {
+	
+		if(arrayCartIdx==null) {
+			msgFlag= "notProduct";
+			return "redirect:/msg/" + msgFlag;
+		}
+		
+		String mid = (String)session.getAttribute("smid");
+		List<CartVo> vos = orderService.findCartByIdx(mid, arrayCartIdx);		
+	  	
+		if(vos.size()<1) {
+			msgFlag= "notProduct";
+			return "redirect:/msg/" + msgFlag;
+		}
+		else {
+		  	model.addAttribute("vos", vos);
+		  	model.addAttribute("arrayCartIdx", arrayCartIdx);
+			return "order/orderInput";
+		}	
+	}
+	
+	@RequestMapping(value="/insertOrder", method = RequestMethod.POST)
+	public String insertOrderPost(Model model,HttpSession session, OrdersVo vo, String addCartIdx) {
+		String mid = (String)session.getAttribute("smid");
+		vo.setMid(mid);
+		
+		String[] arrayCartIdx = addCartIdx.split("/");
+		
+		orderService.insertOrders(vo);
+		String order_idx = vo.getOrder_idx();
+		orderService.insertItem(order_idx, arrayCartIdx);
+		orderService.deleteCartByIdx(mid, arrayCartIdx); 
+		
+		return "order/";
+	}
+	
+	@RequestMapping(value="/viewOrderList", method = RequestMethod.GET)
+	public String viewOrderListGet(Model model,HttpSession session) {
+		String mid = (String)session.getAttribute("smid");
+		
+		List<ItemVo> vos = orderService.findItemGroupByIdx(mid);
+		List<ItemVo> vosItem = orderService.findItemByMid(mid);
+		
+	  	model.addAttribute("vos", vos);
+	  	model.addAttribute("vosItem", vosItem);
+		
+	  	
+		return "order/orderList";
+	}
+	
+	
 }
 
 
