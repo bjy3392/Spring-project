@@ -49,13 +49,15 @@ ALTER TABLE item ADD FOREIGN KEY (product)  REFERENCES product(product_code) ON 
 
 select * from item
 
-select prod.product_name,  count(*)
+select orders.order_idx,orders.total, state.state_name, prod.product_name , count(*) as cnt
 from item
 inner join orders 
 on item.order_idx = orders.order_idx
 and orders.mid = 'admin'
 inner join product prod
 on item.product = prod.product_code
+inner join state
+on state.state_code = orders.state
 group by orders.order_idx
 
 
@@ -67,7 +69,3 @@ and orders.mid = 'admin'
 inner join product prod
 on item.product = prod.product_code
 
-
-select * from cart
-
-desc cart

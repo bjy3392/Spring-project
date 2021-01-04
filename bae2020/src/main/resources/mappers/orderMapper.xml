@@ -71,14 +71,16 @@
        	 <!-- 이렇게 한번에 여러값을 insert 할 경우 auto_increment가 값을 건너뛰고 들어갈수도 있다. --> 	
 	</insert>
 	
-	<select id="findItemGroupByIdx"  resultType="com.spring.bae2020.vo.ItemVo">
-		select orders.order_idx, prod.product_name , count(*) as cnt
+	<select id="findItemGroupByIdx"  resultType="com.spring.bae2020.vo.OrdersVo">
+		select orders.order_idx,orders.total,orders.state, state.state_name, prod.product_name , count(*) as cnt
 		  from item
 		 inner join orders 
 		    on item.order_idx = orders.order_idx
 		   and orders.mid = #{mid}
 		 inner join product prod
 		    on item.product = prod.product_code
+		 inner join state
+			on state.state_code = orders.state
 		 group by orders.order_idx
 	</select>
 	
@@ -91,6 +93,14 @@
 		 inner join product prod
 		    on item.product = prod.product_code
 	</select>
+	
+	<delete id="deleteOrderByIdx">
+		delete from orders where mid=#{mid} and order_idx=#{order_idx};	
+	</delete>
+	
+	<delete id="deleteItemByIdx">
+		delete from item where order_idx=#{order_idx};	
+	</delete>
 	
 </mapper>
 

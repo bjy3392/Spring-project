@@ -109,6 +109,16 @@ public class OrderServiceImp implements OrderService {
 		return orderDao.findItemByMid(mid);
 	}
 
+	@Override
+	public void deleteOrderByIdx(String mid, String order_idx) {
+		orderDao.deleteOrderByIdx(mid,order_idx);
+	}
+
+	@Override
+	public void deleteItemByIdx(String order_idx) {
+		orderDao.deleteItemByIdx(order_idx);		
+	}
+
 
 	
 }

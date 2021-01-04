@@ -40,4 +40,8 @@ public interface OrderService {
 
 	List<ItemVo> findItemByMid(String mid);
 
+	void deleteOrderByIdx(String mid, String order_idx);
+
+	void deleteItemByIdx(String order_idx);
+
 }
