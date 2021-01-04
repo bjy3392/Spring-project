@@ -68,3 +68,6 @@ inner join product prod
 on item.product = prod.product_code
 
 
+select * from cart
+
+desc cart
