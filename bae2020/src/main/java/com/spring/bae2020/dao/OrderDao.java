@@ -38,5 +38,9 @@ public interface OrderDao {
 
 	List<ItemVo> findItemByMid(@Param("mid")String mid);
 
+	void deleteOrderByIdx(@Param("mid")String mid, @Param("order_idx")String order_idx);
+
+	void deleteItemByIdx(@Param("order_idx")String order_idx);
+
 
 }

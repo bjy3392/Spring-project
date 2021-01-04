@@ -215,7 +215,7 @@
 				<!-- 상단 제목 -->
 				<div class="main_title">
 					<p></p>
-					<h2>결제하기</h2>
+					<h2>주문하기</h2>
 					<p><br/><br/></p>
 				</div>
 				<div class="list_start">
@@ -323,7 +323,7 @@
                         <div id="bottom_btn">
                           <button class="w3-round-xlarg btn" onclick="location.href = '${contextPath}/order/viewProductList'">주문추가</button>
                           <button class="w3-round-xlarge btn" onclick="location.href = '${contextPath}/order/viewCartList'">장바구니</button>
-                          <button class="w3-round-xlarge btn" onclick="javascript:insertOrder()">결제하기</button>
+                          <button class="w3-round-xlarge btn" onclick="javascript:insertOrder()">주문하기</button>
                     	</div>
 					</div>
 				</div>

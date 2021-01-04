@@ -156,6 +156,16 @@ public class OrderController {
 		return "order/orderList";
 	}
 	
+	@RequestMapping(value="/deleteOrderAjax", method = RequestMethod.POST)
+	@ResponseBody
+	public String deleteOrderAjaxPost(HttpSession session, String order_idx) {
+		String mid = (String)session.getAttribute("smid");
+				
+		orderService.deleteItemByIdx(order_idx);
+		orderService.deleteOrderByIdx(mid, order_idx);
+		
+		return "";
+	}
 	
 }
 

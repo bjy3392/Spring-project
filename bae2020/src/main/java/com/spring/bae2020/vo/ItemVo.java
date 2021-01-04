@@ -4,6 +4,7 @@ public class ItemVo {
 	private String item_idx;
 	private String order_idx;
 	private String product;
+	private String product_name;
 	private String options;
 	private String price;
 	private String cnt;
@@ -34,6 +35,12 @@ public class ItemVo {
 	public void setProduct(String product) {
 		this.product = product;
 	}
+	public String getProduct_name() {
+		return product_name;
+	}
+	public void setProduct_name(String product_name) {
+		this.product_name = product_name;
+	}
 	public void setOptions(String options) {
 		this.options = options;
 	}
@@ -45,9 +52,10 @@ public class ItemVo {
 	}
 	@Override
 	public String toString() {
-		return "ItemVo [item_idx=" + item_idx + ", order_idx=" + order_idx + ", product=" + product + ", options="
-				+ options + ", price=" + price + ", cnt=" + cnt + "]";
+		return "ItemVo [item_idx=" + item_idx + ", order_idx=" + order_idx + ", product=" + product + ", product_name="
+				+ product_name + ", options=" + options + ", price=" + price + ", cnt=" + cnt + "]";
 	}
+	
 	
 	
 }
