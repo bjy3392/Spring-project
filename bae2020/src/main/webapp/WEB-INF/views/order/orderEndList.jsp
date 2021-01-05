@@ -181,8 +181,8 @@
 					<div class="list_detail">
 						<table id="bar_table">
 							<tr>
-								<td id="bar_td_select">진행중</td>
-								<td id="bar_td" onclick="location.href='${contextPath}/order/viewOrderEndList'">완료</td>
+								<td id="bar_td" onclick="location.href='${contextPath}/order/viewOrderList'">진행중</td>
+								<td id="bar_td_select">완료</td>
 							</tr>
 						</table>
 						<p><br/></p>
@@ -192,20 +192,7 @@
 								<tr id="tr_${vo.order_idx }">
 									<td class="opt_td">${vo.update_dt }</td>
 									<td><font style="font-weight: bold; font-size: 20px;"> ${vo.product_name }</font>  <c:if test="${vo.cnt ne 1 }">외 ${vo.cnt-1 }개</c:if>
-										<button class="icon_btn" disabled >
-											<i class="fas fa-chevron-down"></i>
-										</button>
-										<p></p>
-										<c:forEach var="voItem" items="${vosItem }">
-											<c:if test="${vo.order_idx eq voItem.order_idx }">
-												<div id="detail_${vo.order_idx }"  >
-													<span class="w3-text-grey prod">${voItem.product_name }</span>
-													<span class="w3-text-grey">${voItem.cnt }개&nbsp;<fmt:formatNumber value="${voItem.price * voItem.cnt }" pattern="#,###" /></span><br/> 
-													<span class="w3-text-grey opt">${voItem.options }</span><br/> 
-													<p></p>
-												</div>
-											</c:if>
-										</c:forEach>
+										지점정보 추가하기
 									</td>
 									<td class="opt_td">
 										<fmt:formatNumber value="${vo.total }" pattern="#,###" />
@@ -213,8 +200,8 @@
 										
 									</td>
 									<td class="opt_td">
-										${vo.state_name } 
-										<c:if test="${vo.state eq 'state0' }"><button class="w3-round-xlarge btn_str" onclick="deleteOrderAjax(${vo.order_idx})">취소</button></c:if>
+										<button class="w3-round-xlarge btn_str">리뷰</button>
+										<button class="w3-round-xlarge btn_str">재주문</button>
 									</td>
 								</tr>
 							</c:forEach>	

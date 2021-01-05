@@ -100,13 +100,13 @@ public class OrderServiceImp implements OrderService {
 	}
 
 	@Override
-	public List<ItemVo> findItemGroupByIdx(String mid) {
-		return orderDao.findItemGroupByIdx(mid);
+	public List<OrdersVo> findOrdersGroupByIdx(String group, String mid, String delimiter, String state) {
+		return orderDao.findOrdersGroupByIdx(group,mid,delimiter,state);
 	}
 
 	@Override
-	public List<ItemVo> findItemByMid(String mid) {
-		return orderDao.findItemByMid(mid);
+	public List<ItemVo> findItemByIdx(String[] arrayOrderIdx) {
+		return orderDao.findItemByIdx(arrayOrderIdx);
 	}
 
 	@Override
