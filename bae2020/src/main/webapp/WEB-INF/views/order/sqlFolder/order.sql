@@ -58,6 +58,8 @@ inner join product prod
 on item.product = prod.product_code
 inner join state
 on state.state_code = orders.state
+where orders.state = 'state0'
+
 group by orders.order_idx
 
 
@@ -68,4 +70,7 @@ on item.order_idx = orders.order_idx
 and orders.mid = 'admin'
 inner join product prod
 on item.product = prod.product_code
+where orders.state <> 'state0'
+
+
 

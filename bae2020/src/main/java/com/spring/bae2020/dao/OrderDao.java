@@ -34,9 +34,9 @@ public interface OrderDao {
 
 	void insertItem(@Param("order_idx")String order_idx, @Param("arrayCartIdx")String[] addCartIdx);
 
-	List<ItemVo> findItemGroupByIdx(@Param("mid")String mid);
+	List<OrdersVo> findOrdersGroupByIdx(@Param("group")String group, @Param("mid")String mid, @Param("delimiter")String delimiter, @Param("state")String state);
 
-	List<ItemVo> findItemByMid(@Param("mid")String mid);
+	List<ItemVo> findItemByIdx(@Param("arrayOrderIdx")String[] arrayOrderIdx);
 
 	void deleteOrderByIdx(@Param("mid")String mid, @Param("order_idx")String order_idx);
 

@@ -36,9 +36,9 @@ public interface OrderService {
 
 	void insertItem(String order_idx, String[] addCartIdx);
 
-	List<ItemVo> findItemGroupByIdx(String mid);
+	List<OrdersVo> findOrdersGroupByIdx(String group, String mid, String delimiter, String state);
 
-	List<ItemVo> findItemByMid(String mid);
+	List<ItemVo> findItemByIdx(String[] arrayOrderIdx);
 
 	void deleteOrderByIdx(String mid, String order_idx);
 

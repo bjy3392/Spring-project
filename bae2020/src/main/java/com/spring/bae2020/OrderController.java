@@ -145,9 +145,21 @@ public class OrderController {
 	@RequestMapping(value="/viewOrderList", method = RequestMethod.GET)
 	public String viewOrderListGet(Model model,HttpSession session) {
 		String mid = (String)session.getAttribute("smid");
+//		if(mid==null) {
+//			msgFlag= "";
+//			return "redirect:/msg/" + msgFlag;
+//		}
 		
-		List<ItemVo> vos = orderService.findItemGroupByIdx(mid);
-		List<ItemVo> vosItem = orderService.findItemByMid(mid);
+		List<OrdersVo> vos = orderService.findOrdersGroupByIdx("mid",mid,"not","state5");
+		
+		String[] arrayOrderIdx = new String[vos.size()];
+		
+		for(int i=0; i<vos.size(); i++) {
+			OrdersVo vo = vos.get(i);
+			arrayOrderIdx[i] = vo.getOrder_idx();
+		}
+				
+		List<ItemVo> vosItem = orderService.findItemByIdx(arrayOrderIdx);
 		
 	  	model.addAttribute("vos", vos);
 	  	model.addAttribute("vosItem", vosItem);
@@ -166,7 +178,33 @@ public class OrderController {
 		
 		return "";
 	}
+
 	
+	@RequestMapping(value="/viewOrderEndList", method = RequestMethod.GET)
+	public String viewOrderEndListGet(Model model,HttpSession session) {
+		String mid = (String)session.getAttribute("smid");
+//		if(mid==null) {
+//			msgFlag= "";
+//			return "redirect:/msg/" + msgFlag;
+//		}
+		
+		List<OrdersVo> vos = orderService.findOrdersGroupByIdx("mid",mid,"only","state0");
+		
+		String[] arrayOrderIdx = new String[vos.size()];
+		
+		for(int i=0; i<vos.size(); i++) {
+			OrdersVo vo = vos.get(i);
+			arrayOrderIdx[i] = vo.getOrder_idx();
+		}
+				
+		List<ItemVo> vosItem = orderService.findItemByIdx(arrayOrderIdx);
+		
+	  	model.addAttribute("vos", vos);
+	  	model.addAttribute("vosItem", vosItem);
+		
+	  	
+		return "order/orderEndList";
+	}
 }
 
 

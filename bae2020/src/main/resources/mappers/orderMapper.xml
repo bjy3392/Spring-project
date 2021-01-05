@@ -71,25 +71,35 @@
        	 <!-- 이렇게 한번에 여러값을 insert 할 경우 auto_increment가 값을 건너뛰고 들어갈수도 있다. --> 	
 	</insert>
 	
-	<select id="findItemGroupByIdx"  resultType="com.spring.bae2020.vo.OrdersVo">
-		select orders.order_idx,orders.total,orders.state, state.state_name, prod.product_name , count(*) as cnt
+	<select id="findOrdersGroupByIdx"  resultType="com.spring.bae2020.vo.OrdersVo">
+		select orders.order_idx,orders.total,orders.state, state.state_name, prod.product_name , orders.update_dt, count(*) as cnt
 		  from item
 		 inner join orders 
 		    on item.order_idx = orders.order_idx
-		   and orders.mid = #{mid}
+		   and orders.${group} = #{mid} 
 		 inner join product prod
 		    on item.product = prod.product_code
 		 inner join state
 			on state.state_code = orders.state
+		 where 1=1
+		    <if test="delimiter == 'not'">
+		   and orders.state != #{state} 
+		   </if>
+		   <if test="delimiter == 'only'">
+		   and orders.state = #{state} 
+		   </if> 
 		 group by orders.order_idx
 	</select>
 	
-	<select id="findItemByMid"  resultType="com.spring.bae2020.vo.ItemVo">
+	<select id="findItemByIdx"  resultType="com.spring.bae2020.vo.ItemVo">
 		select item.* , prod.product_name
 		  from item
 		 inner join orders 
 		    on item.order_idx = orders.order_idx
-		   and orders.mid = #{mid}
+		   and orders.order_idx in
+		  <foreach collection="arrayOrderIdx" item="order_idx" index="index" open="(" separator="," close=")">
+       	    	#{order_idx}
+       	  </foreach>
 		 inner join product prod
 		    on item.product = prod.product_code
 	</select>
