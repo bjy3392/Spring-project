@@ -32,7 +32,7 @@
 	.list_detail:hover {
 	    background-color: #ffce32;
 	}
-	button {
+	#btn {
 			background-color: #009223; /* Green */
 			border: none;
 			color: #ffce32;
@@ -62,9 +62,8 @@
 					<div class="list_detail">
 						<p></p>
 						<img src="${contextPath }/content/${vo.image}" style="width:200px;">
-						<p></p>
 						<p>${vo.product_name }<br/>${vo.price }</p>
-						<button class="w3-round-xlarge" onclick="location.href='${contextPath}/order/viewOptionList?product_code=${vo.product_code }'">주문하기</button>
+						<button class="w3-round-xlarge" id="btn" onclick="location.href='${contextPath}/order/viewOptionList?product_code=${vo.product_code }'">주문하기</button>
 					</div>
 					    	
 				</c:forEach>
