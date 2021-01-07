@@ -275,7 +275,8 @@
 		#icon_btn{
 			padding: 0;
 			border: none;
-			background: none;
+			background: none; 
+			color:#009223;
 		}
 	
 	</style>
@@ -331,10 +332,8 @@
 				    		<div class="w3-col l6 w3-padding-small" >
 						      	주문 금액 <strong style="font-size: 40px; color:#ff8300"><span id="totPrice_${vo.cart_idx }"><fmt:formatNumber value="${vo.price * vo.cnt }" pattern="#,###" /></span></strong> 원
 						    </div>
-						    <form id="myform_${vo.cart_idx }">
-						    	<input type="hidden" id="price_${vo.cart_idx }" name="price_${vo.cart_idx }" value="${vo.price}"/>
-						    	<input type="hidden" id="cnt_${vo.cart_idx }" name="cnt_${vo.cart_idx }" value="${vo.cnt}"/>
-						    </form> 
+					    	<input type="hidden" id="price_${vo.cart_idx }" name="price_${vo.cart_idx }" value="${vo.price}"/>
+					    	<input type="hidden" id="cnt_${vo.cart_idx }" name="cnt_${vo.cart_idx }" value="${vo.cnt}"/>
 				    	</div>    					
 				  		<p></p>
 				    </c:forEach>

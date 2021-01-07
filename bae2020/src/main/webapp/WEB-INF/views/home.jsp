@@ -4,7 +4,7 @@
 <c:set var="contextPath" value="${pageContext.request.contextPath }"/>
 <html>
 <head>
-	<title>샌드위치 주문하기</title>
+	<title>SUBWAY</title>
 </head>
 <body>
 <!-- Page content -->
