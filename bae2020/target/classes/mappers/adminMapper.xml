@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.spring.bae2020.dao.AdminDao">
 
-	<select id="findCategoryByCode" resultType="com.spring.bae2020.vo.CategoryVo">
-		select * from category where category_code like concat(#{code}, '%');
+	<select id="findCategory" resultType="com.spring.bae2020.vo.CategoryVo">
+		select * from category;
 	</select>
 
 	<insert id="insertCategory">
@@ -20,7 +20,7 @@
 		delete from category where category_code = #{category_code};
 	</delete>
 	
-	<select id="findProductCodeByCode" resultType="String">
+	<select id="findProductCodeByCategory" resultType="String">
 		select concat(first_code, '-',(select lpad(count(*)+1,3,'0') from product where category_code = #{category_code}))
 		  from category
 	 	 where category_code = #{category_code};
@@ -30,17 +30,84 @@
 		insert into product value (#{vo.product_code},#{vo.product_name},#{vo.category_code},#{vo.price},#{vo.image},#{vo.user_id},default);
 	</insert>
 	
-	<select id="findProductByCode" resultType="com.spring.bae2020.vo.ProductVo">
+	<select id="findProductByCategory" resultType="com.spring.bae2020.vo.ProductVo">
 		select * from product where category_code=#{category_code};
 	</select>
 	
 	<update id="updateProduct">
-		update product set product_name=#{vo.product_name}, price=#{vo.price } where product_code=#{vo.product_code};
+		update product set product_name=#{vo.product_name}, price=#{vo.price }
+		<if test="vo.image!=null">
+			, image=#{vo.image} 
+		</if>
+		where product_code=#{vo.product_code};
 	</update>
 	
 	<delete id="deleteProduct">
 		delete from product where product_code = #{product_code};
 	</delete>
 	
+	<select id="findSUbcategoryBycategory" resultType="com.spring.bae2020.vo.SubcategoryVo">
+		select * from subcategory where category_code = #{category_code};
+	</select> 
+	
+	<insert id="insertSubcategory">
+		insert into subcategory (subcategory_code,subcategory_name,category_code,first_code,user_id,create_dt) 
+		select concat('OPT', '-',(select lpad(count(*)+1,3,'0') from subcategory where subcategory_code like 'OPT%' ))
+			 , #{subcategory_name}, #{category_code}, #{first_code}, #{mid}, now();
+	</insert>
+	
+	<update id="updateSubcategory">
+		update subcategory set subcategory_name=#{subcategory_name} , first_code=#{first_code} where subcategory_code=#{subcategory_code};
+	</update>
+	
+	<delete id="deleteSubcategory">
+		delete from subcategory where subcategory_code = #{subcategory_code};
+	</delete>
+	
+	<select id="findOptionBySubcategory" resultType="com.spring.bae2020.vo.OptionsVo">
+		select * from options where subcategory_code=#{subcategory_code};
+	</select>
+	
+	<select id="findOptionCodeeByCategory" resultType="String">
+		select concat(first_code, '-',(select lpad(count(*)+1,3,'0') from options where subcategory_code = #{subcategory_code}))
+		  from subcategory
+	 	 where subcategory_code = #{subcategory_code};
+	</select>
+	
+	<insert id="insertOption">
+		insert into options value (#{vo.option_code},#{vo.option_name},#{vo.subcategory_code},#{vo.price},#{vo.image},#{vo.user_id},default);
+	</insert>
+	
+	<update id="updateOption">
+		update options set option_name=#{vo.option_name}, price=#{vo.price }
+		<if test="vo.image!=null">
+			, image=#{vo.image} 
+		</if>
+		where option_code=#{vo.option_code};
+	</update>
 	
 </mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

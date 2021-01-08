@@ -153,6 +153,20 @@
 </head>
 <body>
 	<div class="w3-content" style="max-width: 1200px; margin-top: 250px">
+		<div class="main_list" >
+				<!-- 상단 제목 -->
+				<div class="main_title">
+					<p></p>
+					<h2>옵션 선택</h2>
+					<p><br/></p>
+				</div>
+				<!-- 리스트 -->
+				<div class="list_start">
+					<div class="list_detail">
+					</div>
+				</div>
+		</div>
+					
 		<div class="order_con">
 			<form id="myform" method="post">
 				<table class="table table-bordered">

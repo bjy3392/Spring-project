@@ -3,8 +3,9 @@ package com.spring.bae2020.service;
 import java.util.List;
 
 import com.spring.bae2020.vo.CartVo;
+import com.spring.bae2020.vo.CategoryVo;
 import com.spring.bae2020.vo.ItemVo;
-import com.spring.bae2020.vo.OptionVo;
+import com.spring.bae2020.vo.OptionsVo;
 import com.spring.bae2020.vo.OrdersVo;
 import com.spring.bae2020.vo.ProductVo;
 
@@ -12,11 +13,13 @@ public interface OrderService {
 
 	List<ProductVo> findProductAll();
 
-	List<ProductVo> findProductByCategory(List<ProductVo> vos, String category);
+	List<CategoryVo> findCategoryByCode(String classify);
+	
+	List<ProductVo> findProductByCategory(String category);
 
-	List<OptionVo> findOptionAll();
+	List<OptionsVo> findOptionAll();
 
-	List<OptionVo> findOptionByCategory(List<OptionVo> vos, String category);
+	List<OptionsVo> findOptionByCategory(List<OptionsVo> vos, String category);
 
 	ProductVo findProductByCode(String product_code);
 
@@ -43,5 +46,6 @@ public interface OrderService {
 	void deleteOrderByIdx(String mid, String order_idx);
 
 	void deleteItemByIdx(String order_idx);
+
 
 }

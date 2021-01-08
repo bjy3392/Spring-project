@@ -5,8 +5,9 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.spring.bae2020.vo.CartVo;
+import com.spring.bae2020.vo.CategoryVo;
 import com.spring.bae2020.vo.ItemVo;
-import com.spring.bae2020.vo.OptionVo;
+import com.spring.bae2020.vo.OptionsVo;
 import com.spring.bae2020.vo.OrdersVo;
 import com.spring.bae2020.vo.ProductVo;
 
@@ -14,8 +15,10 @@ public interface OrderDao {
 
 	List<ProductVo> findProductAll();
 
-	List<OptionVo> findOptionAll();
+	List<OptionsVo> findOptionAll();
 
+	List<CategoryVo> findCategoryByCode(@Param("classify")String classify);
+	
 	ProductVo findProductByCode(@Param("product_code") String product_code);
 	
 	void insertCart(@Param("mid")String mid, @Param("product")String product, @Param("options")String options, @Param("price")String price);
@@ -41,6 +44,9 @@ public interface OrderDao {
 	void deleteOrderByIdx(@Param("mid")String mid, @Param("order_idx")String order_idx);
 
 	void deleteItemByIdx(@Param("order_idx")String order_idx);
+
+	List<ProductVo> findProductByCategory(@Param("category")String category);
+
 
 
 }
