@@ -9,16 +9,16 @@
 	<title>title</title>
 	<script src="https://use.fontawesome.com/releases/v5.2.0/js/all.js"></script>
 	<script>
-		function insertCategoryAjax(){
+		function insertSubcategoryAjax(){
 			if($('#first_code').val().trim() == ""){
 				alert("코드를 입력하세요.");
 				$("#first_code").focus();
 				return false;
 			}
 			
-			if($('#category_name').val().trim() == ""){
+			if($('#subcategory_name').val().trim() == ""){
 				alert("이름을 입력하세요.");
-				$("#category_name").focus();
+				$("#subcategory_name").focus();
 				return false;
 			}
 			
@@ -28,18 +28,20 @@
 			}
 			else{
 				var first_code = $('#first_code').val();
-				var category_name = $('#category_name').val();
+				var category_code = $('#category_code').val();
+				var subcategory_name = $('#subcategory_name').val();
 				
 				
-				var category={
+				var subcategory={
 					first_code : first_code,
-					category_name : category_name
+					category_code : category_code,
+					subcategory_name : subcategory_name
 				}
 				
 				 $.ajax({
-					url: "${contextPath}/admin/insertCategoryAjax",
+					url: "${contextPath}/admin/insertSubcategoryAjax",
 					type: "post",
-					data: category,
+					data: subcategory,
 					success:function(data){	
 						alert("입력 되었습니다.");
 						location.reload();
@@ -48,31 +50,31 @@
 			}
 		}
 		
-		function editCategory(idx){
+		function editSubcategory(idx){
 			$("#first_code_"+idx).prop("disabled", false);
-			$("#category_name_"+idx).prop("disabled", false);
-			$("#span_"+idx).html("<button class='w3-round-xlarge' id='btn_str' onclick='javascript: updateCategoryAjax("+idx+")'>적용</button>"+
+			$("#subcategory_name_"+idx).prop("disabled", false);
+			$("#span_"+idx).html("<button class='w3-round-xlarge' id='btn_str' onclick='javascript: updateSubcategoryAjax("+idx+")'>적용</button>"+
 					"<button class='w3-round-xlarge' id='btn_str' onclick='cancelEdit("+idx+")'>취소</button>");
 		}
 		
 		function cancelEdit(idx){
 			$("#first_code_"+idx).prop("disabled", true);
-			$("#category_name_"+idx).prop("disabled", true);
-			$("#span_"+idx).html("<button class='w3-round-xlarge' id='btn_str' onclick='editCategory("+idx+")'>편집</button>"+
-        						  "<button class='w3-round-xlarge' id='btn_str' onclick='deleteCategoryAjax("+idx+")'>삭제</button>");
+			$("#subcategory_name_"+idx).prop("disabled", true);
+			$("#span_"+idx).html("<button class='w3-round-xlarge' id='btn_str' onclick='editSubcategory("+idx+")'>편집</button>"+
+        						  "<button class='w3-round-xlarge' id='btn_str' onclick='deleteSubcategoryAjax("+idx+")'>삭제</button>");
 		}
 		
 		
-		function updateCategoryAjax(idx){
+		function updateSubcategoryAjax(idx){
 			if($('#first_code_'+idx).val().trim() == ""){
 				alert("코드를 입력하세요.");
 				$('#first_code_'+idx).focus();
 				return false;
 			}
 			
-			if($('#category_name_'+idx).val().trim() == ""){
+			if($('#subcategory_name_'+idx).val().trim() == ""){
 				alert("이름을 입력하세요.");
-				$('#category_name_'+idx).focus();
+				$('#subcategory_name_'+idx).focus();
 				return false;
 			}
 			
@@ -82,19 +84,19 @@
 			}
 			else{
 				var first_code = $("#first_code_"+idx).val();
-				var category_name = $("#category_name_"+idx).val();
-				var category_code = $("#category_code_"+idx).val();
+				var subcategory_name = $("#subcategory_name_"+idx).val();
+				var subcategory_code = $("#subcategory_code_"+idx).val();
 				
-				var category={
+				var subCategory={
 					first_code : first_code,
-					category_name : category_name,
-					category_code : category_code
+					subcategory_name : subcategory_name,
+					subcategory_code : subcategory_code
 				}
 				
 				 $.ajax({
-					url: "${contextPath}/admin/updateCategoryAjax",
+					url: "${contextPath}/admin/updateSubcategoryAjax",
 					type: "post",
-					data: category,
+					data: subCategory,
 					success:function(data){	
 						alert("적용 되었습니다.");
 						location.reload();
@@ -103,22 +105,22 @@
 			}
 		}
 		
-		function deleteCategoryAjax(idx){
+		function deleteSubcategoryAjax(idx){
 			var res = confirm("삭제하시겠습니까?");
 			if(!res){
 				return ;
 			}
 			else{
-				var category_code = $("#category_code_"+idx).val();
+				var subcategory_code = $("#subcategory_code_"+idx).val();
 				
-				var category={
-					category_code : category_code
+				var subcategory={
+						subcategory_code : subcategory_code
 				}
 				
 				 $.ajax({
-					url: "${contextPath}/admin/deleteCategoryAjax",
+					url: "${contextPath}/admin/deleteSubcategoryAjax",
 					type: "post",
-					data: category,
+					data: subcategory,
 					success:function(data){	
 						alert("삭제 되었습니다.");
 						location.reload();
@@ -233,6 +235,17 @@
 			color: #fff;
 			padding: 12px;
 		}
+		.icon_btn{
+			padding: 0;
+			font-size: 30px;
+			margin: 0px 0px 0 0;
+			padding: 6px 15px;
+			cursor: pointer;
+			font-weight: bold;
+			border: none;
+			background: none; 
+			color:#009223;
+		}
 	</style>
 	
 </head>
@@ -242,19 +255,14 @@
 		 	<!-- 상단 제목 -->
 			<div class="main_title">
 				<p></p>
-				<h2>카테고리</h2>
+				<h2>옵션 카테고리</h2>
 				<p><br/><br/></p>
 			</div>
 
             <div class="list_start">
               	<div class="list_detail">
-                 	<%-- <table id="bar_table">
-						<tr>
-							<td id="bar_td_select" >제품</td>
-							<td id="bar_td" onclick="location.href='${contextPath}/order/viewOrderList'">옵션</td>
-						</tr>
-					</table>
-					<p><br/></p> --%>
+                 	<p></p>
+                 	<button type="button" class="w3-round-xlarge icon_btn" id="back" onclick="window.history.back()"><i class="fas fa-reply"></i></button><label for="back">뒤로가기</label>
                   	<div id="content_input">
                     	<table>
                         	<tr>
@@ -266,21 +274,22 @@
                             <c:forEach var="vo" items="${vos }" varStatus="status">
 	                            <tr>
 	                                <td><input type="text" id="first_code_${status.count}" value="${vo.first_code }" maxlength="10" disabled></td>
-	                                <td><input type="text" id="category_name_${status.count}" value="${vo.category_name }" maxlength="20" disabled></td>
+	                                <td><input type="text" id="subcategory_name_${status.count}" value="${vo.subcategory_name }" maxlength="20" disabled></td>
 	                                <td>
-	                                	<span id="span_${status.count}"><button class="w3-round-xlarge" id="btn_str" onclick="editCategory(${status.count})">편집</button>
-	                                	<button class="w3-round-xlarge" id="btn_str" onclick="deleteCategoryAjax(${status.count})">삭제</button></span>
+	                                	<span id="span_${status.count}"><button class="w3-round-xlarge" id="btn_str" onclick="editSubcategory(${status.count})">편집</button>
+	                                	<button class="w3-round-xlarge" id="btn_str" onclick="deleteSubcategoryAjax(${status.count})">삭제</button></span>
 	                                </td>
 	                                <td>
-	                                	<button id="icon_btn" onclick="location.href='${contextPath}/admin/viewProductEdit?category_code=${vo.category_code }'"><i class="fas fa-arrow-circle-right"></i>${vo.category_name }항목관리</button>
+	                                	<button id="icon_btn" onclick="location.href='${contextPath}/admin/viewOptionEdit?subcategory_code=${vo.subcategory_code }'"><i class="fas fa-arrow-circle-right"></i>${vo.subcategory_name }항목관리</button>
 	                                </td>
 	                            </tr>
-	                            <input type="hidden" id="category_code_${status.count}" value="${vo.category_code }">
+	                            <input type="hidden" id="subcategory_code_${status.count}" value="${vo.subcategory_code }">
                             </c:forEach>
                             <tr>
                             	<td><input type="text" id="first_code" maxlength="10"></td>
-                            	<td><input type="text" id="category_name" maxlength="20"></td>
-                          		<td><button class="w3-round-xlarge" onclick="insertCategoryAjax()" id="btn">추가</button></td>
+                            	<td><input type="text" id="subcategory_name" maxlength="20"></td>
+                          		<td><button class="w3-round-xlarge" onclick="insertSubcategoryAjax()" id="btn">추가</button></td>
+	                            <input type="hidden" id="category_code" value="${category_code }">
                           	</tr>
                       	</table>
                   	</div>

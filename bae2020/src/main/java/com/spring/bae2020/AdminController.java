@@ -14,7 +14,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.spring.bae2020.service.AdminService;
 import com.spring.bae2020.vo.CategoryVo;
+import com.spring.bae2020.vo.OptionsVo;
 import com.spring.bae2020.vo.ProductVo;
+import com.spring.bae2020.vo.SubcategoryVo;
 
 @Controller
 @RequestMapping("/admin")
@@ -26,7 +28,8 @@ public class AdminController {
 	
 	@RequestMapping(value="/viewCategoryEdit", method = RequestMethod.GET)
 	public String viewCategoryEditGet(Model model) {
-		List<CategoryVo> vos =  adminService.findCategoryByCode("prod");
+		List<CategoryVo> vos =  adminService.findCategory();
+		
 		model.addAttribute("vos", vos);
 		
 		return "admin/categoryEdit";
@@ -39,7 +42,6 @@ public class AdminController {
 		first_code = first_code.toUpperCase().trim();
 		adminService.insertCategory(category_name,first_code,mid);
 		 
-		  
 		return "";
 	}
 	
@@ -49,7 +51,6 @@ public class AdminController {
 		first_code = first_code.toUpperCase().trim();
 		adminService.updateCategory(category_name,first_code,category_code);
 		 
-		  
 		return "";
 	} 
 	
@@ -66,7 +67,9 @@ public class AdminController {
 	public String viewProductEditGet(Model model, String category_code) {
 		model.addAttribute("category_code", category_code);
 		
-		List<ProductVo> vos = adminService.findProductByCode(category_code);
+		List<ProductVo> vos = adminService.findProductByCategory(category_code);
+		
+		model.addAttribute("category_code", category_code);
 		model.addAttribute("vos", vos);
 		
 		return "admin/productEdit";
@@ -77,7 +80,7 @@ public class AdminController {
 	public String insertProductAjaxPost(HttpSession session, MultipartFile file, ProductVo vo) {
 		String mid = (String)session.getAttribute("smid");
 		vo.setUser_id(mid);
-		System.out.println(vo);
+		
 		adminService.insertProduct(file,vo);
 		
 		return "";
@@ -100,6 +103,86 @@ public class AdminController {
 		
 		return "";
 	}
+	
+	@RequestMapping(value="/viewSubcategoryEdit", method = RequestMethod.GET)
+	public String viewSubcategoryEditGet(Model model, String category_code) {
+		
+		List<SubcategoryVo> vos =  adminService.findSUbcategoryBycategory(category_code);
+		
+		model.addAttribute("category_code", category_code);
+		model.addAttribute("vos", vos);
+		
+		return "admin/subcategoryEdit";
+	}
+	
+	@RequestMapping(value="/insertSubcategoryAjax", method = RequestMethod.POST)
+	@ResponseBody
+	public String insertSubcategoryAjaxPost(HttpSession session, String first_code,String category_code, String subcategory_name) {
+		String mid = (String)session.getAttribute("smid");
+		first_code = first_code.toUpperCase().trim();
+		adminService.insertSubcategory(category_code,subcategory_name,first_code,mid);
+		 
+		return "";
+	}
+	
+	@RequestMapping(value="/updateSubcategoryAjax", method = RequestMethod.POST)
+	@ResponseBody
+	public String updateSubcategoryAjaxPost(String first_code, String subcategory_name, String subcategory_code) {
+		first_code = first_code.toUpperCase().trim();
+		adminService.updateSubcategory(subcategory_name,first_code,subcategory_code);	 
+		  
+		return "";
+	}
+
+	@RequestMapping(value="/deleteSubcategoryAjax", method = RequestMethod.POST)
+	@ResponseBody
+	public String deleteSubcategoryAjaxPost(String subcategory_code) {
+		
+		adminService.deleteSubcategory(subcategory_code);
+		 
+		return "";
+	}
+	
+	@RequestMapping(value="/viewOptionEdit", method = RequestMethod.GET)
+	public String viewOptionEditGet(Model model, String subcategory_code) {
+		model.addAttribute("subcategory_code", subcategory_code);
+		List<ProductVo> vos = adminService.findOptionBySubcategory(subcategory_code);
+		
+		model.addAttribute("subcategory_code", subcategory_code);
+		model.addAttribute("vos", vos);
+		
+		return "admin/optionEdit";
+	}
+	
+	@RequestMapping(value="/insertOptionAjax", method = RequestMethod.POST)
+	@ResponseBody
+	public String insertOptionAjaxPost(HttpSession session, MultipartFile file, OptionsVo vo) {		
+		String mid = (String)session.getAttribute("smid");
+		vo.setUser_id(mid);
+		
+		adminService.insertOption(file,vo);
+		
+		return "";
+	}
+	
+	@RequestMapping(value="/updateOptionAjax", method = RequestMethod.POST)
+	@ResponseBody
+	public String updateOptionAjaxPost(MultipartFile file, OptionsVo vo) {
+		
+		adminService.updateOption(file,vo);
+		
+		return "";
+	}
+	
+//	@RequestMapping(value="/deleteProductAjax", method = RequestMethod.POST)
+//	@ResponseBody
+//	public String deleteProductAjaxPost(String product_code) {
+//		
+//		adminService.deleteProduc(product_code);
+//		
+//		return "";
+//	}
+	
 }
 
 

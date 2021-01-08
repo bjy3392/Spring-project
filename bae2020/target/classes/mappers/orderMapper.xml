@@ -6,12 +6,24 @@
 		select * from product ;
 	</select> 
 	
-	<select id="findOptionAll" resultType="com.spring.bae2020.vo.OptionVo">
+	<!-- <select id="findOptionAll" resultType="com.spring.bae2020.vo.OptionVo">
 		select * from option_tbl ;
+	</select>  -->
+	
+	<!-- <select id="findProductByCode" resultType="com.spring.bae2020.vo.ProductVo">
+		select * from product where product_code = #{product_code};
+	</select> -->
+	
+	<select id="findCategoryByCode" resultType="com.spring.bae2020.vo.CategoryVo">
+		select * from category where category_code like concat(#{classify}, '%') order by category_code;
 	</select> 
 	
-	<select id="findProductByCode" resultType="com.spring.bae2020.vo.ProductVo">
-		select * from product where product_code = #{product_code};
+	<select id="findProductByCategory" resultType="com.spring.bae2020.vo.ProductVo">
+		select prod.*, ctg.first_code 
+		  from product prod
+		 inner join category ctg
+		    on prod.category_code = ctg.category_code
+		 where prod.category_code = #{category};
 	</select>
 	
 	<insert id="insertCart">

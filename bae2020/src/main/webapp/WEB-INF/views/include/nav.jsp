@@ -54,7 +54,7 @@
 		      	<a href="${contextPath }" class="w3-bar-item w3-button w3-padding-large">HOME</a>
 		    </li>
 		    <li class="nav-item">
-		      	<a href="${contextPath }/order/viewProductList" class="w3-bar-item w3-button w3-padding-large w3-hide-small">ORDER</a>
+		      	<a href="${contextPath }/order/viewProductList/PROD-001" class="w3-bar-item w3-button w3-padding-large w3-hide-small">ORDER</a>
 		    </li>
 		    <li class="nav-item">
 		       	<a href="${contextPath }/order/viewCartList" class="w3-bar-item w3-button w3-padding-large w3-hide-small">CART</a>

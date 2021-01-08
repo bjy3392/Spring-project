@@ -8,8 +8,9 @@ import org.springframework.stereotype.Service;
 
 import com.spring.bae2020.dao.OrderDao;
 import com.spring.bae2020.vo.CartVo;
+import com.spring.bae2020.vo.CategoryVo;
 import com.spring.bae2020.vo.ItemVo;
-import com.spring.bae2020.vo.OptionVo;
+import com.spring.bae2020.vo.OptionsVo;
 import com.spring.bae2020.vo.OrdersVo;
 import com.spring.bae2020.vo.ProductVo;
 
@@ -23,34 +24,44 @@ public class OrderServiceImp implements OrderService {
 		return orderDao.findProductAll();
 	}
 
+//	@Override
+//	public List<ProductVo> findProductByCategory(List<ProductVo> vos, String category) {
+//		List<ProductVo> product = new ArrayList<ProductVo>();
+//		
+//		for(int i=0; i<vos.size(); i++) {
+//			ProductVo vo =vos.get(i);
+//			if(vo.getCategory_code().equals(category)) {
+//				product.add(vo);
+//			}
+//		}
+//		return product;
+//	}
 	@Override
-	public List<ProductVo> findProductByCategory(List<ProductVo> vos, String category) {
-		List<ProductVo> product = new ArrayList<ProductVo>();
-		
-		for(int i=0; i<vos.size(); i++) {
-			ProductVo vo =vos.get(i);
-			if(vo.getCategory_code().equals(category)) {
-				product.add(vo);
-			}
-		}
-		return product;
+	public List<CategoryVo> findCategoryByCode(String classify) {
+		return orderDao.findCategoryByCode(classify);
 	}
-
+	
 	@Override
-	public List<OptionVo> findOptionAll() {
+	public List<ProductVo> findProductByCategory(String category) {
+		return orderDao.findProductByCategory(category);
+	}
+	
+	@Override
+	public List<OptionsVo> findOptionAll() {
 		return orderDao.findOptionAll();
 	}
 
 	@Override
-	public List<OptionVo> findOptionByCategory(List<OptionVo> vos, String category) {
-		List<OptionVo> option = new ArrayList<OptionVo>();
+	public List<OptionsVo> findOptionByCategory(List<OptionsVo> vos, String category) {
+		List<OptionsVo> option = new ArrayList<OptionsVo>();
 		
-		for(int i=0; i<vos.size(); i++) {
-			OptionVo vo =vos.get(i);
-			if(vo.getCategory_code().equals(category)) {
-				option.add(vo);
-			}
-		}
+//		for(int i=0; i<vos.size(); i++) {
+//			OptionsVo vo =vos.get(i);
+//			if(vo.getCategory_code().equals(category)) {
+//				option.add(vo);
+//			}
+//		}
+		
 		return option;
 	}
 
@@ -119,6 +130,7 @@ public class OrderServiceImp implements OrderService {
 		orderDao.deleteItemByIdx(order_idx);		
 	}
 
+	
 
 	
 }

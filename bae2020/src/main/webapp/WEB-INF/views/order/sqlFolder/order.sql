@@ -73,4 +73,5 @@ on item.product = prod.product_code
 where orders.state <> 'state0'
 
 
+select * from cart
 

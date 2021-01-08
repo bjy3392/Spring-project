@@ -7,17 +7,20 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.spring.bae2020.service.AdminService;
 import com.spring.bae2020.service.OrderService;
 import com.spring.bae2020.vo.CartVo;
+import com.spring.bae2020.vo.CategoryVo;
 import com.spring.bae2020.vo.ItemVo;
-import com.spring.bae2020.vo.OptionVo;
 import com.spring.bae2020.vo.OrdersVo;
 import com.spring.bae2020.vo.ProductVo;
+import com.spring.bae2020.vo.SubcategoryVo;
 
 @Controller
 @RequestMapping("/order")
@@ -26,32 +29,47 @@ public class OrderController {
 	@Autowired
 	OrderService orderService;
 	
-	@RequestMapping(value="/viewProductList", method = RequestMethod.GET)
-	public String viewProductListGet(Model model) {
-		List<ProductVo> vos  = orderService.findProductAll();
-		List<ProductVo> vosM = orderService.findProductByCategory(vos,"m");
+	@Autowired
+	AdminService adminService;
+	
+	@RequestMapping(value="/viewProductList/{category}", method = RequestMethod.GET)
+	public String viewProductListGet(@PathVariable String category, Model model) {
+		//List<ProductVo> vos  = orderService.findProductAll();
+		//List<ProductVo> vosM = orderService.findProductByCategory(vos,"m");
 		
-		model.addAttribute("vos", vosM);
+		List<CategoryVo> vosC =  adminService.findCategory();
+		List<ProductVo> vos = adminService.findProductByCategory(category);
+
+		model.addAttribute("vosC", vosC);
+		model.addAttribute("vos", vos);
+		
+		String product_code = vos.get(0).getProduct_code();
+		String first_code = product_code.substring(0,product_code.lastIndexOf("-"));
+		model.addAttribute("first_code", first_code);
 		
 		return "order/productList";
 	}
 	
-	@RequestMapping(value="/viewOptionList", method = RequestMethod.GET)
-	public String viewOptionListGet(Model model, String product_code ) {
+	@RequestMapping(value="/viewOptionList/{category}", method = RequestMethod.GET)
+	public String viewOptionListGet(@PathVariable String category, Model model, String product_code ) {
 
-		List<OptionVo> vos  = orderService.findOptionAll(); //한번에 모든 옵션을 가져와서 분류할때는 DB에 다녀오지 않고 분류
-		ProductVo prod = orderService.findProductByCode(product_code);
+		//List<SubcategoryVo> vos =  adminService.findSUbcategoryBycategory(category_code);
+		//List<ProductVo> vos = adminService.findOptionBySubcategory(subcategory_code);
 		
-		List<OptionVo> vosB = orderService.findOptionByCategory(vos,"b");
-		List<OptionVo> vosV = orderService.findOptionByCategory(vos,"v");
-		List<OptionVo> vosS = orderService.findOptionByCategory(vos,"s");
-		List<OptionVo> vosA = orderService.findOptionByCategory(vos,"a");
 		
-		model.addAttribute("prod", prod);
-		model.addAttribute("vosB", vosB);
-		model.addAttribute("vosV", vosV);
-		model.addAttribute("vosS", vosS);
-		model.addAttribute("vosA", vosA);
+//		List<OptionsVo> vos  = orderService.findOptionAll(); //한번에 모든 옵션을 가져와서 분류할때는 DB에 다녀오지 않고 분류
+//		ProductVo prod = orderService.findProductByCode(product_code);
+//		
+//		List<OptionsVo> vosB = orderService.findOptionByCategory(vos,"b");
+//		List<OptionsVo> vosV = orderService.findOptionByCategory(vos,"v");
+//		List<OptionsVo> vosS = orderService.findOptionByCategory(vos,"s");
+//		List<OptionsVo> vosA = orderService.findOptionByCategory(vos,"a");
+//		
+//		model.addAttribute("prod", prod);
+//		model.addAttribute("vosB", vosB);
+//		model.addAttribute("vosV", vosV);
+//		model.addAttribute("vosS", vosS);
+//		model.addAttribute("vosA", vosA);
 		
 		return "order/optionList";
 	}

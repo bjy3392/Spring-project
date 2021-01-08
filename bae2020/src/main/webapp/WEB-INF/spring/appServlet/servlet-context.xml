@@ -18,6 +18,10 @@
 	<!-- content 폴더 아래 이미지를 참조한다. -->
 	<resources mapping="/content/**" location="/resources/content/" />
 	
+	<!-- 제품/옵션 폴더 아래 이미지를 참조한다. -->
+	<resources mapping="/product/**" location="/resources/prod/" />
+	<resources mapping="/option/**" location="/resources/opt/" />
+	
 	<!-- 비밀번호 암호화를 위한 설정 -->
 	<beans:bean id="bcryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
 

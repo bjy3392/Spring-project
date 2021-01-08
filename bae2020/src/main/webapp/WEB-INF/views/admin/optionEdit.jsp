@@ -9,7 +9,7 @@
 	<title>title</title>
 	<script src="https://use.fontawesome.com/releases/v5.2.0/js/all.js"></script>
 	<script>
-		function insertProductAjax(){
+		function insertOptionAjax(){
 			var res = confirm("추가하시겠습니까?");
 			if(!res){
 				return;
@@ -23,7 +23,7 @@
 					var formData = new FormData($('#myform')[0]);
 					
 					$.ajax({
-						url: "${contextPath}/admin/insertProductAjax",
+						url: "${contextPath}/admin/insertOptionAjax",
 						enctype: "multipart/form-data",
 						type: "post",
 						data: formData, 
@@ -38,26 +38,26 @@
 			}
 		} 
 		
-		function editProduct(idx){
+		function editOption(idx){
 		
-			$("#product_name_"+idx).prop("disabled", false);
+			$("#option_name_"+idx).prop("disabled", false);
 			$("#price_"+idx).prop("disabled", false);
 			$("#file_"+idx).attr("type", "file");
 			$("#fileSpan_"+idx).html("") 
-			$("#span_"+idx).html("<button class='w3-round-xlarge' id='btn_str' onclick='updateProductAjax("+idx+")'>적용</button>"+
+			$("#span_"+idx).html("<button class='w3-round-xlarge' id='btn_str' onclick='updateOptionAjax("+idx+")'>적용</button>"+
 					"<button class='w3-round-xlarge' id='btn_str' onclick='cancelEdit("+idx+")'>취소</button>");
 		}
 		
 		function cancelEdit(idx){
-			$("#product_name_"+idx).prop("disabled", true);
+			$("#option_name_"+idx).prop("disabled", true);
 			$("#price_"+idx).prop("disabled", true);
 			$("#file_"+idx).attr("type", "hidden");
 			$("#fileSpan_"+idx).html("<button type='button' class='w3-round-xlarge' id='btn_str'>미리보기</button>")
-			$("#span_"+idx).html("<button type='button' class='w3-round-xlarge' id='btn_str' onclick='editProduct("+idx+")'>편집</button>"+
+			$("#span_"+idx).html("<button type='button' class='w3-round-xlarge' id='btn_str' onclick='editOption("+idx+")'>편집</button>"+
       							  "<button type='button' class='w3-round-xlarge' id='btn_str'>삭제</button>");
 		}
 		
-		function updateProductAjax(idx){
+		function updateOptionAjax(idx){
 			var file_name = "#file_"+idx;
 			var file = $(file_name).val();
 			
@@ -67,14 +67,14 @@
 			}
 			else{
 				if(file == ""){
-					var product_name = "#product_name_"+idx;
+					var option_name = "#option_name_"+idx;
 					var price = "#price_"+idx;
 					 $("#fileEx_"+idx).val("false"); 
-					 
+					
 					var regExpNum=/^[0-9]*$/;
-					if($(product_name).val().trim() == ""){
+					if($(option_name).val().trim() == ""){
 						alert("상품명을 입력하세요.");
-						$(product_name).focus();
+						$(option_name).focus();
 						return false;
 					}
 					else if($(price).val().trim() == ""){
@@ -90,7 +90,7 @@
 					var formData = new FormData($('#myform_'+idx)[0]);
 					
 					$.ajax({
-						url: "${contextPath}/admin/updateProductAjax",
+						url: "${contextPath}/admin/updateOptionAjax",
 						enctype: "multipart/form-data",
 						type: "post",
 						data: formData, 
@@ -112,7 +112,7 @@
 						var formData = new FormData($('#myform_'+idx)[0]);
 						
 						$.ajax({
-							url: "${contextPath}/admin/updateProductAjax",
+							url: "${contextPath}/admin/updateOptionAjax",
 							enctype: "multipart/form-data",
 							type: "post",
 							data: formData, 
@@ -128,22 +128,22 @@
 			}
 		}
 		
-		function deleteProductAjax(idx){
+		function deleteOptionAjax(idx){
 			var res = confirm("삭제하시겠습니까?");
 			if(!res){
 				return ;
 			}
 			else{
-				var product_code = $("#product_code_"+idx).val();
+				var option_code = $("#option_code_"+idx).val();
 				
-				var product={
-					product_code : product_code
+				var option={
+					option_code : option_code
 				}
 				
 				 $.ajax({
-					url: "${contextPath}/admin/deleteProductAjax",
+					url: "${contextPath}/admin/deleteOptionAjax",
 					type: "post",
-					data: product,
+					data: option,
 					success:function(data){	
 						alert("삭제 되었습니다.");
 						location.reload();
@@ -157,22 +157,22 @@
 			if(idx==''){
 				var file = myform.file.value; 
 				var file_name = "#file";
-				var product_name = "#product_name";
+				var option_name = "#option_name";
 				var price ="#price";
 			}
 			else{
 				var file_name = "#file_"+idx;
 				var file = $(file_name).val(); 
-				var product_name = "#product_name_"+idx;
+				var option_name = "#option_name_"+idx;
 				var price = "#price_"+idx
 			}
 			var ext = file.substring(file.lastIndexOf(".")+1); //확장자 발췌
 			var uExt = ext.toUpperCase(); //확장자를 대문자로
 			var maxSize = 1024*1024*10; //최대 10MByte
 			
-			if($(product_name).val().trim() == ""){
+			if($(option_name).val().trim() == ""){
 				alert("상품명을 입력하세요.");
-				$(product_name).focus();
+				$(option_name).focus();
 				return false;
 			}
 			else if($(price).val().trim() == ""){
@@ -312,7 +312,7 @@
 		 	<!-- 상단 제목 -->
 			<div class="main_title">
 				<p></p>
-				<h2>제품</h2>
+				<h2>옵션</h2>
 				<p><br/><br/></p>
 			</div>
             <div class="list_start">
@@ -320,7 +320,7 @@
               		<p></p>
               		<button type="button" class="w3-round-xlarge icon_btn" id="back" onclick="window.history.back()"><i class="fas fa-reply"></i></button><label for="back">뒤로가기</label>
               		<c:if test="${category_code=='PROD-001' || category_code=='PROD-003'}">
-              			<span class="w3-right"><label for="option">옵션관리</label><button type="button" class="w3-round-xlarge icon_btn" id="option" onclick="location.href='${contextPath}/admin/viewSubcategoryEdit?category_code=${category_code }'"><i class="fas fa-share"></i></button></span>
+              			<span class="w3-right"><label for="option">옵션관리</label><button type="button" class="w3-round-xlarge icon_btn" id="option" ><i class="fas fa-share"></i></button></span>
               		</c:if>
                   	<div id="content_input">
 	                    	<table>
@@ -333,29 +333,29 @@
 	                            <c:forEach var="vo" items="${vos }" varStatus="status">
 		                          	<tr>
 		                          		<form id="myform_${status.count}" method="post"  enctype="multipart/form-data">
-			                              	<td><input type="text" id="product_name_${status.count}" name="product_name" value="${vo.product_name }" maxlength="50" disabled></td>
+			                              	<td><input type="text" id="option_name_${status.count}" name="option_name" value="${vo.option_name }" maxlength="50" disabled></td>
 			                              	<td><input type="text" id="price_${status.count}" name="price" value="${vo.price }" disabled></td>
 			                              	<td>
 			                              	<input type="hidden" id='file_${status.count}' name='file' accept='.zip,.jpg,.gif,.png,.jpeg'>
 			                              	<input type="hidden" id='fileEx_${status.count}' name='fileEx' >
 			                              	<span id="fileSpan_${status.count}"><button type="button" class="w3-round-xlarge" id="btn_str">미리보기</button></span></td>
 			                              	<td>
-			                              		<span id="span_${status.count}"><button type="button" class="w3-round-xlarge" id="btn_str" onclick="editProduct(${status.count})">편집</button>
-			                              		<button type="button" class="w3-round-xlarge" id="btn_str" onclick="deleteProductAjax(${status.count})">삭제</button></span>
+			                              		<span id="span_${status.count}"><button type="button" class="w3-round-xlarge" id="btn_str" onclick="editOption(${status.count})">편집</button>
+			                              		<button type="button" class="w3-round-xlarge" id="btn_str" onclick="deleteOptionAjax(${status.count})">삭제</button></span>
 			                              	</td>
-			                              	<input type="hidden" name="category_code" value="${category_code }"/>
-			                              	<input type="hidden" id="product_code_${status.count}" name="product_code" value="${vo.product_code }"/>
+			                              	<input type="hidden" name="subcategory_code" value="${subcategory_code }"/>
+			                              	<input type="hidden" id="option_code_${status.count}" name="option_code" value="${vo.option_code }"/>
 				                 		</form>
 		                          	</tr>
 	                          	</c:forEach>
 	                          	<tr>
 	                  				<form id="myform" method="post"  enctype="multipart/form-data">
-		                           		<td><input type="text" id="product_name" name="product_name" maxlength="50"></td>
+		                           		<td><input type="text" id="option_name" name="option_name" maxlength="50"></td>
 		                           		<td><input type="text" id="price" name="price"></td>
 		                              	<td><input type="file" id="file" name="file" accept=".zip,.jpg,.gif,.png,.jpeg"></td>
-		                          		<td><button type="button" class="w3-round-xlarge" onclick="insertProductAjax()" id="btn">추가</button>
+		                          		<td><button type="button" class="w3-round-xlarge" onclick="insertOptionAjax()" id="btn">추가</button>
 		                          		</td>
-										<input type="hidden" name="category_code" value="${category_code }"/>
+										<input type="hidden" name="subcategory_code" value="${subcategory_code }"/>
 				                 	</form>   
 	                          	</tr>
 	                        </table>
