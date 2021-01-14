@@ -5,8 +5,12 @@ public class ItemVo {
 	private String order_idx;
 	private String product;
 	private String product_name;
-	private String options;
+	private String option_unit;
+	private String add_unit;
+	private String meat_unit;
 	private String price;
+	private String price_add;
+	private String price_meat;
 	private String cnt;
 	public String getItem_idx() {
 		return item_idx;
@@ -17,11 +21,26 @@ public class ItemVo {
 	public String getProduct() {
 		return product;
 	}
-	public String getOptions() {
-		return options;
+	public String getProduct_name() {
+		return product_name;
+	}
+	public String getOption_unit() {
+		return option_unit;
+	}
+	public String getAdd_unit() {
+		return add_unit;
+	}
+	public String getMeat_unit() {
+		return meat_unit;
 	}
 	public String getPrice() {
 		return price;
+	}
+	public String getPrice_add() {
+		return price_add;
+	}
+	public String getPrice_meat() {
+		return price_meat;
 	}
 	public String getCnt() {
 		return cnt;
@@ -35,17 +54,26 @@ public class ItemVo {
 	public void setProduct(String product) {
 		this.product = product;
 	}
-	public String getProduct_name() {
-		return product_name;
-	}
 	public void setProduct_name(String product_name) {
 		this.product_name = product_name;
 	}
-	public void setOptions(String options) {
-		this.options = options;
+	public void setOption_unit(String option_unit) {
+		this.option_unit = option_unit;
+	}
+	public void setAdd_unit(String add_unit) {
+		this.add_unit = add_unit;
+	}
+	public void setMeat_unit(String meat_unit) {
+		this.meat_unit = meat_unit;
 	}
 	public void setPrice(String price) {
 		this.price = price;
+	}
+	public void setPrice_add(String price_add) {
+		this.price_add = price_add;
+	}
+	public void setPrice_meat(String price_meat) {
+		this.price_meat = price_meat;
 	}
 	public void setCnt(String cnt) {
 		this.cnt = cnt;
@@ -53,8 +81,10 @@ public class ItemVo {
 	@Override
 	public String toString() {
 		return "ItemVo [item_idx=" + item_idx + ", order_idx=" + order_idx + ", product=" + product + ", product_name="
-				+ product_name + ", options=" + options + ", price=" + price + ", cnt=" + cnt + "]";
+				+ product_name + ", option_unit=" + option_unit + ", add_unit=" + add_unit + ", meat_unit=" + meat_unit
+				+ ", price=" + price + ", price_add=" + price_add + ", price_meat=" + price_meat + ", cnt=" + cnt + "]";
 	}
+	
 	
 	
 	

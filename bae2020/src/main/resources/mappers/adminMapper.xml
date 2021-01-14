@@ -46,7 +46,7 @@
 		delete from product where product_code = #{product_code};
 	</delete>
 	
-	<select id="findSUbcategoryBycategory" resultType="com.spring.bae2020.vo.SubcategoryVo">
+	<select id="findSubcategoryBycategory" resultType="com.spring.bae2020.vo.SubcategoryVo">
 		select * from subcategory where category_code = #{category_code};
 	</select> 
 	
@@ -85,6 +85,14 @@
 		</if>
 		where option_code=#{vo.option_code};
 	</update>
+	
+	<select id="findProductByCode" resultType="com.spring.bae2020.vo.ProductVo">
+		select * from product where product_code = #{product_code};
+	</select> 
+	
+	<delete id="deleteOption">
+		delete from options where option_code = #{option_code};
+	</delete>
 	
 </mapper>
 

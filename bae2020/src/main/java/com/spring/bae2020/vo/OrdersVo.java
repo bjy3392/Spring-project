@@ -12,6 +12,7 @@ public class OrdersVo {
 	private String demand;
 	private String store;
 	private String delivery;
+	private String distance;
 	private String coupon;
 	private String point;
 	private String create_dt;
@@ -52,6 +53,9 @@ public class OrdersVo {
 	}
 	public String getDelivery() {
 		return delivery;
+	}
+	public String getDistance() {
+		return distance;
 	}
 	public String getCoupon() {
 		return coupon;
@@ -110,6 +114,9 @@ public class OrdersVo {
 	public void setDelivery(String delivery) {
 		this.delivery = delivery;
 	}
+	public void setDistance(String distance) {
+		this.distance = distance;
+	}
 	public void setCoupon(String coupon) {
 		this.coupon = coupon;
 	}
@@ -138,10 +145,13 @@ public class OrdersVo {
 	public String toString() {
 		return "OrdersVo [order_idx=" + order_idx + ", mid=" + mid + ", total=" + total + ", payment=" + payment
 				+ ", postcode=" + postcode + ", roadAddress=" + roadAddress + ", detailAddress=" + detailAddress
-				+ ", tel=" + tel + ", demand=" + demand + ", store=" + store + ", delivery=" + delivery + ", coupon="
-				+ coupon + ", point=" + point + ", create_dt=" + create_dt + ", update_dt=" + update_dt + ", state="
-				+ state + ", state_name=" + state_name + ", product_name=" + product_name + ", cnt=" + cnt + "]";
+				+ ", tel=" + tel + ", demand=" + demand + ", store=" + store + ", delivery=" + delivery + ", distance="
+				+ distance + ", coupon=" + coupon + ", point=" + point + ", create_dt=" + create_dt + ", update_dt="
+				+ update_dt + ", state=" + state + ", state_name=" + state_name + ", product_name=" + product_name
+				+ ", cnt=" + cnt + "]";
 	}
+	
+	
 	
 	
 	

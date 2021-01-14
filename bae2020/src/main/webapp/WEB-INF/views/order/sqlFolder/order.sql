@@ -8,13 +8,14 @@ create table orders (
 	detailAddress	varchar(50) ,
 	tel				varchar(20) not null,		
 	demand			varchar(100) ,
-	store			varchar(10) not null,
-	delivery		varchar(10) ,
-	coupon			varchar(20) not null default 0,
+	store			varchar(20) not null,
+	delivery		varchar(20) ,
+	distance		int,
+	coupon			varchar(50) not null default 0,
 	point			int	not null default 0,
 	create_dt		datetime default now(),
 	update_dt		datetime default now(),
-	state			varchar(10) not null default 'state0',
+	state			varchar(10) not null default 'state-01',
 	primary key(order_idx)
 );
 ALTER TABLE orders ADD FOREIGN KEY (state)  REFERENCES state(state_code) ON DELETE RESTRICT ON UPDATE CASCADE ;
@@ -23,26 +24,26 @@ ALTER TABLE orders ADD FOREIGN KEY (mid)  REFERENCES user(mid) ON DELETE RESTRIC
 
 select * from orders;
 
-insert into orders value (default, 'admin', 92200,"card",'' ,'' ,'' , '010-4158-3031','' , '미정', '픽업', 0, 0, default, default, default);	
-
+update orders set state='state-04' where order_idx=3
 
 --drop table orders;
-
 
 create table item (
 	item_idx		int not null auto_increment,
 	order_idx		int not null,
-	product			varchar(10) not null,
-	options			varchar(200),
-	price			int not null,
-	cnt				int not null default 1,
+	product		varchar(20) not null,
+	option_unit varchar(200),
+	add_unit 	varchar(100),
+	meat_unit 	varchar(100),
+	price		int not null,
+	price_add	int,
+	price_meat	int,
+	cnt			int not null default 1,
 	primary key(item_idx)
 );
+
+
 --drop table item
-insert into item ( order_idx ,product, options, price, cnt)
-(select 2, product, options, price, cnt from cart where cart_idx in (28,29))
-
-
 ALTER TABLE item ADD FOREIGN KEY (order_idx)  REFERENCES orders(order_idx) ON DELETE RESTRICT ON UPDATE CASCADE ;
 ALTER TABLE item ADD FOREIGN KEY (product)  REFERENCES product(product_code) ON DELETE RESTRICT ON UPDATE CASCADE ;
 --ALTER TABLE order_detail ADD FOREIGN KEY (option_code)  REFERENCES option_tbl(option_code) ON DELETE RESTRICT ON UPDATE CASCADE ;
@@ -72,6 +73,48 @@ inner join product prod
 on item.product = prod.product_code
 where orders.state <> 'state0'
 
+select '3' as order_idx, product, option_unit, add_unit, meat_unit, price, price_add,price_meat, cnt 
+  	from cart 
+  	where cart_idx =2
+
+
+
 
 select * from cart
 
+create table cart(
+	cart_idx 	int not null auto_increment,
+	mid 		varchar(20) not null,
+	product		varchar(20) not null,
+	option_unit varchar(200),
+	add_unit 	varchar(100),
+	meat_unit 	varchar(100),
+	price		int not null,
+	price_add	int,
+	price_meat	int,
+	cnt			int not null default 1,
+	create_dt		datetime default now(),
+	update_dt		datetime default now(),
+	primary key(cart_idx)
+);
+
+desc cart
+
+insert into cart value (default, 'admin', 'COOKIE-002', '', '', '', 1000, 0,'', default, default, default);
+	
+--drop table cart;
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		

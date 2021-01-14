@@ -80,51 +80,43 @@
 		
 		//삭제버튼 클릭시
 		function deleteCartAjax(idx){
-			var chkbox = document.getElementsByName("chkProd");
-			var chkCnt = 0;
-			for(var i=0;i<chkbox.length; i++){
-				if(chkbox[i].checked){
-					chkCnt++;
+			if(count_ck()){
+				var res = confirm("선택한 항목을 삭제하시겠습니까?");
+				if(!res){
+					return;
+				}
+				else{
+					var count = document.getElementsByName("chkProd").length;
+					var arrayCartIdx = [];
+			        for (var i=0; i<count; i++) {
+			            if (document.getElementsByName("chkProd")[i].checked == true) {
+			            	var chkProd = document.getElementsByName("chkProd")[i].value;
+			            	chkProd = chkProd.split("/")[1];
+			            	arrayCartIdx.push(chkProd);
+			            }
+			        }
+			        
+			        var cart ={
+			        		arrayCartIdx: arrayCartIdx
+					    };
+			        
+			       $.ajax({
+						url: "${contextPath}/order/deleteCartAjax",
+						type: "post",
+						data: cart,
+						success:function(data){	
+							alert("선택한 항목이 삭제 되었습니다.")
+							for(var idx in arrayCartIdx){
+								$("#cart_"+arrayCartIdx[idx]).remove();					
+							}
+							calcPrice();
+						}
+					});  
 				}
 			}
-			if(chkCnt<1){
-				alert("1개이상 선택해주세요.");
+			else{
 				return false;
 			}
-			var res = confirm("선택한 항목을 삭제하시겠습니까?");
-			if(!res){
-				return;
-			}
-			else{
-				var count = document.getElementsByName("chkProd").length;
-				var arrayCartIdx = [];
-		        for (var i=0; i<count; i++) {
-		            if (document.getElementsByName("chkProd")[i].checked == true) {
-		            	var chkProd = document.getElementsByName("chkProd")[i].value;
-		            	chkProd = chkProd.split("/")[1];
-		            	arrayCartIdx.push(chkProd);
-		            }
-		        }
-		        
-		        var cart ={
-		        		arrayCartIdx: arrayCartIdx
-				    };
-		        
-		        
-		       $.ajax({
-					url: "${contextPath}/order/deleteCartAjax",
-					type: "post",
-					data: cart,
-					success:function(data){	
-						alert("선택한 항목이 삭제 되었습니다.")
-						for(var idx in arrayCartIdx){
-							$("#cart_"+arrayCartIdx[idx]).remove();					
-						}
-						calcPrice();
-					}
-				});  
-			}
-			
 		}
 		
 		//개수가 변할때 화면에 보이는 가격과 개수를 변경해준다.
@@ -172,29 +164,23 @@
 		
 		//주문하기
 		function viewOrder(){
-			var chkbox = document.getElementsByName("chkProd");
-			var chkCnt = 0;
-			for(var i=0;i<chkbox.length; i++){
-				if(chkbox[i].checked){
-					chkCnt++;
-				}
+			if(count_ck()){
+				var count = document.getElementsByName("chkProd").length;
+				var arrayCartIdx = [];
+				
+		        for (var i=0; i<count; i++) {
+		            if (document.getElementsByName("chkProd")[i].checked == true) {
+		            	var chkProd = document.getElementsByName("chkProd")[i].value;
+		            	chkProd = chkProd.split("/")[1];
+		            	arrayCartIdx.push(chkProd);
+		            }
+		        }
+		        $("#arrayIdx").val(arrayCartIdx); 
+		        myform.submit();
 			}
-			if(chkCnt<1){
-				alert("1개이상 선택해주세요.");
+			else{
 				return false;
 			}
-			var count = document.getElementsByName("chkProd").length;
-			var arrayCartIdx = [];
-			
-	        for (var i=0; i<count; i++) {
-	            if (document.getElementsByName("chkProd")[i].checked == true) {
-	            	var chkProd = document.getElementsByName("chkProd")[i].value;
-	            	chkProd = chkProd.split("/")[1];
-	            	arrayCartIdx.push(chkProd);
-	            }
-	        }
-	        $("#arrayCartIdx").val(arrayCartIdx); 
-	        myform.submit();
 			
 		}
 		
@@ -210,6 +196,9 @@
 			if(chkCnt<1){
 				alert("1개이상 선택해주세요.");
 				return false;
+			}
+			else{
+				return true;
 			}
 		}
 		
@@ -313,16 +302,18 @@
 					  	<div class="w3-row w3-padding-10 w3-white" id="cart_${vo.cart_idx }">
 				    		<div class="w3-col l6 w3-padding-large">
 				    			<p></p>
-				      			<input type="checkbox" id="chkProd_${vo.cart_idx }" name="chkProd" value="${vo.price * vo.cnt }/${vo.cart_idx }" onclick="checkEach();" style="float:left;"><h2 class="w3-center">${vo.product_name }</h2><br>
-				      			<p class="w3-text-grey">옵션: ${vo.options }</p><br>
-				      			<div style="font-size: 30px; color:#009223; width:200px; align:center;">
+				      			<input type="checkbox" id="chkProd_${vo.cart_idx }" name="chkProd" value="${(vo.price+vo.price_add+vo.price_meat ) * vo.cnt }/${vo.cart_idx }" onclick="checkEach();" style="float:left;"><h2 class="w3-center">${vo.product_name }</h2><br>
+				      			<p class="w3-text-grey">옵션: ${vo.option_unit }</p>
+				      			<p class="w3-text-grey">추가: ${vo.add_unit }</p>
+				      			<p class="w3-text-grey">미트: ${vo.meat_unit }</p><br/>
+				      			<div style="font-size: 30px; color:#009223; width:200px; ">
 							      	<button id="icon_btn" onclick="deleteOrderAjax('${vo.cart_idx }');"><i class="fas fa-minus-circle"></i></button>
 							      	<span id="txtCnt_${vo.cart_idx }">${vo.cnt }</span>
 							      	<button id="icon_btn" onclick="insertOrderAjax('${vo.cart_idx }');"><i class="fas fa-plus-circle"></i></button> 
 							    </div>
 					      	</div>
 				    		<div class="w3-col l6 w3-padding-large">
-				      			<img src="${contextPath }/content/${vo.image}" class="w3-round w3-image" alt="Menu" style="width: 300px">
+				      			<img src="${contextPath }/product/${vo.category_code }/${vo.image}" class="w3-round w3-image" alt="Menu" style="width: 300px">
 				    		</div>
 				    		<div class="w3-col" style="padding:0px; margin:0px; line-height:0">
 				    			<hr style="width:80%; text-align:center; padding:0px; margin: 0px auto;"/>
@@ -330,9 +321,10 @@
 				    		<div class="w3-col l6 w3-padding-small">
 				    		</div>
 				    		<div class="w3-col l6 w3-padding-small" >
-						      	주문 금액 <strong style="font-size: 40px; color:#ff8300"><span id="totPrice_${vo.cart_idx }"><fmt:formatNumber value="${vo.price * vo.cnt }" pattern="#,###" /></span></strong> 원
+				    			(추가:<fmt:formatNumber value="${vo.price_add }" pattern="#,###" />, 미트:<fmt:formatNumber value="${vo.price_meat }" pattern="#,###" />)
+						      	주문 금액 <strong style="font-size: 40px; color:#ff8300"><span id="totPrice_${vo.cart_idx }"><fmt:formatNumber value="${(vo.price+vo.price_add+vo.price_meat )* vo.cnt }" pattern="#,###" /></span></strong> 원
 						    </div>
-					    	<input type="hidden" id="price_${vo.cart_idx }" name="price_${vo.cart_idx }" value="${vo.price}"/>
+					    	<input type="hidden" id="price_${vo.cart_idx }" name="price_${vo.cart_idx }" value="${vo.price+vo.price_add+vo.price_meat}"/>
 					    	<input type="hidden" id="cnt_${vo.cart_idx }" name="cnt_${vo.cart_idx }" value="${vo.cnt}"/>
 				    	</div>    					
 				  		<p></p>
@@ -342,10 +334,10 @@
 			    		 	총 주문 금액 <strong style="font-size: 40px; color:#ff8300"><span id="totPriceAll">0</span></strong> 원
 			    		</div>
 			    		<div class="w3-col l6 w3-padding-small" >
-			    			<button class="w3-round-xlarge" id="btn" onclick="location.href='${contextPath}/order/productList'">추가하기</button>
+			    			<button class="w3-round-xlarge" id="btn" onclick="location.href='${contextPath}/order/viewProductList/PROD-001'">추가하기</button>
 							<button class="w3-round-xlarge" id="btn" onclick="javascript:viewOrder()">주문하기</button>
-					   		<form id="myform" method="post" action="${contextPath }/order/viewOrderInput">
-						    	<input type="hidden" id="arrayCartIdx" name="arrayCartIdx[]" value=""/>
+					   		<form id="myform" method="post" action="${contextPath }/order/viewOrderInput/cart">
+						    	<input type="hidden" id="arrayIdx" name="arrayIdx[]" value=""/>
 						    </form> 
 					    </div>
 					    

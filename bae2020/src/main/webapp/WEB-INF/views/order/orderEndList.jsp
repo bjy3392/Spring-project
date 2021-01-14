@@ -12,44 +12,38 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
 
-	/* function toggleView(idx){
-	  	var detail_div = document.getElementById("detail_"+idx);
-	   	if(detail_div.style.display=="none"){
-	   		 $("#detail_"+idx).show(); 
-	   	}else{
-	   		$("#detail_"+idx).css("height", "0px");
-	   	} 
+/* 	function findItemForReOrderAjax(idx){
+		var order = {
+				order_idx : idx
+		};
+		
+		var isSubmit = false;
+		var arrayIdx = [];
+		
+		$.ajax({
+			url: "${contextPath}/order/findItemForReOrderAjax",
+			type: "post",
+			data: order,
+			success:function(data){	
+				for (i in data) {
+					arrayIdx.push(data[i].name);
+	            }
+				
+				$("#arrayIdx").val(arrayIdx); 
+				
+				isSubmit = true;
+			}
+		}); 
+		
+		
+		$("#myform_"+idx).submit();
+	} */
+	
+	
+	function formSubmit(idx){
+		$("#myform_"+idx).submit();
 	}
 	
-	$(document).ready( function() {
-        $( '#toggle_btn' ).click( function() {
-          $( "#detail_42" ).toggle( 'slow' );
-        });
-      });
-//출처: https://unabated.tistory.com/entry/displaynone-과-visibilityhidden-의-차이 [랄라라] */
-
-	function deleteOrderAjax(idx){
-		var res = confirm("주문을 취소하겠습니까?");
-		if(!res){
-			return;
-		}
-		else{
-			var order = {
-				order_idx : idx
-			};
-			
-			$.ajax({
-				url: "${contextPath}/order/deleteOrderAjax",
-				type: "post",
-				data: order,
-				success:function(data){	
-					alert("선택한 항목이 삭제 되었습니다.")
-					$("#tr_"+idx).remove();	
-				}
-			});  
-		}
-	}
-
 </script>
 
 <style>
@@ -167,25 +161,34 @@
 </style>
 </head>
 <body>
-
 	<div class="w3-content" style="max-width: 1200px; margin-top: 250px">
-		<form name="myform">
-			<div class="main_list">
-				<!-- 상단 제목 -->
-				<div class="main_title">
-					<p></p>
-					<h2>주문확인</h2>
-					<p><br/><br/></p>
-				</div>
-				<div class="list_start">
-					<div class="list_detail">
-						<table id="bar_table">
-							<tr>
-								<td id="bar_td" onclick="location.href='${contextPath}/order/viewOrderList'">진행중</td>
-								<td id="bar_td_select">완료</td>
-							</tr>
-						</table>
-						<p><br/></p>
+		<div class="main_list">
+			<!-- 상단 제목 -->
+			<div class="main_title">
+				<p></p>
+				<h2>주문확인</h2>
+				<p><br/><br/></p>
+			</div>
+			<div class="list_start">
+				<div class="list_detail">
+					<table id="bar_table">
+						<tr>
+							<td id="bar_td" onclick="location.href='${contextPath}/order/viewOrderList'">진행중</td>
+							<td id="bar_td_select">완료</td>
+						</tr>
+					</table>
+					<p><br/></p>
+					<c:if test="${empty vos}">
+						<div class="list_start">
+							<div class="w3-row w3-padding-10 w3-white" style="text-align:left">
+								<div class="w3-row w3-padding-large">
+									주문내역이 없습니다.
+								</div>
+							</div>
+							
+						</div>
+					</c:if>
+					<c:if test="${not empty vos}">
 						<h3 class="title">주문내역</h3>
 						<table>
 							<c:forEach var="vo" items="${vos }">
@@ -200,17 +203,19 @@
 										
 									</td>
 									<td class="opt_td">
-										<button class="w3-round-xlarge btn_str">리뷰</button>
-										<button class="w3-round-xlarge btn_str">재주문</button>
+										<button class="w3-round-xlarge btn_str" type="button" onclick="formSubmit(${vo.order_idx })">재주문</button>
+										<form id="myform_${vo.order_idx }" method="post" action="${contextPath }/order/viewOrderInput/order">
+									    	<input type="hidden" id="order_idx" name="order_idx" value="${vo.order_idx }"/>
+									    </form>
 									</td>
 								</tr>
 							</c:forEach>	
 						</table>
 						<p></p>
-					</div>
+					</c:if>
 				</div>
 			</div>
-		</form>
+		</div>
 	</div>
 </body>
 <%@ include file="/WEB-INF/views/include/footer.jsp"%>

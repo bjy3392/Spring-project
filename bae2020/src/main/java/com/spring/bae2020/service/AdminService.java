@@ -25,9 +25,9 @@ public interface AdminService {
 
 	void updateProduct(MultipartFile file, ProductVo vo);
 
-	void deleteProduc(String product_code);
+	void deleteProduct(String product_code);
 
-	List<SubcategoryVo> findSUbcategoryBycategory(String category_code);
+	List<SubcategoryVo> findSubcategoryBycategory(String category_code);
 
 	void insertSubcategory(String category_code, String subcategory_name, String first_code, String mid);
 
@@ -35,10 +35,14 @@ public interface AdminService {
 
 	void deleteSubcategory(String subcategory_code);
 
-	List<ProductVo> findOptionBySubcategory(String subcategory_code);
+	List<OptionsVo> findOptionBySubcategory(String subcategory_code);
 
 	void insertOption(MultipartFile file, OptionsVo vo);
 
 	void updateOption(MultipartFile file, OptionsVo vo);
+
+	ProductVo findProductByCode(String product_code);
+
+	void deleteOption(String option_code);
 
 }

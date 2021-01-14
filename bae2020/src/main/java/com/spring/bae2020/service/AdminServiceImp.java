@@ -53,12 +53,11 @@ public class AdminServiceImp implements AdminService{
 			String category_code= vo.getCategory_code();
 			String product_code = adminDao.findProductCodeByCategory(category_code); 
 			String category_first_code = category_code.substring(0,category_code.lastIndexOf("-"));
-			String first_code = product_code.substring(0,product_code.lastIndexOf("-"));
 			
 			//서버에 제품코드와 같은 이름으로 파일명 저장.
 			String saveFileName = product_code+"."+oFileExt;
 			
-			writeFile(file, saveFileName,category_first_code, first_code);
+			writeFile(file, saveFileName,category_first_code, category_code);
 			
 			//서버에 저장된 파일의 정보를 vo에 담아서 DB에 저장시킨다.
 			vo.setProduct_code(product_code);
@@ -71,11 +70,11 @@ public class AdminServiceImp implements AdminService{
 		}
 	}
 	
-	private void writeFile(MultipartFile file, String saveFileName,String category_first_code, String first_code) throws IOException {
+	private void writeFile(MultipartFile file, String saveFileName,String category_first_code, String category_code) throws IOException {
 		byte[] data = file.getBytes();
 		
 		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest();
-		String uploadPath = request.getSession().getServletContext().getRealPath("/")+"resources\\"+ category_first_code+"\\"+first_code +"\\";
+		String uploadPath = request.getSession().getServletContext().getRealPath("/")+"resources\\"+ category_first_code+"\\"+category_code +"\\";
 		
 		FileOutputStream fos = new FileOutputStream(uploadPath + saveFileName);
 		fos.write(data);  //서버에 파일이 저장된다.
@@ -103,13 +102,12 @@ public class AdminServiceImp implements AdminService{
 				String product_code = vo.getProduct_code();
 				
 				String category_first_code = category_code.substring(0,category_code.lastIndexOf("-"));
-				String first_code = product_code.substring(0,product_code.lastIndexOf("-"));
 				
 				//서버에 제품코드와 같은 이름으로 파일명 저장.
 				String saveFileName = product_code+"."+oFileExt;
 				vo.setImage(saveFileName);
 				
-				writeFile(file, saveFileName,category_first_code, first_code);
+				writeFile(file, saveFileName,category_first_code, category_code);
 				
 				adminDao.updateProduct(vo);
 				
@@ -121,13 +119,13 @@ public class AdminServiceImp implements AdminService{
 	}
 
 	@Override
-	public void deleteProduc(String product_code) {
+	public void deleteProduct(String product_code) {
 		adminDao.deleteProduct(product_code);
 	}
 
 	@Override
-	public List<SubcategoryVo> findSUbcategoryBycategory(String category_code) {
-		return adminDao.findSUbcategoryBycategory(category_code);
+	public List<SubcategoryVo> findSubcategoryBycategory(String category_code) {
+		return adminDao.findSubcategoryBycategory(category_code);
 	}
 
 	@Override
@@ -146,7 +144,7 @@ public class AdminServiceImp implements AdminService{
 	}
 
 	@Override
-	public List<ProductVo> findOptionBySubcategory(String subcategory_code) {
+	public List<OptionsVo> findOptionBySubcategory(String subcategory_code) {
 		return adminDao.findOptionBySubcategory(subcategory_code);
 	}
 
@@ -161,12 +159,11 @@ public class AdminServiceImp implements AdminService{
 			String option_code = adminDao.findOptionCodeeByCategory(subcategory_code); 
 			
 			String subcategory_first_code = subcategory_code.substring(0,subcategory_code.lastIndexOf("-"));
-			String first_code = option_code.substring(0,option_code.lastIndexOf("-"));
 			
 			//서버에 제품코드와 같은 이름으로 파일명 저장.
 			String saveFileName = option_code+"."+oFileExt;
 			
-			writeFile(file, saveFileName,subcategory_first_code, first_code);
+			writeFile(file, saveFileName,subcategory_first_code, subcategory_code);
 			
 			//서버에 저장된 파일의 정보를 vo에 담아서 DB에 저장시킨다.
 			vo.setOption_code(option_code);
@@ -195,13 +192,12 @@ public class AdminServiceImp implements AdminService{
 				String option_code = vo.getOption_code();
 				
 				String subcategory_first_code = subcategory_code.substring(0,subcategory_code.lastIndexOf("-"));
-				String first_code = option_code.substring(0,option_code.lastIndexOf("-"));
 				
 				//서버에 제품코드와 같은 이름으로 파일명 저장.
 				String saveFileName = option_code+"."+oFileExt;
 				vo.setImage(saveFileName);
 				
-				writeFile(file, saveFileName,subcategory_first_code, first_code);
+				writeFile(file, saveFileName,subcategory_first_code, subcategory_code);
 				
 				adminDao.updateOption(vo);
 				
@@ -209,6 +205,16 @@ public class AdminServiceImp implements AdminService{
 				e.printStackTrace();
 			}
 		}
+	}
+
+	@Override
+	public ProductVo findProductByCode(String product_code) {
+		return adminDao.findProductByCode(product_code);
+	}
+
+	@Override
+	public void deleteOption(String option_code) {
+		adminDao.deleteOption(option_code);
 	}
 }
 

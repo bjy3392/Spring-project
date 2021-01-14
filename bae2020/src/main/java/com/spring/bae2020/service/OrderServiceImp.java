@@ -1,6 +1,5 @@
 package com.spring.bae2020.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,71 +7,17 @@ import org.springframework.stereotype.Service;
 
 import com.spring.bae2020.dao.OrderDao;
 import com.spring.bae2020.vo.CartVo;
-import com.spring.bae2020.vo.CategoryVo;
 import com.spring.bae2020.vo.ItemVo;
-import com.spring.bae2020.vo.OptionsVo;
 import com.spring.bae2020.vo.OrdersVo;
-import com.spring.bae2020.vo.ProductVo;
 
 @Service
 public class OrderServiceImp implements OrderService {
 	@Autowired
-	OrderDao orderDao;
-
-	@Override
-	public List<ProductVo> findProductAll() {
-		return orderDao.findProductAll();
-	}
-
-//	@Override
-//	public List<ProductVo> findProductByCategory(List<ProductVo> vos, String category) {
-//		List<ProductVo> product = new ArrayList<ProductVo>();
-//		
-//		for(int i=0; i<vos.size(); i++) {
-//			ProductVo vo =vos.get(i);
-//			if(vo.getCategory_code().equals(category)) {
-//				product.add(vo);
-//			}
-//		}
-//		return product;
-//	}
-	@Override
-	public List<CategoryVo> findCategoryByCode(String classify) {
-		return orderDao.findCategoryByCode(classify);
-	}
+	OrderDao orderDao;	
 	
 	@Override
-	public List<ProductVo> findProductByCategory(String category) {
-		return orderDao.findProductByCategory(category);
-	}
-	
-	@Override
-	public List<OptionsVo> findOptionAll() {
-		return orderDao.findOptionAll();
-	}
-
-	@Override
-	public List<OptionsVo> findOptionByCategory(List<OptionsVo> vos, String category) {
-		List<OptionsVo> option = new ArrayList<OptionsVo>();
-		
-//		for(int i=0; i<vos.size(); i++) {
-//			OptionsVo vo =vos.get(i);
-//			if(vo.getCategory_code().equals(category)) {
-//				option.add(vo);
-//			}
-//		}
-		
-		return option;
-	}
-
-	@Override
-	public ProductVo findProductByCode(String product_code) {
-		return orderDao.findProductByCode(product_code);
-	}
-	
-	@Override
-	public void insertCart(String mid, String product, String options, String price) {
-		orderDao.insertCart(mid, product, options, price);
+	public void insertCart(CartVo vo) {
+		orderDao.insertCart(vo);
 	}
 
 	@Override
@@ -91,13 +36,13 @@ public class OrderServiceImp implements OrderService {
 	}
 
 	@Override
-	public List<CartVo> findCartByIdx(String mid, String[] arrayCartIdx) {
-		return orderDao.findCartByIdx(mid, arrayCartIdx);
+	public List<ItemVo> findCartByIdx(String mid, String[] arrayIdx) {
+		return orderDao.findCartByIdx(arrayIdx);
 	}
 
 	@Override
-	public CartVo findCartByProduct(String mid, String product, String options, String price) {
-		return orderDao.findCartByProduct(mid, product, options, price);
+	public CartVo findCartByProduct(CartVo vo) {
+		return orderDao.findCartByProduct(vo);
 	}
 
 	@Override
@@ -106,8 +51,8 @@ public class OrderServiceImp implements OrderService {
 	}
 
 	@Override
-	public void insertItem(String order_idx, String[] addCartIdx) {
-		orderDao.insertItem(order_idx,addCartIdx);
+	public void insertItemFromCart(String order_idx, String[] arrayIdx) {
+		orderDao.insertItemFromCart(order_idx,arrayIdx);
 	}
 
 	@Override
@@ -116,8 +61,8 @@ public class OrderServiceImp implements OrderService {
 	}
 
 	@Override
-	public List<ItemVo> findItemByIdx(String[] arrayOrderIdx) {
-		return orderDao.findItemByIdx(arrayOrderIdx);
+	public List<ItemVo> findItemByOrderIdx(String[] arrayOrderIdx) {
+		return orderDao.findItemByOrderIdx(arrayOrderIdx);
 	}
 
 	@Override
@@ -128,6 +73,31 @@ public class OrderServiceImp implements OrderService {
 	@Override
 	public void deleteItemByIdx(String order_idx) {
 		orderDao.deleteItemByIdx(order_idx);		
+	}
+
+	@Override
+	public List<ItemVo> findItemByIdx(String mid, String[] arrayIdx) {
+		return orderDao.findItemByIdx(mid, arrayIdx);
+	}
+
+	@Override
+	public void insertItemFromItem(String order_idx, String[] arrayIdx) {
+		orderDao.insertItemFromItem(order_idx,arrayIdx);
+	}
+
+	@Override
+	public List<ItemVo> findItem(String route, String[] arrayIdx, String order_idx) {
+		List<ItemVo> vos = null;
+		
+		if(route.equals("cart")) {
+			vos = orderDao.findCartByIdx(arrayIdx);
+		}
+		
+		else {
+			vos = orderDao.findItemByOrderIdx(new String[] {order_idx});
+		}
+		
+		return vos;
 	}
 
 	

@@ -55,6 +55,7 @@
 					$("#roadAddress").attr('disabled', true);
 					$("#detailAddress").attr('disabled', true);
 					$("#btnPost").attr('disabled', true);
+					$("#chk").prop('checked',false);
 					$("#chk").attr('disabled', true);
 		        	
 		        	
@@ -79,10 +80,10 @@
 		    	myform.tel2.focus();
 		    	return false;
 		    }
-			/* else if($("#coupon option:selected").val().trim() == ""){
+			else if($("#payment option:selected").val().trim() == ""){
 				alert("결제방법을 선택해주세요.");
 				return false;
-			} */
+			} 
 			
 			
 			if($("#chkStore").is(":checked")){
@@ -93,6 +94,10 @@
 					alert("주소를 입력해주세요.");
 					return false;
 				}
+			    else if($("#total").val()<=15000){
+					alert("15,000 이상 배달 가능합니다.");
+					return false;
+			    }
 			}
 			
 			myform.tel.value = tel;
@@ -206,11 +211,14 @@
         select {
         	width : 100%;
         }
+        #title_name{
+            font-size:25px;
+        }
 	</style>
 </head>
 <body>
 	<div class="w3-content" style="max-width: 1200px; margin-top: 250px">
-		<form name="myform" method="post" action="${contextPath }/order/insertOrder">
+		<form name="myform" method="post" action="${contextPath }/order/insertOrder/${route}">
 			<div class="main_list">
 				<!-- 상단 제목 -->
 				<div class="main_title">
@@ -221,7 +229,7 @@
 				<div class="list_start">
 					<div class="list_detail"> 
 						<p></p>
-                       	<h3 class="title">배달정보</h3><input type="checkbox" id="chk"  />내 정보와 동일 <input type="checkbox" id="chkStore" />매장 픽업 
+                       	<div class="title"><span id="title_name">배달정보</span>&emsp;<input type="checkbox" id="chk"  />내 정보와 동일 <input type="checkbox" id="chkStore" />매장 픽업 </div>
 						<table>
 							<tr>
 						  		<th>주소</th>
@@ -284,7 +292,7 @@
 							<tr>
 						  		<th width="100px">결제수단</th>
 						  		<td>
-						  			<select name="payment">
+						  			<select id="payment" name="payment">
                                         <option value="">결제수단</option>
                                         <option value="card">만나서 카드결제</option>
                                         <option value="cash">만나서 현금결제</option>
@@ -298,14 +306,16 @@
 						<table>
 							<c:set var="total" value="0"/>
 							<c:forEach var="vo" items="${vos }">
-								<c:set var="total" value= "${total + (vo.price * vo.cnt) }"/>
+								<c:set var="total" value= "${total + ((vo.price+vo.price_add+vo.price_meat ) * vo.cnt) }"/>
 								<tr>
 							  		<td id="prod_td">
 	                                 <span id="prod">${vo.product_name }</span><span class="w3-text-grey">${vo.cnt } 개</span><br/>
-	                                 <span class="w3-text-grey" id="opt">${vo.options }</span>
+	                                 <span class="w3-text-grey" id="opt">옵션:${vo.option_unit }</span><br/>
+	                                 <span class="w3-text-grey" id="opt">추가:${vo.add_unit }</span><br/>
+	                                 <span class="w3-text-grey" id="opt">미트:${vo.meat_unit }</span><br/>
 							  		</td>
 	                                <td id="opt_td">
-	                                 	<fmt:formatNumber value="${vo.price * vo.cnt }" pattern="#,###" />
+	                                 	<fmt:formatNumber value="${(vo.price+vo.price_add+vo.price_meat ) * vo.cnt }" pattern="#,###" />
 							  		</td>
 								</tr>
 							</c:forEach>
@@ -321,18 +331,18 @@
 							</tr>
 						</table>
                         <div id="bottom_btn">
-                          <button class="w3-round-xlarg btn" onclick="location.href = '${contextPath}/order/viewProductList'">주문추가</button>
-                          <button class="w3-round-xlarge btn" onclick="location.href = '${contextPath}/order/viewCartList'">장바구니</button>
-                          <button class="w3-round-xlarge btn" onclick="javascript:insertOrder()">주문하기</button>
+                          <button class="w3-round-xlarg btn" type="button" onclick="location.href = '${contextPath}/order/viewProductList/PROD-001'">주문추가</button>
+                          <button class="w3-round-xlarge btn" type="button" onclick="location.href = '${contextPath}/order/viewCartList'">장바구니</button>
+                          <button class="w3-round-xlarge btn" type="button" onclick="javascript:insertOrder()">주문하기</button>
                     	</div>
 					</div>
 				</div>
 			</div>
-			<c:set var="addCartIdx" value="${fn:join(arrayCartIdx,'/')}" />
-			<input type="hidden" name="addCartIdx" value="${addCartIdx }"/> 
+			<c:set var="addIdx" value="${fn:join(arrayIdx,'/')}" />
+			<input type="hidden" name="addIdx" value="${addIdx }"/> 
   			<input type="hidden" name="tel"/>
   			<input type="hidden" name="delivery" />
-  			<input type="hidden" name="total" value="${total }"/>
+  			<input type="hidden" id="total" name="total" value="${total }"/>
 		</form>
 	</div>
 </body>
