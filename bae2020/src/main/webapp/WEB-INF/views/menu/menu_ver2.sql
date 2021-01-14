@@ -54,22 +54,16 @@ create table options (
 
 select * from options
 
+alter table options drop primary key;
+
+ALTER TABLE options
+ADD PRIMARY KEY (option_code,subcategory_code);
+
+desc options
+
 --참조되는 테이블의 컬럼이 수정되면 같이 수정, 참조하고 있는 데이터가 있을 경우 삭제 불가
 ALTER TABLE product ADD FOREIGN KEY (category_code)  REFERENCES category(category_code) ON DELETE RESTRICT ON UPDATE CASCADE ;
 ALTER TABLE option_tbl ADD FOREIGN KEY (category_code)  REFERENCES category(category_code) ON DELETE RESTRICT ON UPDATE CASCADE ;
-
-insert option_tbl value ('b001','화이트','b',0,'b001.jpg','bjy12',default);
-insert option_tbl value ('b002','파마산 오레가노','b',0,'b002.jpg','bjy12',default);
-
-insert option_tbl value ('v001','양상추','v',0,'v001.jpg','bjy12',default);
-insert option_tbl value ('v002','토마토','v',0,'v002.jpg','bjy12',default);
-
-insert option_tbl value ('s001','머스타드','s',0,'s001.jpg','bjy12',default);
-insert option_tbl value ('s002','스윗 칠리','s',0,'s002.jpg','bjy12',default);
-
-insert option_tbl value ('a001','에그마요','a',3200,'a001.jpg','bjy12',default);
-insert option_tbl value ('a002','페퍼로니','a',1800,'a002.jpg','bjy12',default);
-
 
 select concat(first_code, '-',(select lpad(count(*)+1,3,'0') from product where category_code = 'PROD-001'))
 from category_test
@@ -87,7 +81,6 @@ create table subcategory(
 );
 --drop table subcategory
 select * from subcategory where category_code = 'prod-001';
-
 
 
 

@@ -2,39 +2,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.spring.bae2020.dao.OrderDao">
 
-	<select id="findProductAll" resultType="com.spring.bae2020.vo.ProductVo">
-		select * from product ;
-	</select> 
-	
-	<!-- <select id="findOptionAll" resultType="com.spring.bae2020.vo.OptionVo">
-		select * from option_tbl ;
-	</select>  -->
-	
-	<!-- <select id="findProductByCode" resultType="com.spring.bae2020.vo.ProductVo">
-		select * from product where product_code = #{product_code};
-	</select> -->
-	
-	<select id="findCategoryByCode" resultType="com.spring.bae2020.vo.CategoryVo">
-		select * from category where category_code like concat(#{classify}, '%') order by category_code;
-	</select> 
-	
-	<select id="findProductByCategory" resultType="com.spring.bae2020.vo.ProductVo">
-		select prod.*, ctg.first_code 
-		  from product prod
-		 inner join category ctg
-		    on prod.category_code = ctg.category_code
-		 where prod.category_code = #{category};
-	</select>
-	
 	<insert id="insertCart">
-		insert into cart value (default, #{mid}, #{product}, #{options}, #{price}, default, default, default);
+		insert into cart value (default, #{vo.mid}, #{vo.product}, #{vo.option_unit}, #{vo.add_unit}, #{vo.meat_unit}, #{vo.price}, #{vo.price_add}, #{vo.price_meat}, default, default, default);
 	</insert>
 	
 	<select id="findCartByMid" resultType="com.spring.bae2020.vo.CartVo">
-		select cart.*, prod.product_name, prod.image
+		select cart.*, prod.product_name, prod.image, prod.category_code
 		  from cart cart
 		 inner join product prod
-		    on cart.product = prod.product_code
+		    on cart.product = prod.product_code  
 		 where mid=#{mid}
 		 order by cart_idx;
 	</select>
@@ -51,34 +27,64 @@
        	</foreach>  
 	</delete>
 	
-	<select id="findCartByIdx" resultType="com.spring.bae2020.vo.CartVo">
-		select cart.*, prod.product_name, prod.image
+	<select id="findCartByIdx" resultType="com.spring.bae2020.vo.ItemVo">
+		select cart.*, prod.product_name
 		  from cart cart
 		 inner join product prod
 		    on cart.product = prod.product_code
-		 where mid=#{mid}
+		 where 1=1
 		   and cart_idx in
-		<foreach collection="arrayCartIdx" item="cart_idx" index="index" open="(" separator="," close=")">
+		<foreach collection="arrayIdx" item="cart_idx" index="index" open="(" separator="," close=")">
        		#{cart_idx}
        	</foreach>  
 		order by cart_idx;
 	</select>
 	
+	<select id="findItemByOrderIdx"  resultType="com.spring.bae2020.vo.ItemVo">
+	select item.* , prod.product_name
+	  from item
+	 inner join orders 
+	    on item.order_idx = orders.order_idx
+	   and orders.order_idx in
+	  <foreach collection="arrayOrderIdx" item="order_idx" index="index" open="(" separator="," close=")">
+   	    	#{order_idx}
+   	  </foreach>
+	 inner join product prod
+	    on item.product = prod.product_code
+	</select>
+	
+	
 	<select id="findCartByProduct" resultType="com.spring.bae2020.vo.CartVo">
-		select * from cart where mid=#{mid} and product=#{product} and options=#{options} and price=#{price};
+		select * from cart 
+		where mid=#{vo.mid} 
+		and product=#{vo.product} 
+		and option_unit=#{vo.option_unit} 
+		and add_unit=#{vo.add_unit}
+		and meat_unit=#{vo.meat_unit};
 	</select>
 	
 	<insert id="insertOrders" parameterType="com.spring.bae2020.vo.OrdersVo" useGeneratedKeys="true" keyProperty="vo.order_idx" keyColumn="order_idx">
-		insert into orders value (default, #{vo.mid}, #{vo.total}, #{vo.payment}, #{vo.postcode}, #{vo.roadAddress}, #{vo.detailAddress}, #{vo.tel}, #{vo.demand}, #{vo.store}, #{vo.delivery}, #{vo.coupon}, #{vo.point}, default, default, default);	
+		insert into orders value (default, #{vo.mid}, #{vo.total}, #{vo.payment}, #{vo.postcode}, #{vo.roadAddress}, #{vo.detailAddress}, #{vo.tel}, #{vo.demand}, #{vo.store}, #{vo.delivery},#{vo.distance}, #{vo.coupon}, #{vo.point}, default, default, default);	
 	</insert>
 	
-	<insert id="insertItem">
-		insert into item (order_idx ,product, options, price, cnt)
-			(select #{order_idx} as order_idx, product, options, price, cnt 
+	<insert id="insertItemFromCart">
+		insert into item (order_idx ,product, option_unit, add_unit, meat_unit, price, price_add,price_meat, cnt )
+			(select #{order_idx} as order_idx, product, option_unit, add_unit, meat_unit, price, price_add,price_meat, cnt 
 		  	from cart 
 		  	where cart_idx in 
-		  	<foreach collection="arrayCartIdx" item="cart_idx" index="index" open="(" separator="," close=")">
+		  	<foreach collection="arrayIdx" item="cart_idx" index="index" open="(" separator="," close=")">
        			#{cart_idx}
+       	  	</foreach> )
+       	 <!-- 이렇게 한번에 여러값을 insert 할 경우 auto_increment가 값을 건너뛰고 들어갈수도 있다. --> 	
+	</insert>
+	
+	<insert id="insertItemFromItem">
+		insert into item (order_idx ,product, option_unit, add_unit, meat_unit, price, price_add,price_meat, cnt )
+			(select #{order_idx} as order_idx, product, option_unit, add_unit, meat_unit, price, price_add,price_meat, cnt 
+		  	from item 
+		  	where item_idx in 
+		  	<foreach collection="arrayIdx" item="item_idx" index="index" open="(" separator="," close=")">
+       			#{item_idx}
        	  	</foreach> )
        	 <!-- 이렇게 한번에 여러값을 insert 할 경우 auto_increment가 값을 건너뛰고 들어갈수도 있다. --> 	
 	</insert>
@@ -103,19 +109,7 @@
 		 group by orders.order_idx
 	</select>
 	
-	<select id="findItemByIdx"  resultType="com.spring.bae2020.vo.ItemVo">
-		select item.* , prod.product_name
-		  from item
-		 inner join orders 
-		    on item.order_idx = orders.order_idx
-		   and orders.order_idx in
-		  <foreach collection="arrayOrderIdx" item="order_idx" index="index" open="(" separator="," close=")">
-       	    	#{order_idx}
-       	  </foreach>
-		 inner join product prod
-		    on item.product = prod.product_code
-	</select>
-	
+
 	<delete id="deleteOrderByIdx">
 		delete from orders where mid=#{mid} and order_idx=#{order_idx};	
 	</delete>
@@ -123,6 +117,7 @@
 	<delete id="deleteItemByIdx">
 		delete from item where order_idx=#{order_idx};	
 	</delete>
+
 	
 </mapper>
 

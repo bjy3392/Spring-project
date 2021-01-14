@@ -99,7 +99,7 @@ public class AdminController {
 	@ResponseBody
 	public String deleteProductAjaxPost(String product_code) {
 		
-		adminService.deleteProduc(product_code);
+		adminService.deleteProduct(product_code);
 		
 		return "";
 	}
@@ -107,7 +107,7 @@ public class AdminController {
 	@RequestMapping(value="/viewSubcategoryEdit", method = RequestMethod.GET)
 	public String viewSubcategoryEditGet(Model model, String category_code) {
 		
-		List<SubcategoryVo> vos =  adminService.findSUbcategoryBycategory(category_code);
+		List<SubcategoryVo> vos =  adminService.findSubcategoryBycategory(category_code);
 		
 		model.addAttribute("category_code", category_code);
 		model.addAttribute("vos", vos);
@@ -146,7 +146,7 @@ public class AdminController {
 	@RequestMapping(value="/viewOptionEdit", method = RequestMethod.GET)
 	public String viewOptionEditGet(Model model, String subcategory_code) {
 		model.addAttribute("subcategory_code", subcategory_code);
-		List<ProductVo> vos = adminService.findOptionBySubcategory(subcategory_code);
+		List<OptionsVo> vos = adminService.findOptionBySubcategory(subcategory_code);
 		
 		model.addAttribute("subcategory_code", subcategory_code);
 		model.addAttribute("vos", vos);
@@ -174,14 +174,14 @@ public class AdminController {
 		return "";
 	}
 	
-//	@RequestMapping(value="/deleteProductAjax", method = RequestMethod.POST)
-//	@ResponseBody
-//	public String deleteProductAjaxPost(String product_code) {
-//		
-//		adminService.deleteProduc(product_code);
-//		
-//		return "";
-//	}
+	@RequestMapping(value="/deleteOptionAjax", method = RequestMethod.POST)
+	@ResponseBody
+	public String deleteOptionAjaxPost(String option_code) {
+		
+		adminService.deleteOption(option_code);
+		
+		return "";
+	}
 	
 }
 

@@ -43,7 +43,7 @@
 				type: "post",
 				data: order,
 				success:function(data){	
-					alert("선택한 항목이 삭제 되었습니다.")
+					alert("주문이 취소 되었습니다.")
 					$("#tr_"+idx).remove();	
 				}
 			});  
@@ -186,40 +186,54 @@
 							</tr>
 						</table>
 						<p><br/></p>
-						<h3 class="title">주문내역</h3>
-						<table>
-							<c:forEach var="vo" items="${vos }">
-								<tr id="tr_${vo.order_idx }">
-									<td class="opt_td">${vo.update_dt }</td>
-									<td><font style="font-weight: bold; font-size: 20px;"> ${vo.product_name }</font>  <c:if test="${vo.cnt ne 1 }">외 ${vo.cnt-1 }개</c:if>
-										<button class="icon_btn" disabled >
-											<i class="fas fa-chevron-down"></i>
-										</button>
-										<p></p>
-										<c:forEach var="voItem" items="${vosItem }">
-											<c:if test="${vo.order_idx eq voItem.order_idx }">
-												<div id="detail_${vo.order_idx }"  >
-													<span class="w3-text-grey prod">${voItem.product_name }</span>
-													<span class="w3-text-grey">${voItem.cnt }개&nbsp;<fmt:formatNumber value="${voItem.price * voItem.cnt }" pattern="#,###" /></span><br/> 
-													<span class="w3-text-grey opt">${voItem.options }</span><br/> 
-													<p></p>
-												</div>
-											</c:if>
-										</c:forEach>
-									</td>
-									<td class="opt_td">
-										<fmt:formatNumber value="${vo.total }" pattern="#,###" />
-										<button class="w3-round-xlarge btn_str">상세</button>
-										
-									</td>
-									<td class="opt_td">
-										${vo.state_name } 
-										<c:if test="${vo.state eq 'state0' }"><button class="w3-round-xlarge btn_str" onclick="deleteOrderAjax(${vo.order_idx})">취소</button></c:if>
-									</td>
-								</tr>
-							</c:forEach>	
-						</table>
-						<p></p>
+						<c:if test="${empty vos}">
+							<div class="list_start">
+								<div class="w3-row w3-padding-10 w3-white" style="text-align:left">
+									<div class="w3-row w3-padding-large">
+										주문내역이 없습니다.
+									</div>
+								</div>
+								
+							</div>
+						</c:if>
+						<c:if test="${not empty vos}">
+							<h3 class="title">주문내역</h3>
+							<table>
+								<c:forEach var="vo" items="${vos }">
+									<tr id="tr_${vo.order_idx }">
+										<td class="opt_td">${vo.update_dt }</td>
+										<td><font style="font-weight: bold; font-size: 20px;"> ${vo.product_name }</font>  <c:if test="${vo.cnt ne 1 }">외 ${vo.cnt-1 }개</c:if>
+											<button class="icon_btn" disabled >
+												<i class="fas fa-chevron-down"></i>
+											</button>
+											<p></p>
+											<c:forEach var="voItem" items="${vosItem }">
+												<c:if test="${vo.order_idx eq voItem.order_idx }">
+													<div id="detail_${vo.order_idx }"  >
+														<span class="w3-text-grey prod">${voItem.product_name }</span>
+														<span class="w3-text-grey">${voItem.cnt }개&nbsp;<fmt:formatNumber value="${voItem.price * voItem.cnt }" pattern="#,###" /></span><br/> 
+														<span class="w3-text-grey opt">옵션:${voItem.option_unit }</span><br/>
+														<span class="w3-text-grey opt">추가:${voItem.add_unit }</span><br/> 
+														<span class="w3-text-grey opt">미트:${voItem.meat_unit }</span><br/>  
+														<p></p>
+													</div>
+												</c:if>
+											</c:forEach>
+										</td>
+										<td class="opt_td">
+											<fmt:formatNumber value="${vo.total }" pattern="#,###" />
+											<button class="w3-round-xlarge btn_str">상세</button>
+											
+										</td>
+										<td class="opt_td">
+											${vo.state_name } 
+											<c:if test="${vo.state eq 'state-01' }"><button class="w3-round-xlarge btn_str" onclick="deleteOrderAjax(${vo.order_idx})">취소</button></c:if>
+										</td>
+									</tr>
+								</c:forEach>	
+							</table>
+							<p></p>
+						</c:if>
 					</div>
 				</div>
 			</div>

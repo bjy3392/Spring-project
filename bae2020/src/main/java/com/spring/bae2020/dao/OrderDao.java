@@ -13,15 +13,7 @@ import com.spring.bae2020.vo.ProductVo;
 
 public interface OrderDao {
 
-	List<ProductVo> findProductAll();
-
-	List<OptionsVo> findOptionAll();
-
-	List<CategoryVo> findCategoryByCode(@Param("classify")String classify);
-	
-	ProductVo findProductByCode(@Param("product_code") String product_code);
-	
-	void insertCart(@Param("mid")String mid, @Param("product")String product, @Param("options")String options, @Param("price")String price);
+	void insertCart(@Param("vo")CartVo vo);
 
 	List<CartVo> findCartByMid(@Param("mid")String mid);
 
@@ -29,23 +21,27 @@ public interface OrderDao {
 
 	void deleteCartByIdx(@Param("mid")String mid, @Param("arrayCartIdx")String[] arrayCartIdx);
 
-	List<CartVo> findCartByIdx(@Param("mid")String mid, @Param("arrayCartIdx")String[] arrayCartIdx);
+	List<ItemVo> findCartByIdx(@Param("arrayIdx")String[] arrayIdx);
 
-	CartVo findCartByProduct(@Param("mid")String mid, @Param("product")String product, @Param("options")String options, @Param("price")String price);
+	CartVo findCartByProduct(@Param("vo")CartVo vo);
 
 	void insertOrders(@Param("vo")OrdersVo vo);
 
-	void insertItem(@Param("order_idx")String order_idx, @Param("arrayCartIdx")String[] addCartIdx);
+	void insertItemFromCart(@Param("order_idx")String order_idx, @Param("arrayIdx")String[] arrayIdx);
 
 	List<OrdersVo> findOrdersGroupByIdx(@Param("group")String group, @Param("mid")String mid, @Param("delimiter")String delimiter, @Param("state")String state);
 
-	List<ItemVo> findItemByIdx(@Param("arrayOrderIdx")String[] arrayOrderIdx);
+	List<ItemVo> findItemByOrderIdx(@Param("arrayOrderIdx")String[] arrayOrderIdx);
 
 	void deleteOrderByIdx(@Param("mid")String mid, @Param("order_idx")String order_idx);
 
 	void deleteItemByIdx(@Param("order_idx")String order_idx);
 
 	List<ProductVo> findProductByCategory(@Param("category")String category);
+
+	List<ItemVo> findItemByIdx(@Param("mid")String mid, @Param("arrayIdx")String[] arrayIdx);
+
+	void insertItemFromItem(@Param("order_idx")String order_idx, @Param("arrayIdx")String[] arrayIdx);
 
 
 

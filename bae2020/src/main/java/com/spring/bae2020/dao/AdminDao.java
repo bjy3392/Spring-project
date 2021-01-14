@@ -29,7 +29,7 @@ public interface AdminDao {
 
 	void deleteProduct(@Param("product_code")String product_code);
 
-	List<SubcategoryVo> findSUbcategoryBycategory(@Param("category_code")String category_code);
+	List<SubcategoryVo> findSubcategoryBycategory(@Param("category_code")String category_code);
 
 	void insertSubcategory(@Param("category_code")String category_code, @Param("subcategory_name")String subcategory_name, @Param("first_code")String first_code, @Param("mid")String mid);
 
@@ -37,12 +37,16 @@ public interface AdminDao {
 
 	void deleteSubcategory(@Param("subcategory_code")String subcategory_code);
 
-	List<ProductVo> findOptionBySubcategory(@Param("subcategory_code")String subcategory_code);
+	List<OptionsVo> findOptionBySubcategory(@Param("subcategory_code")String subcategory_code);
 
 	String findOptionCodeeByCategory(@Param("subcategory_code")String subcategory_code);
 
 	void insertOption(@Param("vo")OptionsVo vo);
 
 	void updateOption(@Param("vo")OptionsVo vo);
+
+	ProductVo findProductByCode(@Param("product_code")String product_code);
+
+	void deleteOption(@Param("option_code")String option_code);
 
 }

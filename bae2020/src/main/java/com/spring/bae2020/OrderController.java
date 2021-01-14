@@ -1,5 +1,6 @@
 package com.spring.bae2020;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -12,12 +13,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.spring.bae2020.service.AdminService;
 import com.spring.bae2020.service.OrderService;
 import com.spring.bae2020.vo.CartVo;
 import com.spring.bae2020.vo.CategoryVo;
 import com.spring.bae2020.vo.ItemVo;
+import com.spring.bae2020.vo.OptionsVo;
 import com.spring.bae2020.vo.OrdersVo;
 import com.spring.bae2020.vo.ProductVo;
 import com.spring.bae2020.vo.SubcategoryVo;
@@ -34,42 +37,35 @@ public class OrderController {
 	
 	@RequestMapping(value="/viewProductList/{category}", method = RequestMethod.GET)
 	public String viewProductListGet(@PathVariable String category, Model model) {
-		//List<ProductVo> vos  = orderService.findProductAll();
-		//List<ProductVo> vosM = orderService.findProductByCategory(vos,"m");
 		
 		List<CategoryVo> vosC =  adminService.findCategory();
 		List<ProductVo> vos = adminService.findProductByCategory(category);
 
 		model.addAttribute("vosC", vosC);
 		model.addAttribute("vos", vos);
-		
-		String product_code = vos.get(0).getProduct_code();
-		String first_code = product_code.substring(0,product_code.lastIndexOf("-"));
-		model.addAttribute("first_code", first_code);
+		model.addAttribute("category", category);
 		
 		return "order/productList";
 	}
 	
 	@RequestMapping(value="/viewOptionList/{category}", method = RequestMethod.GET)
 	public String viewOptionListGet(@PathVariable String category, Model model, String product_code ) {
-
-		//List<SubcategoryVo> vos =  adminService.findSUbcategoryBycategory(category_code);
-		//List<ProductVo> vos = adminService.findOptionBySubcategory(subcategory_code);
+		List<SubcategoryVo> vosS =  adminService.findSubcategoryBycategory(category);
+		ProductVo voP = adminService.findProductByCode(product_code);
 		
+		for(int i=0; i<vosS.size(); i++) {
+			SubcategoryVo vo = vosS.get(i);
+			String subcategory_code = vo.getSubcategory_code();
+			List<OptionsVo> vos = adminService.findOptionBySubcategory(subcategory_code);
+			
+			String option_code = vos.get(0).getOption_code();
+			String first_code = option_code.substring(0,option_code.lastIndexOf("-"));			
+			
+			model.addAttribute(first_code+"vos", vos);
+		}
+		model.addAttribute("voP", voP);
+		model.addAttribute("category_code", category);
 		
-//		List<OptionsVo> vos  = orderService.findOptionAll(); //한번에 모든 옵션을 가져와서 분류할때는 DB에 다녀오지 않고 분류
-//		ProductVo prod = orderService.findProductByCode(product_code);
-//		
-//		List<OptionsVo> vosB = orderService.findOptionByCategory(vos,"b");
-//		List<OptionsVo> vosV = orderService.findOptionByCategory(vos,"v");
-//		List<OptionsVo> vosS = orderService.findOptionByCategory(vos,"s");
-//		List<OptionsVo> vosA = orderService.findOptionByCategory(vos,"a");
-//		
-//		model.addAttribute("prod", prod);
-//		model.addAttribute("vosB", vosB);
-//		model.addAttribute("vosV", vosV);
-//		model.addAttribute("vosS", vosS);
-//		model.addAttribute("vosA", vosA);
 		
 		return "order/optionList";
 	}
@@ -77,17 +73,18 @@ public class OrderController {
 	
 	@RequestMapping(value="/insertCartAjax", method = RequestMethod.POST)
 	@ResponseBody
-	public String insertCartAjaxPost(HttpSession session, String product, String options, String price) {
+	public String insertCartAjaxPost(HttpSession session, CartVo vo) {
 		String mid = (String)session.getAttribute("smid");
-		CartVo vo = orderService.findCartByProduct(mid,product,options,price);
+		vo.setMid(mid);
+		CartVo voCheck = orderService.findCartByProduct(vo); //장바구니에 같은 제품이 있나 확인
 		
-		if(vo!=null) {
-			String cart_idx = vo.getCart_idx();
+		if(voCheck!=null) {
+			String cart_idx = voCheck.getCart_idx();
 			String purpose = "1";
 			orderService.updateCart(mid, cart_idx, purpose);
 		}
 		else {
-			orderService.insertCart(mid,product,options,price);			
+			orderService.insertCart(vo);			
 		}
 		
 		return "";
@@ -97,6 +94,7 @@ public class OrderController {
 	public String viewCartListGet(HttpSession session, Model model) {
 		String mid = (String)session.getAttribute("smid");
 		List<CartVo> vos = orderService.findCartByMid(mid);
+		
 		model.addAttribute("vos", vos);
 		
 		return "order/cartList";
@@ -123,41 +121,58 @@ public class OrderController {
 	}
 	
 	
-	@RequestMapping(value="/viewOrderInput", method = RequestMethod.POST)
-	public String viewOrderInputPost(Model model,HttpSession session, @RequestParam("arrayCartIdx[]") String[] arrayCartIdx) {
+	@RequestMapping(value="/viewOrderInput/{route}", method = RequestMethod.POST)
+	public String viewOrderInputPost(@PathVariable String route, Model model,HttpSession session,
+									@RequestParam(value="arrayIdx[]", required = false) String[] arrayIdx,
+									@RequestParam(value="order_idx", required = false) String order_idx) {
 	
-		if(arrayCartIdx==null) {
+		if(arrayIdx==null && order_idx.equals("")) {
 			msgFlag= "notProduct";
 			return "redirect:/msg/" + msgFlag;
 		}
 		
-		String mid = (String)session.getAttribute("smid");
-		List<CartVo> vos = orderService.findCartByIdx(mid, arrayCartIdx);		
-	  	
+		List<ItemVo> vos = orderService.findItem(route,arrayIdx,order_idx);
+		
+		if(arrayIdx == null){
+		  	arrayIdx = new String[vos.size()];
+			for(int i=0; i<vos.size(); i++) {
+				ItemVo vo = vos.get(i);
+				arrayIdx[i] = vo.getItem_idx();
+			}
+		}
+		
 		if(vos.size()<1) {
 			msgFlag= "notProduct";
 			return "redirect:/msg/" + msgFlag;
 		}
 		else {
-		  	model.addAttribute("vos", vos);
-		  	model.addAttribute("arrayCartIdx", arrayCartIdx);
-			return "order/orderInput";
-		}	
+		  	model.addAttribute("vos", vos);	
+		  	model.addAttribute("route", route);
+		  	model.addAttribute("arrayIdx", arrayIdx);
+		}
+	  	
+		return "order/orderInput";
 	}
 	
-	@RequestMapping(value="/insertOrder", method = RequestMethod.POST)
-	public String insertOrderPost(Model model,HttpSession session, OrdersVo vo, String addCartIdx) {
+	@RequestMapping(value="/insertOrder/{route}", method = RequestMethod.POST)
+	public String insertOrderPost(@PathVariable String route, Model model,HttpSession session, OrdersVo vo, String addIdx) {
 		String mid = (String)session.getAttribute("smid");
 		vo.setMid(mid);
 		
-		String[] arrayCartIdx = addCartIdx.split("/");
+		String[] arrayIdx = addIdx.split("/");
 		
 		orderService.insertOrders(vo);
 		String order_idx = vo.getOrder_idx();
-		orderService.insertItem(order_idx, arrayCartIdx);
-		orderService.deleteCartByIdx(mid, arrayCartIdx); 
 		
-		return "order/";
+		if(route.equals("cart")) {
+			orderService.insertItemFromCart(order_idx, arrayIdx);
+			orderService.deleteCartByIdx(mid, arrayIdx); 
+		}
+		else {
+			orderService.insertItemFromItem(order_idx, arrayIdx);
+		}
+		
+		return "/";
 	}
 	
 	@RequestMapping(value="/viewOrderList", method = RequestMethod.GET)
@@ -168,19 +183,22 @@ public class OrderController {
 //			return "redirect:/msg/" + msgFlag;
 //		}
 		
-		List<OrdersVo> vos = orderService.findOrdersGroupByIdx("mid",mid,"not","state5");
+		List<OrdersVo> vos = orderService.findOrdersGroupByIdx("mid",mid,"not","state-04");
 		
-		String[] arrayOrderIdx = new String[vos.size()];
 		
-		for(int i=0; i<vos.size(); i++) {
-			OrdersVo vo = vos.get(i);
-			arrayOrderIdx[i] = vo.getOrder_idx();
+		if(vos.size() != 0) {
+			String[] arrayOrderIdx = new String[vos.size()];
+			
+			for(int i=0; i<vos.size(); i++) {
+				OrdersVo vo = vos.get(i);
+				arrayOrderIdx[i] = vo.getOrder_idx();
+			}
+					
+			List<ItemVo> vosItem = orderService.findItemByOrderIdx(arrayOrderIdx);
+			model.addAttribute("vosItem", vosItem);
 		}
-				
-		List<ItemVo> vosItem = orderService.findItemByIdx(arrayOrderIdx);
 		
 	  	model.addAttribute("vos", vos);
-	  	model.addAttribute("vosItem", vosItem);
 		
 	  	
 		return "order/orderList";
@@ -206,23 +224,15 @@ public class OrderController {
 //			return "redirect:/msg/" + msgFlag;
 //		}
 		
-		List<OrdersVo> vos = orderService.findOrdersGroupByIdx("mid",mid,"only","state0");
-		
-		String[] arrayOrderIdx = new String[vos.size()];
-		
-		for(int i=0; i<vos.size(); i++) {
-			OrdersVo vo = vos.get(i);
-			arrayOrderIdx[i] = vo.getOrder_idx();
-		}
-				
-		List<ItemVo> vosItem = orderService.findItemByIdx(arrayOrderIdx);
+		List<OrdersVo> vos = orderService.findOrdersGroupByIdx("mid",mid,"only","state-04");
 		
 	  	model.addAttribute("vos", vos);
-	  	model.addAttribute("vosItem", vosItem);
 		
-	  	
 		return "order/orderEndList";
 	}
+
+
+	
 }
 
 

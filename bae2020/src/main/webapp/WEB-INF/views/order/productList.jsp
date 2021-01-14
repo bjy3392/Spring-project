@@ -63,6 +63,14 @@
 			background-color: #009223;
 			color: #fff;
 		}
+		#bar_td_selected {
+			width: 160px;
+			border: 1px solid #fff;
+			padding: 12px;
+			cursor: pointer;
+			background-color: #ffce32;
+			color: #000;
+		}
 	</style>
 </head>
 <body>
@@ -79,7 +87,12 @@
 				<table id="bar_table">
 					<tr>
 						<c:forEach var="voC" items="${vosC }">
-							<td id="bar_td" onclick="location.href='${contextPath}/order/viewProductList/${voC.category_code}'">${voC.category_name }</td>
+							<c:if test="${category eq voC.category_code }">
+								<td id="bar_td_selected" >${voC.category_name }</td>
+							</c:if>
+							<c:if test="${category ne voC.category_code }">
+								<td id="bar_td" onclick="location.href='${contextPath}/order/viewProductList/${voC.category_code}'">${voC.category_name }</td>						
+							</c:if>
 						</c:forEach>
 					</tr>
 				</table>
@@ -87,7 +100,7 @@
 				<c:forEach var="vo" items="${vos }">
 					<div class="list_detail">
 						<p></p>
-						<img src="${contextPath }/product/${first_code }/${vo.image}" style="width:200px;">
+						<img src="${contextPath }/product/${vo.category_code }/${vo.image}" style="width:200px;">
 						<p>${vo.product_name }<br/>${vo.price }</p>
 						<button class="w3-round-xlarge" id="btn" onclick="location.href='${contextPath}/order/viewOptionList/${vo.category_code}?product_code=${vo.product_code }'">주문하기</button>
 					</div>

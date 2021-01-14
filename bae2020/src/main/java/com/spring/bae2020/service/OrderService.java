@@ -3,27 +3,12 @@ package com.spring.bae2020.service;
 import java.util.List;
 
 import com.spring.bae2020.vo.CartVo;
-import com.spring.bae2020.vo.CategoryVo;
 import com.spring.bae2020.vo.ItemVo;
-import com.spring.bae2020.vo.OptionsVo;
 import com.spring.bae2020.vo.OrdersVo;
-import com.spring.bae2020.vo.ProductVo;
 
 public interface OrderService {
 
-	List<ProductVo> findProductAll();
-
-	List<CategoryVo> findCategoryByCode(String classify);
-	
-	List<ProductVo> findProductByCategory(String category);
-
-	List<OptionsVo> findOptionAll();
-
-	List<OptionsVo> findOptionByCategory(List<OptionsVo> vos, String category);
-
-	ProductVo findProductByCode(String product_code);
-
-	void insertCart(String mid, String product, String options, String price);
+	void insertCart(CartVo vo);
 
 	List<CartVo> findCartByMid(String mid);
 
@@ -31,21 +16,27 @@ public interface OrderService {
 
 	void deleteCartByIdx(String mid, String[] arrayCartIdx);
 
-	List<CartVo> findCartByIdx(String mid, String[] arrayCartIdx);
+	List<ItemVo> findCartByIdx(String mid, String[] arrayIdx);
 
-	CartVo findCartByProduct(String mid, String product, String options, String price);
+	CartVo findCartByProduct(CartVo vo);
 
 	void insertOrders(OrdersVo vo);
 
-	void insertItem(String order_idx, String[] addCartIdx);
+	void insertItemFromCart(String order_idx, String[] arrayIdx);
 
 	List<OrdersVo> findOrdersGroupByIdx(String group, String mid, String delimiter, String state);
 
-	List<ItemVo> findItemByIdx(String[] arrayOrderIdx);
+	List<ItemVo> findItemByOrderIdx(String[] arrayOrderIdx);
 
 	void deleteOrderByIdx(String mid, String order_idx);
 
 	void deleteItemByIdx(String order_idx);
+
+	List<ItemVo> findItemByIdx(String mid, String[] arrayIdx);
+
+	void insertItemFromItem(String order_idx, String[] arrayIdx);
+
+	List<ItemVo> findItem(String route, String[] arrayIdx, String order_idx);
 
 
 }
