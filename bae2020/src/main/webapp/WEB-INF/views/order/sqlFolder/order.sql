@@ -35,7 +35,7 @@ select orders.*
 select * from orders
 where date(create_dt) = date(now());
 
-update orders set STORE='STORE-001' where order_idx=14
+update orders set STORE='STORE-001' where order_idx=18
 
 select * from orders;
 select * from store
@@ -123,8 +123,7 @@ insert into cart value (default, 'admin', 'COOKIE-002', '', '', '', 1000, 0,'', 
 	
 --drop table cart;
 		
-		
-		
+select * from state
 		
 		
 		

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.spring.bae2020.dao.StoreDao;
 import com.spring.bae2020.vo.OrdersVo;
+import com.spring.bae2020.vo.StoreVo;
 
 @Service
 public class StoreServiceImp implements StoreService {
@@ -14,15 +15,22 @@ public class StoreServiceImp implements StoreService {
 	StoreDao storeDao;
 
 	@Override
-	public List<OrdersVo> findOrderByMid(String mid) {
-		return storeDao.findOrderByMid(mid);
+	public StoreVo findStoreByMid(String mid) {
+		return storeDao.findStoreByMid(mid);
 	}
 
 	@Override
 	public void updateOrderByState(String order_idx, String state) {
-		
-		
+		storeDao.updateOrderByState(order_idx, state);
 	}
 
+	@Override
+	public void updateStoreByOpen(String store_code, String open_yn) {
+		storeDao.updateStoreByOpen(store_code, open_yn);
+	}
 
+	@Override
+	public List<OrdersVo> findOrderByDeliveryState(String store_code) {
+		return storeDao.findOrderByDeliveryState(store_code);
+	}
 }

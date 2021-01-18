@@ -95,11 +95,11 @@
 		}
 		.opt_th {
 			text-align: center;
-			width: 200px;
+			width: 120px;
 			border: 1px solid #ccc;
 		}
 		.opt_td {
-			width: 200px;
+			width: 120px;
 			border: 1px solid #ccc;
 			padding: 12px;
 			text-align: center;
@@ -177,64 +177,35 @@
 				<c:if test="${open == 'y' }">
 					<div class="list_detail">
 						<table id="bar_table">
-							<c:if test="${state == 'state-01'}">
-								<tr>
-									<td id="bar_td_select">주문접수 중</td>
-									<td id="bar_td" onclick="location.href='${contextPath}/store/viewStoreOrderList/state-02'">준비중</td>
-									<td id="bar_td" onclick="location.href='${contextPath}/store/viewDeliveryOrderList'">배달현황</td>
-								</tr>
-							</c:if>
-							<c:if test="${state == 'state-02'}">
-								<tr>
-									<td id="bar_td" onclick="location.href='${contextPath}/store/viewStoreOrderList/state-01'">주문접수 중</td>
-									<td id="bar_td_select" >준비중</td>
-									<td id="bar_td" onclick="location.href='${contextPath}/store/viewDeliveryOrderList'">배달현황</td>
-								</tr>
-							</c:if>	
+							<tr>
+								<td id="bar_td" onclick="location.href='${contextPath}/store/viewStoreOrderList/state-01'">주문접수 중</td>
+								<td id="bar_td" onclick="location.href='${contextPath}/store/viewStoreOrderList/state-02'">준비중</td>
+								<td id="bar_td_select">배달현황</td>
+							</tr>
 						</table> 
 						<h3 class="title">주문리스트</h3>
 						<button class="w3-round-xlarge btn_str w3-right w3-margin" type="button" onclick="updateStoreByOpenAjax('${store}','n')">영업종료</button>
 						<table>
 							<tr>
-								<th>주문시각</th>
+								<th class="opt_th">주문시각</th>
+								<th class="opt_th">변경시각</th>
 								<th>총 가격</th>
 								<th>결제수단</th>
 								<th>거리</th>
 								<th>요구사항</th>
-								<th>주문접수</th>
+								<th>배달원</th>
+								<th>상태</th>
 							</tr>
 							<c:forEach var="vo" items="${vos }">
 								<tr id="tr">
-									<td>${vo.create_dt}</td>
+									<td class="opt_td">${vo.create_dt}</td>
+									<td class="opt_td">${vo.update_dt}</td>
 									<td><fmt:formatNumber value="${vo.total }" pattern="#,###" /></td>
 									<td>${vo.payment }</td>
 									<td>${vo.distance  }</td>
 									<td>${vo.demand  }</td>
-									<td rowspan="2">
-										<c:if test="${state == 'state-01'}">
-											<button class="w3-round-xlarge btn_str" type="button" onclick="updateOrderByStateAjax('${vo.order_idx}','state-02')">접수</button>
-										</c:if>
-										<c:if test="${state == 'state-02'}">
-											<button class="w3-round-xlarge btn_str" type="button" onclick="updateOrderByStateAjax('${vo.order_idx}','state-03')">준비완료</button>
-										</c:if>	
-									</td>
-								</tr>
-								<tr>
-									<td colspan="5">
-										<font style="font-weight: bold; font-size: 20px;"> ${vo.product_name }</font>  <c:if test="${vo.cnt ne 1 }">외 ${vo.cnt-1 }개</c:if>
-										<c:forEach var="voItem" items="${vosItem }">
-											<c:if test="${vo.order_idx eq voItem.order_idx }">
-												<div id="detail_${vo.order_idx }"  >
-													<span class="w3-text-grey prod">${voItem.product_name }</span>
-													<span class="w3-text-grey">${voItem.cnt }개&nbsp;<fmt:formatNumber value="${voItem.price * voItem.cnt }" pattern="#,###" /></span><br/> 
-													<span class="w3-text-grey opt">옵션:${voItem.option_unit }</span><br/>
-													<span class="w3-text-grey opt">추가:${voItem.add_unit }</span><br/> 
-													<span class="w3-text-grey opt">미트:${voItem.meat_unit }</span><br/>  
-													<p></p>
-												</div>
-											</c:if>
-										</c:forEach>
-									</td>
+									<td>${vo.delivery  }</td>
+									<td>${vo.state_name  }</td>
 								</tr>
 							</c:forEach>	
 						</table>
