@@ -15,18 +15,38 @@ create table orders (
 	point			int	not null default 0,
 	create_dt		datetime default now(),
 	update_dt		datetime default now(),
-	state			varchar(10) not null default 'state-01',
+	state			varchar(20) not null default 'state-01',
 	primary key(order_idx)
 );
 ALTER TABLE orders ADD FOREIGN KEY (state)  REFERENCES state(state_code) ON DELETE RESTRICT ON UPDATE CASCADE ;
 ALTER TABLE orders ADD FOREIGN KEY (mid)  REFERENCES user(mid) ON DELETE RESTRICT ON UPDATE CASCADE ;
 --쿠폰이랑 매장, 배달 코드도 외래키 연결 해줘야함
 
-select * from orders;
+select orders.*
+  from orders
+ inner join store
+    on orders.store = store.store_code
+ inner join user 
+    on store.manager = user.mid
+   and user.mid = 'manager1'
+ where date(orders.create_dt) = date(now())
+ order by orders.create_dt;
 
-update orders set state='state-04' where order_idx=3
+select * from orders
+where date(create_dt) = date(now());
+
+update orders set STORE='STORE-001' where order_idx=14
+
+select * from orders;
+select * from store
+desc orders;
+
+update orders set state='state-01' where order_idx=15
+ALTER TABLE orders MODIFY state varchar(20) not null default 'state-01';
 
 --drop table orders;
+
+select * from item
 
 create table item (
 	item_idx		int not null auto_increment,
@@ -49,6 +69,7 @@ ALTER TABLE item ADD FOREIGN KEY (product)  REFERENCES product(product_code) ON 
 --ALTER TABLE order_detail ADD FOREIGN KEY (option_code)  REFERENCES option_tbl(option_code) ON DELETE RESTRICT ON UPDATE CASCADE ;
 
 select * from item
+desc item
 
 select orders.order_idx,orders.total, state.state_name, prod.product_name , count(*) as cnt
 from item
@@ -76,8 +97,6 @@ where orders.state <> 'state0'
 select '3' as order_idx, product, option_unit, add_unit, meat_unit, price, price_add,price_meat, cnt 
   	from cart 
   	where cart_idx =2
-
-
 
 
 select * from cart

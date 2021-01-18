@@ -4,9 +4,11 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.spring.bae2020.vo.AskManagerVo;
 import com.spring.bae2020.vo.CategoryVo;
 import com.spring.bae2020.vo.OptionsVo;
 import com.spring.bae2020.vo.ProductVo;
+import com.spring.bae2020.vo.StoreVo;
 import com.spring.bae2020.vo.SubcategoryVo;
 
 public interface AdminDao {
@@ -29,7 +31,7 @@ public interface AdminDao {
 
 	void deleteProduct(@Param("product_code")String product_code);
 
-	List<SubcategoryVo> findSubcategoryBycategory(@Param("category_code")String category_code);
+	List<SubcategoryVo> findSubcategoryByCategory(@Param("category_code")String category_code);
 
 	void insertSubcategory(@Param("category_code")String category_code, @Param("subcategory_name")String subcategory_name, @Param("first_code")String first_code, @Param("mid")String mid);
 
@@ -49,4 +51,17 @@ public interface AdminDao {
 
 	void deleteOption(@Param("option_code")String option_code);
 
+	List<CategoryVo> findStore();
+
+	void insertStore(@Param("vo")StoreVo vo);
+
+	List<AskManagerVo> findAskManager();
+
+	void updateAskManager(@Param("ask_idx")String ask_idx, @Param("pass_yn")String pass_yn);
+
+	void updateStore(@Param("column")String column, @Param("condition")String condition, @Param("store_code")String store_code);
+
+	StoreVo findStoreByCode(@Param("store_code")String store_code);
+
+	
 }

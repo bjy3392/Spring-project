@@ -13,10 +13,13 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.spring.bae2020.dao.AdminDao;
+import com.spring.bae2020.vo.AskManagerVo;
 import com.spring.bae2020.vo.CategoryVo;
 import com.spring.bae2020.vo.OptionsVo;
 import com.spring.bae2020.vo.ProductVo;
+import com.spring.bae2020.vo.StoreVo;
 import com.spring.bae2020.vo.SubcategoryVo;
+import com.spring.bae2020.vo.UserVo;
 
 @Service
 public class AdminServiceImp implements AdminService{
@@ -124,8 +127,8 @@ public class AdminServiceImp implements AdminService{
 	}
 
 	@Override
-	public List<SubcategoryVo> findSubcategoryBycategory(String category_code) {
-		return adminDao.findSubcategoryBycategory(category_code);
+	public List<SubcategoryVo> findSubcategoryByCategory(String category_code) {
+		return adminDao.findSubcategoryByCategory(category_code);
 	}
 
 	@Override
@@ -216,6 +219,38 @@ public class AdminServiceImp implements AdminService{
 	public void deleteOption(String option_code) {
 		adminDao.deleteOption(option_code);
 	}
+
+	@Override
+	public List<CategoryVo> findStore() {
+		return adminDao.findStore();
+	}
+
+	@Override
+	public void insertStore(StoreVo vo) {
+		adminDao.insertStore(vo);
+	}
+
+	@Override
+	public List<AskManagerVo> findAskManager() {
+		return adminDao.findAskManager();
+	}
+
+	@Override
+	public void updateAskManager(String ask_idx, String pass_yn) {
+		adminDao.updateAskManager(ask_idx,pass_yn);
+	}
+
+	@Override
+	public void updateStore(String column, String condition, String store_code) {
+		adminDao.updateStore(column, condition, store_code);
+	}
+
+	@Override
+	public StoreVo findStoreByCode(String store_code) {
+		return adminDao.findStoreByCode(store_code);
+	}
+
+
 }
 
 

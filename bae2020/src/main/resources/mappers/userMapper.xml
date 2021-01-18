@@ -9,4 +9,28 @@
 	<insert id="insertUser">
 		insert into user values (#{vo.mid},#{vo.pwd},#{vo.name},#{vo.tel},#{vo.postcode},#{vo.roadAddress},#{vo.detailAddress},default,default,default)
 	</insert>
+	
+	<insert id="insertAskManager">
+		insert into ask_manager values (default, #{vo.mid}, #{vo.message}, default, default);
+	</insert>
+	
+	<update id="updateUserByLevel">
+		update user set level = #{level} where mid=#{mid};
+	</update>
+	
+	<select id="findUserByLevel" resultType="com.spring.bae2020.vo.UserVo">
+		select * from user where level=#{level} order by join_dt desc;
+	</select>
+	
+	<select id="findUserByName" resultType="com.spring.bae2020.vo.UserVo">
+		select mid, name, tel from user 
+		where name like concat("%",#{name},"%") 
+		and level='level-05'
+		order by name;
+	</select>
+	
+	<select id="findAskManagerByMid" resultType="com.spring.bae2020.vo.AskManagerVo">
+		select * from ask_manager where mid=#{mid};
+	</select>
+	
 </mapper>
