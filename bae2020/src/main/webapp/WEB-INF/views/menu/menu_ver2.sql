@@ -3,18 +3,16 @@ create table category (
 	category_name 	varchar(20) not null,
 	first_code		varchar(10) not null, 
 	user_id  		varchar(20) not null,
+	use_yn			varchar(5)   default 'y' not null,
 	create_dt		datetime default now(),
 	primary key(category_code)
 );
---drop table category_test
-insert into category_test values (category_code,category_name,first_code,user_id,create_dt)
-SELECT CONCAT('PROD', (SELECT LPAD(COUNT(*)+1,3,'0') FROM category where category_code like 'PROD%') )
-
+--drop table category
 select * from category where category_code like 'PROD%' order by category_code
+	
+alter table category add use_yn varchar(5) default 'y' not null;
 
-insert into category_test (category_code,category_name,first_code,user_id,create_dt)
-select concat('PROD', '-',(select lpad(count(*)+1,3,'0') from category_test where category_code like 'PROD%' )),'test', 'test', 'admin', now() ;
-		
+
 select * from category_test where category_code like concat('prod', '%');
 
 select prod.*, ctg.first_code 
@@ -30,6 +28,7 @@ create table product (
 	price 			int	not null,
 	image			varchar(100),
 	user_id  		varchar(20) not null,
+	use_yn			varchar(5)   default 'y' not null,
 	create_dt		datetime default now(),
 	primary key(product_code)
 );
@@ -39,6 +38,22 @@ alter table cart drop FOREIGN KEY cart_ibfk_1;
 
 select * from product
 
+alter table options add use_yn varchar(5) default 'y' not null;
+
+create table subcategory(
+	subcategory_code 	varchar(20) not null,
+	subcategory_name 	varchar(20) not null,
+	category_code 	varchar(20) not null,
+	first_code		varchar(10) not null, 
+	user_id  		varchar(20) not null,
+	use_yn			varchar(5)   default 'y' not null,
+	create_dt		datetime default now(),
+	primary key(subcategory_code)
+);
+--drop table subcategory
+select * from subcategory where category_code = 'prod-001';
+
+
 create table options (
 	option_code	varchar(20) not null,
 	option_name	varchar(100) not null,
@@ -46,6 +61,7 @@ create table options (
 	price 			int	not null,
 	image			varchar(100),
 	user_id  		varchar(20) not null,
+	use_yn			varchar(5)   default 'y' not null,
 	create_dt		datetime default now(),
 	primary key(option_code)
 );
@@ -69,18 +85,7 @@ select concat(first_code, '-',(select lpad(count(*)+1,3,'0') from product where 
 from category_test
 where category_code = 'PROD-001'
 
-
-create table subcategory(
-	subcategory_code 	varchar(20) not null,
-	subcategory_name 	varchar(20) not null,
-	category_code 	varchar(20) not null,
-	first_code		varchar(10) not null, 
-	user_id  		varchar(20) not null,
-	create_dt		datetime default now(),
-	primary key(subcategory_code)
-);
---drop table subcategory
-select * from subcategory where category_code = 'prod-001';
+select * from user
 
 
 

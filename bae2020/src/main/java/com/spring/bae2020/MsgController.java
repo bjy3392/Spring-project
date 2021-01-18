@@ -33,6 +33,10 @@ public class MsgController {
 			model.addAttribute("msg", "선택한 제품이 없습니다.");
 			model.addAttribute("url", "order/viewCartList");
 		}
+		else if(msgFlag.equals("insertStoreOk")) {
+			model.addAttribute("msg", "등록되었습니다.");
+			model.addAttribute("url", "admin/viewStoreList");
+		}
 		return "include/msg";
 	}	
 }

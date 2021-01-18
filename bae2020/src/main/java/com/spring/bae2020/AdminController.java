@@ -13,10 +13,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.spring.bae2020.service.AdminService;
+import com.spring.bae2020.service.UserService;
+import com.spring.bae2020.vo.AskManagerVo;
 import com.spring.bae2020.vo.CategoryVo;
 import com.spring.bae2020.vo.OptionsVo;
 import com.spring.bae2020.vo.ProductVo;
+import com.spring.bae2020.vo.StoreVo;
 import com.spring.bae2020.vo.SubcategoryVo;
+import com.spring.bae2020.vo.UserVo;
 
 @Controller
 @RequestMapping("/admin")
@@ -26,13 +30,16 @@ public class AdminController {
 	@Autowired
 	AdminService adminService;
 	
+	@Autowired
+	UserService userService;
+	
 	@RequestMapping(value="/viewCategoryEdit", method = RequestMethod.GET)
 	public String viewCategoryEditGet(Model model) {
 		List<CategoryVo> vos =  adminService.findCategory();
 		
 		model.addAttribute("vos", vos);
 		
-		return "admin/categoryEdit";
+		return "admin/product/categoryEdit";
 	}
 	
 	@RequestMapping(value="/insertCategoryAjax", method = RequestMethod.POST)
@@ -72,7 +79,7 @@ public class AdminController {
 		model.addAttribute("category_code", category_code);
 		model.addAttribute("vos", vos);
 		
-		return "admin/productEdit";
+		return "admin/product/productEdit";
 	}
 	
 	@RequestMapping(value="/insertProductAjax", method = RequestMethod.POST)
@@ -107,12 +114,12 @@ public class AdminController {
 	@RequestMapping(value="/viewSubcategoryEdit", method = RequestMethod.GET)
 	public String viewSubcategoryEditGet(Model model, String category_code) {
 		
-		List<SubcategoryVo> vos =  adminService.findSubcategoryBycategory(category_code);
+		List<SubcategoryVo> vos =  adminService.findSubcategoryByCategory(category_code);
 		
 		model.addAttribute("category_code", category_code);
 		model.addAttribute("vos", vos);
 		
-		return "admin/subcategoryEdit";
+		return "admin/product/subcategoryEdit";
 	}
 	
 	@RequestMapping(value="/insertSubcategoryAjax", method = RequestMethod.POST)
@@ -151,7 +158,7 @@ public class AdminController {
 		model.addAttribute("subcategory_code", subcategory_code);
 		model.addAttribute("vos", vos);
 		
-		return "admin/optionEdit";
+		return "admin/product/optionEdit";
 	}
 	
 	@RequestMapping(value="/insertOptionAjax", method = RequestMethod.POST)
@@ -183,6 +190,105 @@ public class AdminController {
 		return "";
 	}
 	
+	@RequestMapping(value="/viewStoreList", method = RequestMethod.GET)
+	public String viewStoreListGet(Model model) {
+		List<CategoryVo> vos =  adminService.findStore();
+		
+		model.addAttribute("vos", vos);
+		
+		return "admin/store/storeList";
+	}
+	
+	@RequestMapping(value="/viewStoreInput", method = RequestMethod.GET)
+	public String viewStoreInputGet() {
+		return "admin/store/storeInput";
+	}
+	
+	@RequestMapping(value="/insertStore", method = RequestMethod.POST)
+	public String insertStorePost(StoreVo vo) {
+		adminService.insertStore(vo);
+		msgFlag= "insertStoreOk";
+		
+		return "redirect:/msg/" + msgFlag;
+	}
+	
+	@RequestMapping(value="/updateStore", method = RequestMethod.POST)
+	@ResponseBody
+	public String updateStorePost(String column, String condition, String store_code) {
+		adminService.updateStore(column, condition, store_code);
+		
+		return "";
+	}
+	
+	@RequestMapping(value="/viewStoreInfo", method = RequestMethod.GET)
+	public String viewStoreGet(Model model, String store_code) {
+		StoreVo vo = adminService.findStoreByCode(store_code);
+		
+		model.addAttribute("vo", vo);
+		
+		return "admin/store/storeInfo";
+	}
+	
+	@RequestMapping(value="/viewManagerList", method = RequestMethod.GET)
+	public String viewManagerListGet(Model model) {
+		List<UserVo> vos = userService.findUserByLevel("level-05");
+
+		model.addAttribute("vos", vos);
+		
+		return "admin/manager/managerList";
+	}
+	
+	@RequestMapping(value="/viewAskManagerList", method = RequestMethod.GET)
+	public String viewAskManagerListGet(Model model) {
+		List<AskManagerVo> vos = adminService.findAskManager();
+		
+		model.addAttribute("vos", vos);
+		
+		return "admin/manager/askManagerList";
+	}
+	
+	@RequestMapping(value="/updateAskManagerAjax", method = RequestMethod.POST)
+	@ResponseBody
+	public String updateAskManagerAjaxPost(String ask_idx, String pass_yn, String mid) {
+		
+		adminService.updateAskManager(ask_idx,pass_yn);
+		
+		if(pass_yn.equals("y")) {
+			userService.updateUserByLevel(mid,"level-05");
+		}
+		
+		return "";
+	}
+	
+	@RequestMapping(value="/updateUserByLevelAjax", method = RequestMethod.POST)
+	@ResponseBody
+	public String updateUserByLevelAjaxPost(String mid) {
+		
+		userService.updateUserByLevel(mid,"level-01");
+		
+		return "";
+	}
+	
+	@RequestMapping(value="/viewManagerSimpleList", method = RequestMethod.GET)
+	public String viewManagerSimpleListGet(Model model, String store_code) {
+		List<UserVo> vos = userService.findUserByLevel("level-05");
+
+		model.addAttribute("store_code", store_code);
+		model.addAttribute("vos", vos);
+		
+		return "admin/manager/managerSimpleList";
+	}
+	
+	@RequestMapping(value="/findUserByNameAjax", method = RequestMethod.POST)
+	@ResponseBody
+	public List<UserVo> findUserByNameAjaxPost(String name) {
+		
+		List<UserVo> vos = userService.findUserByName(name);
+		
+		return vos;
+	}
+	
+
 }
 
 

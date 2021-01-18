@@ -6,7 +6,7 @@ update state set state_name='주문 접수 중'
 select * from groups
 select * from level
 
-drop table state
+--drop table state
 
 create table state (
 	state_code 	varchar(20) not null,
@@ -20,3 +20,7 @@ insert into state value ('state-01','주문접수 중','admin',default);
 insert into state value ('state-02','준비 중','admin',default);
 insert into state value ('state-03','배달 중','admin',default);
 insert into state value ('state-04','배달완료','admin',default);
+
+desc level
+
+update level set level_code = 'level-06' where level_name='관리자' 

@@ -12,8 +12,8 @@
 	<script src="https://use.fontawesome.com/releases/v5.2.0/js/all.js"></script>
 	<script>
 		//소스 선택  개수 제한
-		function count_ck(obj){
-			var chkbox = document.getElementsByName("sauce");
+		function count_ck(obj,sub){
+			var chkbox = document.getElementsByName(sub);
 			var chkCnt = 0;
 			for(var i=0;i<chkbox.length; i++){
 				if(chkbox[i].checked){
@@ -24,6 +24,9 @@
 				alert("2개이상 선택할 수 없습니다.");
 				obj.checked = false;
 				return false;
+			}
+			else{
+				return true;
 			}
 		} 
 		//출처: https://hyunssssss.tistory.com/259 [현's 블로그]
@@ -40,34 +43,40 @@
 		}
 		
 		//추가메뉴 선택시 가격 계산
-		function calcPrice() {
-	        var check_count = document.getElementsByName('add').length;
-	        var addVal = 0;
-	        for (var i=0; i<check_count; i++) {
-	            if (document.getElementsByName('add')[i].checked == true) {
-	            	var price = document.getElementsByName('add')[i].value;
-	            	price = price.split("/")[1];
-	            	addVal+= Number(price);
-	            }
-	        }
-	        var check_count = document.getElementsByName('meat').length;
-	        var meatVal = 0;
-	        for (var i=0; i<check_count; i++) {
-	            if (document.getElementsByName('meat')[i].checked == true) {
-	            	var price = document.getElementsByName('meat')[i].value;
-	            	price = price.split("/")[1];
-	            	meatVal+= Number(price);
-	            }
-	        }
-	        
-			totPrice = addComma(addVal+meatVal+${voP.price});
-			
-			$("#totPrice").html(totPrice);
-			$("#addPrice").html(addComma(addVal));
-			$("#meatPrice").html(addComma(meatVal));
-			
-	       	$("#price_add").val(addVal);
-	       	$("#price_meat").val(meatVal);
+		function calcPrice(obj,sub) {
+			if(!count_ck(obj,sub)){
+				return false;
+			}	
+			else{			
+		        var check_count = document.getElementsByName('add').length;
+		        var addVal = 0;
+		        for (var i=0; i<check_count; i++) {
+		            if (document.getElementsByName('add')[i].checked == true) {
+		            	var price = document.getElementsByName('add')[i].value;
+		            	price = price.split("/")[1];
+		            	addVal+= Number(price);
+		            }
+		        }
+		        var check_count = document.getElementsByName('meat').length;
+		        var meatVal = 0;
+		        for (var i=0; i<check_count; i++) {
+		            if (document.getElementsByName('meat')[i].checked == true) {
+		            	var price = document.getElementsByName('meat')[i].value;
+		            	price = price.split("/")[1];
+		            	meatVal+= Number(price);
+		            }
+		        }
+		        
+				totPrice = addComma(addVal+meatVal+${voP.price});
+				
+				$("#totPrice").html(totPrice);
+				$("#addPrice").html(addComma(addVal));
+				$("#meatPrice").html(addComma(meatVal));
+				
+		       	$("#price_add").val(addVal);
+		       	$("#price_meat").val(meatVal);
+			}
+	       	
 		}
 		
 		//천단위 콤마 펑션
@@ -329,7 +338,7 @@
 	                <div class="w3-col l10">
 	                	<c:forEach var="vo" items="${SAUCEvos }" >
 		                	<div class="list_detail">
-		                      	<input type="checkbox" name="sauce" id="${vo.option_code }" class="input-hidden" value="${vo.option_name }" onclick="count_ck(this)"/>
+		                      	<input type="checkbox" name="sauce" id="${vo.option_code }" class="input-hidden" value="${vo.option_name }" onclick="count_ck(this,'sauce')"/>
 		                       	<label for="${vo.option_code }">
 		                          	<img src="${contextPath }/option/${vo.subcategory_code }/${vo.image }" style="width:100px;"><p>${vo.option_name }</p>
 		                       	</label>
@@ -344,7 +353,7 @@
 					<div class="w3-hide w3-col l10" id="add">
 						<c:forEach var="vo" items="${ADDvos }" >
 							<div class="list_detail" id="a_list_detail">
-					     		<input type="checkbox" name="add" id="${vo.option_code }" class="input-hidden" value="${vo.option_name }/${vo.price}" onclick="calcPrice()"/>
+					     		<input type="checkbox" name="add" id="${vo.option_code }" class="input-hidden" value="${vo.option_name }/${vo.price}" onclick="calcPrice(this,'add')"/>
 								<label for="${vo.option_code }">
 									<img src="${contextPath }/option/${vo.subcategory_code }/${vo.image }" style="width:100px;">
 									<p>${vo.option_name }<fmt:formatNumber value="${vo.price}" pattern="#,###" /></p>
@@ -360,7 +369,7 @@
 					<div class="w3-hide w3-col l10" id="meat">
 						<c:forEach var="vo" items="${MEATvos }" >
 							<div class="list_detail">
-					     		<input type="checkbox" name="meat" id="${vo.option_code }" class="input-hidden" value="${vo.option_name }/${vo.price}" onclick="calcPrice()"/>
+					     		<input type="checkbox" name="meat" id="${vo.option_code }" class="input-hidden" value="${vo.option_name }/${vo.price}" onclick="calcPrice(this,'meat')"/>
 								<label for="${vo.option_code }">
 									<img src="${contextPath }/option/${vo.subcategory_code }/${vo.image }" style="width:100px;">
 									<p>${vo.option_name }<fmt:formatNumber value="${vo.price}" pattern="#,###" /></p>

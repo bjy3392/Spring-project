@@ -1,6 +1,5 @@
 package com.spring.bae2020;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.spring.bae2020.service.AdminService;
 import com.spring.bae2020.service.OrderService;
@@ -50,7 +48,7 @@ public class OrderController {
 	
 	@RequestMapping(value="/viewOptionList/{category}", method = RequestMethod.GET)
 	public String viewOptionListGet(@PathVariable String category, Model model, String product_code ) {
-		List<SubcategoryVo> vosS =  adminService.findSubcategoryBycategory(category);
+		List<SubcategoryVo> vosS =  adminService.findSubcategoryByCategory(category);
 		ProductVo voP = adminService.findProductByCode(product_code);
 		
 		for(int i=0; i<vosS.size(); i++) {
@@ -156,6 +154,11 @@ public class OrderController {
 	
 	@RequestMapping(value="/insertOrder/{route}", method = RequestMethod.POST)
 	public String insertOrderPost(@PathVariable String route, Model model,HttpSession session, OrdersVo vo, String addIdx) {
+		if(addIdx==null || addIdx.equals("")) {
+			msgFlag= "notProduct";
+			return "redirect:/msg/" + msgFlag;
+		}
+		
 		String mid = (String)session.getAttribute("smid");
 		vo.setMid(mid);
 		
@@ -172,16 +175,12 @@ public class OrderController {
 			orderService.insertItemFromItem(order_idx, arrayIdx);
 		}
 		
-		return "/";
+		return "order/orderInputOk";
 	}
 	
 	@RequestMapping(value="/viewOrderList", method = RequestMethod.GET)
 	public String viewOrderListGet(Model model,HttpSession session) {
 		String mid = (String)session.getAttribute("smid");
-//		if(mid==null) {
-//			msgFlag= "";
-//			return "redirect:/msg/" + msgFlag;
-//		}
 		
 		List<OrdersVo> vos = orderService.findOrdersGroupByIdx("mid",mid,"not","state-04");
 		
@@ -219,10 +218,6 @@ public class OrderController {
 	@RequestMapping(value="/viewOrderEndList", method = RequestMethod.GET)
 	public String viewOrderEndListGet(Model model,HttpSession session) {
 		String mid = (String)session.getAttribute("smid");
-//		if(mid==null) {
-//			msgFlag= "";
-//			return "redirect:/msg/" + msgFlag;
-//		}
 		
 		List<OrdersVo> vos = orderService.findOrdersGroupByIdx("mid",mid,"only","state-04");
 		

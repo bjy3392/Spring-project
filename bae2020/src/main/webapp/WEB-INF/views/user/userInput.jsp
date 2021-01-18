@@ -125,12 +125,12 @@
 	      }
 	      else {
 	    	  myform.tel.value = tel;
-	    	  
 	    	  myform.submit();	    	  
 	      }
 	    }
 	</script>
   	<style>
+  	
 	    table, th, td {
 	      margin : 0px auto;
 	      width : 650px;
@@ -141,7 +141,7 @@
 	    th {
 	      text-align:center;
 	    }
-		button {
+		.btn {
 			background-color: #009223; /* Green */
 			border: none;
 			color: #ffce32;
@@ -168,7 +168,7 @@
 			    	<th>아이디</th>
 			      	<td>
 			        	<input class="w3-border" type="text" name="mid" id="mid" onkeyup="idValidate()" autofocus required/>
-			    		<button class="w3-round-xlarge" type="button" id="idCheck" >아이디중복체크</button>
+			    		<button class="w3-round-xlarge btn" type="button" id="idCheck" >아이디중복체크</button>
 			    		<div id="idVal"></div>
 			  		</td>
 				</tr>
@@ -195,15 +195,15 @@
 			  		<th>주소</th>
 			  		<td>
 					    <input class="w3-border" type="text" name="postcode" id="postcode" placeholder="우편번호" readonly required>
-						<button class="w3-round-xlarge" type="button" onclick="execDaumPostcode()">우편번호 찾기</button><br/>
+						<button class="w3-round-xlarge btn" type="button" onclick="execDaumPostcode()">우편번호 찾기</button><br/>
 						<p><input class="w3-border" type="text" name="roadAddress" id="roadAddress" placeholder="도로명주소" size=50></p>
 						<input class="w3-border" type="text" name="detailAddress" id="detailAddress" placeholder="상세주소" size=50>
 					</td>
 				</tr>
 				<tr>
 			  		<th colspan=2 style="text-align:center">
-						<button class="w3-round-xlarge" type="button" id="subm" onclick="fCheck()">회원가입</button>
-			        	<button class="w3-round-xlarge" type="reset">다시입력</button>
+						<button class="w3-round-xlarge btn" type="button"  onclick="fCheck()">회원가입</button>
+			        	<button class="w3-round-xlarge btn" type="reset" >다시입력</button>
 			      	</th>
 			    </tr>
 			</table>

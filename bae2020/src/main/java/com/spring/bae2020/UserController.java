@@ -1,15 +1,20 @@
 package com.spring.bae2020;
 
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.spring.bae2020.service.AdminService;
 import com.spring.bae2020.service.UserService;
+import com.spring.bae2020.vo.AskManagerVo;
 import com.spring.bae2020.vo.UserVo;
 
 @Controller
@@ -19,6 +24,9 @@ public class UserController {
 	
 	@Autowired
 	UserService userService;
+	
+	@Autowired
+	AdminService adminService;
 	
 	@Autowired
 	BCryptPasswordEncoder passwordEncoder;
@@ -76,9 +84,14 @@ public class UserController {
 		if(vo != null) {
 			if(passwordEncoder.matches(pwd, vo.getPwd())) {				
 				session.setAttribute("smid", vo.getMid());
+				session.setAttribute("sname", vo.getName());
 				session.setAttribute("slevel", vo.getLevel());
-				session.setAttribute("sgroup", vo.getGroups());
-				return "redirect:/";
+				if(vo.getLevel().equals("level-05")) {
+					return "store/storeHome";
+				}
+				else {
+					return "redirect:/";					
+				}
 			}
 			else {
 				//비밀번호가 틀린경우
@@ -99,4 +112,29 @@ public class UserController {
 		return "redirect:/";
 	}
 
+	
+	@RequestMapping(value="/viewManagerInput", method=RequestMethod.GET)
+	public String managerInputGet(Model model) {
+		return "user/managerInput";
+	}
+	
+	@RequestMapping(value="/insertManager", method=RequestMethod.POST)
+	public String insertManagerPost(HttpSession session, AskManagerVo vo) {
+		String mid = (String)session.getAttribute("smid");
+		vo.setMid(mid);
+		
+		userService.insertAskManager(vo);
+		
+		return "user/managerInputOk";
+	}
+	
+	@RequestMapping(value="/viewManagerPassOk", method=RequestMethod.GET)
+	public String viewManagerPassOkGet(HttpSession session, Model model) {
+		String mid = (String)session.getAttribute("smid");
+		List<AskManagerVo> vos =  userService.findAskManagerByMid(mid);
+		
+		model.addAttribute("vos", vos);
+		
+		return "user/managerPassOk";
+	}
 }
