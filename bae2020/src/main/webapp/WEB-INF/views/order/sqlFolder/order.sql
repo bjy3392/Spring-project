@@ -35,7 +35,7 @@ select orders.*
 select * from orders
 where date(create_dt) = date(now());
 
-update orders set STORE='STORE-001' where order_idx=18
+update orders set STORE='STORE-001' where order_idx=19
 
 select * from orders;
 select * from store
@@ -122,17 +122,14 @@ desc cart
 insert into cart value (default, 'admin', 'COOKIE-002', '', '', '', 1000, 0,'', default, default, default);
 	
 --drop table cart;
-		
+
 select * from state
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+
+select orders.*, state.state_name
+		  from orders
+		 inner join state 
+		    on orders.state = state.state_code
+		 where 1=1
+		   and store='STORE-001'
+		   and state in ('state-03', 'state-04');
 		
