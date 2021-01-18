@@ -62,4 +62,4 @@ select * from store
 
 select * from store order by store_code desc;
 
-select * from 
+select store_code from store where manager='manager1';

@@ -57,7 +57,7 @@
 			<div class="navbar-brand" >매니저 메뉴</div>
 	  		<ul class="navbar-nav" >
 	  			<li class="nav-item">
-			      	<a href="${contextPath }/store/viewStoreOrderList" class="w3-bar-item w3-button w3-padding-large w3-hide-small">주문현황</a>
+			      	<a href="${contextPath }/store/viewStoreOrderList/state-01" class="w3-bar-item w3-button w3-padding-large w3-hide-small">주문현황</a>
 			    </li>
 	    		<li class="nav-item">
 			      	<a href="${contextPath }/admin/viewCategoryEdit" class="w3-bar-item w3-button w3-padding-large">재고관리</a>
