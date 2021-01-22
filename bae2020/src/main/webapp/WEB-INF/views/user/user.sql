@@ -7,13 +7,24 @@ create table user(
 	roadAddress 	varchar(50) ,
 	detailAddress 	varchar(50) ,
 	join_dt 		datetime default now(),
-	level			varchar(10) default 'level0' not null,
-	groups			varchar(10) default 'group-c' not null,
+	level 			varchar(10) default 'level-01' not null,
+	use_yn 			varchar(5) default 'y' not null,
 	primary key(mid)
 );
 --drop table user
 
+alter table user add use_yn varchar(5) default 'y' not null ;
+
+ALTER TABLE user MODIFY level varchar(10) default 'level-01' not null
+
+insert into user values ('lmj1234','1234','test','010-41583031','test','test','test',default,default,default)
+
+select * from level
+
 select * from user
+
+update user set use_yn = 'y' where mid='test1234';
+
 select * from groups
 select* from level
 
@@ -63,3 +74,14 @@ select * from store
 select * from store order by store_code desc;
 
 select store_code from store where manager='manager1';
+
+create table delete_user(
+	delete_idx		int not null auto_increment,
+	reason			varchar(20) not null,
+	message 	text,			
+	delete_dt 	datetime default now(),
+	primary key(delete_idx)
+);
+
+select * from delete_user
+insert delete_user (default, 'adsds', 'dddd', default);

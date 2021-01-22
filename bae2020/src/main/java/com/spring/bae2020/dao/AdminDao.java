@@ -10,6 +10,7 @@ import com.spring.bae2020.vo.OptionsVo;
 import com.spring.bae2020.vo.ProductVo;
 import com.spring.bae2020.vo.StoreVo;
 import com.spring.bae2020.vo.SubcategoryVo;
+import com.spring.bae2020.vo.UserVo;
 
 public interface AdminDao {
 
@@ -51,7 +52,7 @@ public interface AdminDao {
 
 	void deleteOption(@Param("option_code")String option_code);
 
-	List<CategoryVo> findStore();
+	List<StoreVo> findStore();
 
 	void insertStore(@Param("vo")StoreVo vo);
 
@@ -62,6 +63,12 @@ public interface AdminDao {
 	void updateStore(@Param("column")String column, @Param("condition")String condition, @Param("store_code")String store_code);
 
 	StoreVo findStoreByCode(@Param("store_code")String store_code);
+
+	OptionsVo findOptionByCode(@Param("option_code")String option_code);
+
+	int totUserRecCnt();
+
+	List<UserVo> findUser(@Param("startNo")int startNo, @Param("pageSize")int pageSize);
 
 	
 }

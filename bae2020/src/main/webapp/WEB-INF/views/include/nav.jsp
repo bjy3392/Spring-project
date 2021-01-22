@@ -54,7 +54,7 @@
 		      	<a href="${contextPath }" class="w3-bar-item w3-button w3-padding-large">HOME</a>
 		    </li>
 		    <li class="nav-item">
-		      	<a href="${contextPath }/order/viewProductList/PROD-001" class="w3-bar-item w3-button w3-padding-large w3-hide-small">ORDER</a>
+		      	<a href="${contextPath }/order/viewOrderStoreList" class="w3-bar-item w3-button w3-padding-large w3-hide-small">ORDER</a>
 		    </li>
 		    <li class="nav-item">
 		       	<a href="${contextPath }/order/viewCartList" class="w3-bar-item w3-button w3-padding-large w3-hide-small">CART</a>
@@ -65,7 +65,7 @@
 		    <li class="w3-dropdown-hover w3-hide-small">
 		      	<button class="w3-padding-large w3-button" title="More">MY PAGE<i class="fa fa-caret-down"></i></button>     
 					<div class="w3-dropdown-content w3-bar-block w3-card-4">
-						<a href="${contextPath }/member/mPassCheck" class="w3-bar-item w3-button">정보수정</a>
+						<a href="${contextPath }/user/viewPasswordCheck" class="w3-bar-item w3-button">정보수정</a>
 						<a href="${contextPath }/member/mPassCheck" class="w3-bar-item w3-button">포인트/쿠폰</a>
 						<a href="${contextPath }/order/viewOrderList" class="w3-bar-item w3-button">주문확인</a>
 					</div>
@@ -91,7 +91,7 @@
 			      	<a href="${contextPath }/admin/viewCategoryEdit" class="w3-bar-item w3-button w3-padding-large">제품관리</a>
 			    </li>
 			    <li class="nav-item">
-			      	<a href="${contextPath }/order/viewProductList" class="w3-bar-item w3-button w3-padding-large w3-hide-small">회원관리</a>
+			      	<a href="${contextPath }/admin/viewUserList" class="w3-bar-item w3-button w3-padding-large w3-hide-small">회원관리</a>
 			    </li>
 			    <li class="nav-item">
 			      	<a href="${contextPath }/admin/viewManagerList" class="w3-bar-item w3-button w3-padding-large w3-hide-small">매니저관리</a>
@@ -102,19 +102,10 @@
 			    <li class="nav-item">
 			       	<a href="${contextPath }/order/viewCartList" class="w3-bar-item w3-button w3-padding-large w3-hide-small">게시판관리</a>
 			    </li>
-			    <li class="w3-dropdown-hover w3-hide-small">
-			      	<button class="w3-padding-large w3-button" title="More">MY PAGE<i class="fa fa-caret-down"></i></button>     
-						<div class="w3-dropdown-content w3-bar-block w3-card-4">
-							<a href="${contextPath }/member/mPassCheck" class="w3-bar-item w3-button">정보수정</a>
-							<a href="#" class="w3-bar-item w3-button">회원탈퇴</a>
-							<a href="${contextPath }/order/viewOrderList" class="w3-bar-item w3-button">주문확인</a>
-							<a href="${contextPath }/admin/adminMenu" class="w3-bar-item w3-button">관리자</a>
-						</div>
-	    		</li>
 	  		</ul>
 		</nav>
 	</c:if>
-	<c:if test="${slevel eq 'level-05' }">
+	<%-- <c:if test="${slevel eq 'level-05' }">
 		<nav class="navbar navbar-expand-sm justify-content-center" id="admin_bar">
 			<div class="navbar-brand" >매니저 메뉴</div>
 	  		<ul class="navbar-nav" >
@@ -135,7 +126,7 @@
 			    </li>
 	  		</ul>
 		</nav>
-	</c:if>  
+	</c:if>   --%>
 	  <%-- <div class="bar" style="text-align:center;">
 		    <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
 		    <a href="${contextPath }" class="w3-bar-item w3-button w3-padding-large">HOME</a>

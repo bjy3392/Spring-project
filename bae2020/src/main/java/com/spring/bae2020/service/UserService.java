@@ -21,4 +21,10 @@ public interface UserService {
 
 	List<AskManagerVo> findAskManagerByMid(String mid);
 
+	void updateUser(UserVo vo);
+
+	void deleteUser(String mid);
+
+	void insertDeleteUser(String reason, String message);
+
 }

@@ -20,6 +20,7 @@ public class OrdersVo {
 	private String state;
 	private String state_name;
 	private String product_name;
+	private String store_name;
 	private String cnt;
 	public String getOrder_idx() {
 		return order_idx;
@@ -77,6 +78,9 @@ public class OrdersVo {
 	}
 	public String getProduct_name() {
 		return product_name;
+	}
+	public String getStore_name() {
+		return store_name;
 	}
 	public String getCnt() {
 		return cnt;
@@ -138,6 +142,9 @@ public class OrdersVo {
 	public void setProduct_name(String product_name) {
 		this.product_name = product_name;
 	}
+	public void setStore_name(String store_name) {
+		this.store_name = store_name;
+	}
 	public void setCnt(String cnt) {
 		this.cnt = cnt;
 	}
@@ -148,8 +155,9 @@ public class OrdersVo {
 				+ ", tel=" + tel + ", demand=" + demand + ", store=" + store + ", delivery=" + delivery + ", distance="
 				+ distance + ", coupon=" + coupon + ", point=" + point + ", create_dt=" + create_dt + ", update_dt="
 				+ update_dt + ", state=" + state + ", state_name=" + state_name + ", product_name=" + product_name
-				+ ", cnt=" + cnt + "]";
+				+ ", store_name=" + store_name + ", cnt=" + cnt + "]";
 	}
+
 	
 	
 	

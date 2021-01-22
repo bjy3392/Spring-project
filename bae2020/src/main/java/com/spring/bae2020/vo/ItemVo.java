@@ -3,6 +3,7 @@ package com.spring.bae2020.vo;
 public class ItemVo {
 	private String item_idx;
 	private String order_idx;
+	private String mid;
 	private String product;
 	private String product_name;
 	private String option_unit;
@@ -12,11 +13,15 @@ public class ItemVo {
 	private String price_add;
 	private String price_meat;
 	private String cnt;
+	private String create_dt;
 	public String getItem_idx() {
 		return item_idx;
 	}
 	public String getOrder_idx() {
 		return order_idx;
+	}
+	public String getMid() {
+		return mid;
 	}
 	public String getProduct() {
 		return product;
@@ -45,11 +50,17 @@ public class ItemVo {
 	public String getCnt() {
 		return cnt;
 	}
+	public String getCreate_dt() {
+		return create_dt;
+	}
 	public void setItem_idx(String item_idx) {
 		this.item_idx = item_idx;
 	}
 	public void setOrder_idx(String order_idx) {
 		this.order_idx = order_idx;
+	}
+	public void setMid(String mid) {
+		this.mid = mid;
 	}
 	public void setProduct(String product) {
 		this.product = product;
@@ -78,12 +89,18 @@ public class ItemVo {
 	public void setCnt(String cnt) {
 		this.cnt = cnt;
 	}
+	public void setCreate_dt(String create_dt) {
+		this.create_dt = create_dt;
+	}
 	@Override
 	public String toString() {
-		return "ItemVo [item_idx=" + item_idx + ", order_idx=" + order_idx + ", product=" + product + ", product_name="
-				+ product_name + ", option_unit=" + option_unit + ", add_unit=" + add_unit + ", meat_unit=" + meat_unit
-				+ ", price=" + price + ", price_add=" + price_add + ", price_meat=" + price_meat + ", cnt=" + cnt + "]";
+		return "ItemVo [item_idx=" + item_idx + ", order_idx=" + order_idx + ", mid=" + mid + ", product=" + product
+				+ ", product_name=" + product_name + ", option_unit=" + option_unit + ", add_unit=" + add_unit
+				+ ", meat_unit=" + meat_unit + ", price=" + price + ", price_add=" + price_add + ", price_meat="
+				+ price_meat + ", cnt=" + cnt + ", create_dt=" + create_dt + "]";
 	}
+	
+	
 	
 	
 	

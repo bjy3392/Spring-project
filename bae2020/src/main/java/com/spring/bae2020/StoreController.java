@@ -98,4 +98,10 @@ public class StoreController {
 		
 		return "store/deliveryOrderList";
 	}
+	
+	@RequestMapping(value="/viewSalesCalendar", method=RequestMethod.GET)
+	  public String viewSalesCalendarGet() {
+		storeService.getCalendar();
+	  	return "store/salesCalendar";
+	  }
 }

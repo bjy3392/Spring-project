@@ -222,7 +222,7 @@
 		}
 		
 		.list_detail {
-		   text-align: left; 
+		   	text-align: left; 
 		    display: inline-block;
 		    width: 700px;
 		    height: 210px;
@@ -267,7 +267,15 @@
 			background: none; 
 			color:#009223;
 		}
-	
+		#storeInfo{
+			padding: 15px 15px;
+			font-size: 18px;
+			font-weight: bold;
+		}
+		#storeDiv{
+			background: #ffce32; 
+			text-align:left;
+		}
 	</style>
 </head>
 <body>
@@ -291,6 +299,11 @@
 			</c:if>
 			<c:if test="${not empty vos}">
 				<div class="list_start">
+					<div class="w3-panel w3-round-xlarge" id="storeDiv">
+						<div id="storeInfo">
+							${storeVo.store_name } :${storeVo.roadAddress }
+						</div>
+					</div>
 					<div class="w3-row w3-padding-10 w3-white" style="text-align:left">
 						<div class="w3-row w3-padding-large" >
 							<input type="checkbox" id="all_select" onclick="checkAll();">&nbsp;&nbsp;<font style="font-weight: bold; font-size: 20px;">전체선택</font>
@@ -334,10 +347,11 @@
 			    		 	총 주문 금액 <strong style="font-size: 40px; color:#ff8300"><span id="totPriceAll">0</span></strong> 원
 			    		</div>
 			    		<div class="w3-col l6 w3-padding-small" >
-			    			<button class="w3-round-xlarge" id="btn" onclick="location.href='${contextPath}/order/viewProductList/PROD-001'">추가하기</button>
+			    			<button class="w3-round-xlarge" id="btn" onclick="location.href='${contextPath}/order/setStore?store=${storeVo.store_code }'">추가하기</button>
 							<button class="w3-round-xlarge" id="btn" onclick="javascript:viewOrder()">주문하기</button>
 					   		<form id="myform" method="post" action="${contextPath }/order/viewOrderInput/cart">
 						    	<input type="hidden" id="arrayIdx" name="arrayIdx[]" value=""/>
+						    	<input type="hidden" id="store" name="store" value="${storeVo.store_code }"/>
 						    </form> 
 					    </div>
 					    

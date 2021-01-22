@@ -43,6 +43,16 @@ public interface OrderDao {
 
 	void insertItemFromItem(@Param("order_idx")String order_idx, @Param("arrayIdx")String[] arrayIdx);
 
+	void deleteCartByMid(@Param("mid")String mid);
+
+	List<OrdersVo> findOrderEndByMid(@Param("mid")String mid, @Param("month")int month);
+
+	void insertItem(@Param("order_idx")String order_idx, @Param("itemVo")ItemVo itemVo);
+
+	OrdersVo findOrderByIdx(@Param("order_idx")String order_idx);
+
+	
+
 
 
 }

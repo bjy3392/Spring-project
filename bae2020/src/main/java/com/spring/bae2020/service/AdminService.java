@@ -48,7 +48,7 @@ public interface AdminService {
 
 	void deleteOption(String option_code);
 
-	List<CategoryVo> findStore();
+	List<StoreVo> findStore();
 
 	void insertStore(StoreVo vo);
 
@@ -59,6 +59,12 @@ public interface AdminService {
 	void updateStore(String column, String condition, String store_code);
 
 	StoreVo findStoreByCode(String store_code);
+
+	OptionsVo findOptionByCode(String option_code);
+
+	int totUserRecCnt();
+
+	List<UserVo> findUser(int startNo, int pageSize);
 
 
 

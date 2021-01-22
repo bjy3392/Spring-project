@@ -23,4 +23,10 @@ public interface UserDao {
 
 	List<AskManagerVo> findAskManagerByMid(@Param("mid")String mid);
 
+	void updateUser(@Param("vo")UserVo vo);
+
+	void deleteUser(@Param("mid")String mid);
+
+	void insertDeleteUser(@Param("reason")String reason, @Param("message")String message);
+
 }

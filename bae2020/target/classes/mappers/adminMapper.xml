@@ -27,7 +27,7 @@
 	</select>
 	
 	<insert id="insertProduct">
-		insert into product value (#{vo.product_code},#{vo.product_name},#{vo.category_code},#{vo.price},#{vo.image},#{vo.user_id},default);
+		insert into product value (#{vo.product_code},#{vo.product_name},#{vo.category_code},#{vo.price},#{vo.image},#{vo.user_id},default,default);
 	</insert>
 	
 	<select id="findProductByCategory" resultType="com.spring.bae2020.vo.ProductVo">
@@ -81,7 +81,7 @@
 	</select>
 	
 	<insert id="insertOption">
-		insert into options value (#{vo.option_code},#{vo.option_name},#{vo.subcategory_code},#{vo.price},#{vo.image},#{vo.user_id},default);
+		insert into options value (#{vo.option_code},#{vo.option_name},#{vo.subcategory_code},#{vo.price},#{vo.image},#{vo.user_id},default,'y');
 	</insert>
 	
 	<update id="updateOption">
@@ -103,7 +103,7 @@
 	<select id="findStore"  resultType="com.spring.bae2020.vo.StoreVo">
 		select store.*, user.name as manager_name
 		  from store 
-	inner join user 
+	left outer join user 
 	        on store.manager = user.mid
 		 order by store_code desc;
 	</select>
@@ -139,6 +139,23 @@
 	     where store_code = #{store_code}
 		 order by join_dt desc;
 	</select>
+	
+	<select id="findOptionByCode" resultType="com.spring.bae2020.vo.OptionsVo">
+		select * from options where option_code = #{option_code} limit 1;
+	</select>
+	
+	<select id="totUserRecCnt" resultType="int">
+		select count(*) from user;
+	</select>
+	
+	<select id="findUser" resultType="com.spring.bae2020.vo.UserVo">
+		select user.*, level.level_name
+		from user 
+	   inner join level
+	      on user.level = level.level_code 	
+		order by join_dt desc 
+		limit #{startNo}, #{pageSize}
+	</select> 
 	
 </mapper>
 

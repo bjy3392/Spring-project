@@ -49,4 +49,19 @@ public class UserServiceImp implements UserService {
 	public List<AskManagerVo> findAskManagerByMid(String mid) {
 		return userDao.findAskManagerByMid(mid);
 	}
+
+	@Override
+	public void updateUser(UserVo vo) {
+		userDao.updateUser(vo);		
+	}
+
+	@Override
+	public void deleteUser(String mid) {
+		userDao.deleteUser(mid);		
+	}
+
+	@Override
+	public void insertDeleteUser(String reason, String message) {
+		userDao.insertDeleteUser(reason,message);			
+	}
 }

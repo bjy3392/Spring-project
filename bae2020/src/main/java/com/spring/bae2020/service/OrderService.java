@@ -36,7 +36,15 @@ public interface OrderService {
 
 	void insertItemFromItem(String order_idx, String[] arrayIdx);
 
-	List<ItemVo> findItem(String route, String[] arrayIdx, String order_idx);
+	List<ItemVo> findItem(String route, String[] arrayIdx, String order_idx, ItemVo itemVo);
+
+	void deleteCartByMid(String mid);
+
+	List<OrdersVo> findOrderEndByMid(String mid, int month);
+
+	void insertItem(String route, String order_idx, String[] arrayIdx, ItemVo itemVo);
+
+	OrdersVo findOrderByIdx(String order_idx);
 
 
 

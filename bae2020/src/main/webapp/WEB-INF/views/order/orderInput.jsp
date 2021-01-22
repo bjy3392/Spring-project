@@ -10,6 +10,7 @@
 	<meta charset="UTF-8">
 	<title>SUBWAY</title>
 	<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+	<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=ac95c27acc45476a2c2bc9417405e7f6&libraries=services"></script>
 	<script src="${contextPath}/resources/js/woo.js"></script>
 	<script>
 		$(document).ready(function(){
@@ -27,11 +28,10 @@
 							var tel = data.tel.split("-");
 							$("#postcode").val(data.postcode); 
 							$("#roadAddress").val(data.roadAddress); 
-							$("#detailAddress").val(data.detailAddress); 
+							$("#detailAddress").val(data.detailAddress);
 							$("#tel1").val(tel[0]); 
 							$("#tel2").val(tel[1]); 
 							$("#tel3").val(tel[2]); 
-							
 						}
 					});
 		        	
@@ -68,7 +68,65 @@
 		        	
 		        }
 		    });
+		    
+		    
 		});
+		
+		$(document).ready(function(){
+		    var $input = $("#roadAddress"); // readonly inputBox  
+		        $("#roadAddress").on('input', function() {
+		        	calcLength()
+		        });
+		});
+		
+		(function ($) {
+		    var originalVal = $.fn.val;
+		    $.fn.val = function (value) {
+		        var res = originalVal.apply(this, arguments);
+		 
+		        if (this.is('input:text') && arguments.length >= 1) {
+		            // this is input type=text setter
+		            this.trigger("input");
+		        }
+		 
+		        return res;
+		    };
+		})(jQuery);
+		
+		function resetAddress(){
+			$("#detailAddress").val(""); 
+			execDaumPostcode();
+		}
+		
+		function calcLength(){
+			if($("#chkStore").is(":checked")){
+		    	$('#mlon').val(0);
+				$('#mlat').val(0);
+		    	$('#vlon').val(0);
+				$('#vlat').val(0);
+			}
+			else{
+				var geocoder = new kakao.maps.services.Geocoder();
+	
+				var store = '${storeVo.roadAddress}';
+				var arrival = $('#roadAddress').val();
+				
+				var coords1 = geocoder.addressSearch(store, function(result, status) { 
+					if (status === kakao.maps.services.Status.OK){
+				    	$('#mlon').val(result[0].y);
+						$('#mlat').val(result[0].x);
+				    }
+				}); 
+				
+				geocoder.addressSearch(arrival, function(result, status) {
+				    if (status === kakao.maps.services.Status.OK){
+				    	$('#vlon').val(result[0].y);
+						$('#vlat').val(result[0].x);
+				    }
+				}); 
+			}
+		}
+		
 		
 		
 		function insertOrder(){
@@ -77,7 +135,7 @@
 	      
 			if(!regExpTel.test(tel)) {
 		    	alert("전화번호를 확인하세요.");
-		    	myform.tel2.focus();
+		    	myform.tel1.focus();
 		    	return false;
 		    }
 			else if($("#payment option:selected").val().trim() == ""){
@@ -88,18 +146,47 @@
 			
 			if($("#chkStore").is(":checked")){
 				myform.delivery.value = "픽업";
+				myform.distance.value = "0";	
 			}
 			else{
 			    if($("#postcode").val().trim() == ""){
 					alert("주소를 입력해주세요.");
+			    	myform.btnPost.focus();
+					return false;
+				}
+			    else if($("#detailAddress").val().trim() == ""){
+					alert("상세주소를 입력해주세요.");
+			    	myform.detailAddress.focus();
 					return false;
 				}
 			    else if($("#total").val()<=15000){
 					alert("15,000 이상 배달 가능합니다.");
 					return false;
 			    }
+			    else{
+			    	var mlon=$('#mlon').val();
+					var mlat=$('#mlat').val();
+					var vlon=$('#vlon').val();
+					var vlat=$('#vlat').val();
+			    	
+					var polyline=new daum.maps.Polyline({
+						path : [
+							new daum.maps.LatLng(mlon,mlat),
+							new daum.maps.LatLng(vlon,vlat)
+						]
+					});
+					
+					var distance =( polyline.getLength() / 1000 ).toFixed(2);	
+					if(distance > 2.0){
+						alert("거리가 2km이내만 배달가능합니다.");
+						return false;
+					}
+					else{
+						myform.distance.value = distance;
+					}
+			    }
 			}
-			
+			//console.log("길이"+myform.distance.value);
 			myform.tel.value = tel;
 			myform.submit();
 		}
@@ -235,9 +322,13 @@
 						  		<th>주소</th>
 						  		<td>
 								    <p><input class="w3-border" type="text" name="postcode" id="postcode" placeholder="우편번호" readonly required>
-									<button class="w3-round-xlarge btn" id="btnPost" type="button" onclick="execDaumPostcode()">우편번호 찾기</button><br/></p>
-									<p><input class="w3-border" type="text" name="roadAddress" id="roadAddress" placeholder="도로명주소" size=50></p>
-									<input class="w3-border" type="text" name="detailAddress" id="detailAddress" placeholder="상세주소" size=50>
+									<button class="w3-round-xlarge btn" id="btnPost" type="button" onclick="resetAddress()">우편번호 찾기</button><br/></p>
+									<p><input class="w3-border" type="text" name="roadAddress" id="roadAddress" placeholder="도로명주소" size=50 readonly></p>
+									<input class="w3-border" type="text" name="detailAddress" id="detailAddress" onchange="calcLength()" placeholder="상세주소" size=50 required>
+									<input type="hidden" id="mlon">
+									<input type="hidden" id="mlat">
+									<input type="hidden" id="vlon">
+									<input type="hidden" id="vlat">
 								</td>
 							</tr>
 							<tr>
@@ -252,15 +343,11 @@
 						  		<th>주문시 요청사항</th>
 						  		<td>
 						  			<input class="w3-border" type="text" name="demand" maxlength=100/>
-						  			
 						  		</td>
 							</tr>
 							<tr>
-						  		<th>매장선택(가까운거리 순으로 검색 예정)</th>
-						  		<td>
-						  			<button class="w3-round-xlarge btn" id="" type="button" onclick="">매장검색</button>	
-						  			<span><input name="store" class="w3-border" type="text" value="미정" readonly></span>					  			
-						  		</td>
+						  		<th>선택매장</th>
+						  		<td>${storeVo.store_name }</td>
 							</tr>
 						</table>
                         <hr style="width:100%"/>
@@ -310,14 +397,23 @@
 								<tr>
 							  		<td id="prod_td">
 	                                 <span id="prod">${vo.product_name }</span><span class="w3-text-grey">${vo.cnt } 개</span><br/>
-	                                 <span class="w3-text-grey" id="opt">옵션:${vo.option_unit }</span><br/>
-	                                 <span class="w3-text-grey" id="opt">추가:${vo.add_unit }</span><br/>
-	                                 <span class="w3-text-grey" id="opt">미트:${vo.meat_unit }</span><br/>
+	                                 <c:if test="${vo.option_unit !=''}"><span class="w3-text-grey" id="opt">옵션:${vo.option_unit }</span><br/></c:if>
+	                                 <c:if test="${vo.add_unit !=''}"><span class="w3-text-grey" id="opt">추가:${vo.add_unit }</span><br/></c:if>
+	                                 <c:if test="${vo.meat_unit !=''}"><span class="w3-text-grey" id="opt">미트:${vo.meat_unit }</span><br/></c:if>
 							  		</td>
 	                                <td id="opt_td">
 	                                 	<fmt:formatNumber value="${(vo.price+vo.price_add+vo.price_meat ) * vo.cnt }" pattern="#,###" />
 							  		</td>
 								</tr>
+								<c:if test="${route == 'direct' }">
+					  				<input type="hidden" name="product" value="${vo.product }"/>
+					  				<input type="hidden" name="option_unit" value="${vo.option_unit }"/>
+					  				<input type="hidden" name="add_unit" value="${vo.add_unit }"/>
+					  				<input type="hidden" name="meat_unit" value="${vo.meat_unit }"/>
+					  				<input type="hidden" name="price" value="${vo.price }"/>
+					  				<input type="hidden" name="price_add" value="${vo.price_add }"/>
+					  				<input type="hidden" name="price_meat" value="${vo.price_meat }"/>
+					  			</c:if>
 							</c:forEach>
 						</table>
                         <hr style="width:100%"/>
@@ -331,7 +427,7 @@
 							</tr>
 						</table>
                         <div id="bottom_btn">
-                          <button class="w3-round-xlarg btn" type="button" onclick="location.href = '${contextPath}/order/viewProductList/PROD-001'">주문추가</button>
+                          <button class="w3-round-xlarg btn" type="button" onclick="location.href = '${contextPath}/order/setStore?store=${storeVo.store_code }'">메뉴선택</button>
                           <button class="w3-round-xlarge btn" type="button" onclick="location.href = '${contextPath}/order/viewCartList'">장바구니</button>
                           <button class="w3-round-xlarge btn" type="button" onclick="javascript:insertOrder()">주문하기</button>
                     	</div>
@@ -341,7 +437,9 @@
 			<c:set var="addIdx" value="${fn:join(arrayIdx,'/')}" />
 			<input type="hidden" name="addIdx" value="${addIdx }"/> 
   			<input type="hidden" name="tel"/>
+  			<input type="hidden" name="store" value=${storeVo.store_code } />
   			<input type="hidden" name="delivery" />
+  			<input type="hidden" name="distance" />
   			<input type="hidden" id="total" name="total" value="${total }"/>
 		</form>
 	</div>

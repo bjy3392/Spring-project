@@ -79,7 +79,7 @@
 			<!-- 상단 제목 -->
 			<div class="main_title">
 				<p></p>
-				<h2>메뉴선택</h2>
+				<h2>메뉴선택(${store_name })</h2>
 				<p><br/></p>
 			</div>
 			<!-- 리스트 -->

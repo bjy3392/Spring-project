@@ -221,7 +221,7 @@ public class AdminServiceImp implements AdminService{
 	}
 
 	@Override
-	public List<CategoryVo> findStore() {
+	public List<StoreVo> findStore() {
 		return adminDao.findStore();
 	}
 
@@ -248,6 +248,21 @@ public class AdminServiceImp implements AdminService{
 	@Override
 	public StoreVo findStoreByCode(String store_code) {
 		return adminDao.findStoreByCode(store_code);
+	}
+
+	@Override
+	public OptionsVo findOptionByCode(String option_code) {
+		return adminDao.findOptionByCode(option_code);
+	}
+
+	@Override
+	public int totUserRecCnt() {
+		return adminDao.totUserRecCnt();
+	}
+
+	@Override
+	public List<UserVo> findUser(int startNo, int pageSize) {
+		return adminDao.findUser(startNo, pageSize);
 	}
 
 

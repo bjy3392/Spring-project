@@ -7,6 +7,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -21,6 +22,7 @@ import com.spring.bae2020.vo.ItemVo;
 import com.spring.bae2020.vo.OptionsVo;
 import com.spring.bae2020.vo.OrdersVo;
 import com.spring.bae2020.vo.ProductVo;
+import com.spring.bae2020.vo.StoreVo;
 import com.spring.bae2020.vo.SubcategoryVo;
 
 @Controller
@@ -34,14 +36,17 @@ public class OrderController {
 	AdminService adminService;
 	
 	@RequestMapping(value="/viewProductList/{category}", method = RequestMethod.GET)
-	public String viewProductListGet(@PathVariable String category, Model model) {
+	public String viewProductListGet(@PathVariable String category, Model model, HttpSession session) {
+		String store= (String)session.getAttribute("store");
 		
 		List<CategoryVo> vosC =  adminService.findCategory();
 		List<ProductVo> vos = adminService.findProductByCategory(category);
+		StoreVo vo = adminService.findStoreByCode(store);
 
 		model.addAttribute("vosC", vosC);
 		model.addAttribute("vos", vos);
 		model.addAttribute("category", category);
+		model.addAttribute("store_name", vo.getStore_name());
 		
 		return "order/productList";
 	}
@@ -93,7 +98,14 @@ public class OrderController {
 		String mid = (String)session.getAttribute("smid");
 		List<CartVo> vos = orderService.findCartByMid(mid);
 		
+		String store= "";
+		if(vos.size() != 0) {
+			store = vos.get(0).getStore();			
+		}
+		StoreVo storeVo = adminService.findStoreByCode(store);
+		
 		model.addAttribute("vos", vos);
+		model.addAttribute("storeVo", storeVo);
 		
 		return "order/cartList";
 	}
@@ -122,16 +134,21 @@ public class OrderController {
 	@RequestMapping(value="/viewOrderInput/{route}", method = RequestMethod.POST)
 	public String viewOrderInputPost(@PathVariable String route, Model model,HttpSession session,
 									@RequestParam(value="arrayIdx[]", required = false) String[] arrayIdx,
-									@RequestParam(value="order_idx", required = false) String order_idx) {
-	
-		if(arrayIdx==null && order_idx.equals("")) {
+									@RequestParam(value="order_idx", required = false) String order_idx,
+									@ModelAttribute(value="itemVo") ItemVo itemVo,
+									String store) {
+		
+		if(arrayIdx==null && order_idx==null && itemVo==null) {
 			msgFlag= "notProduct";
 			return "redirect:/msg/" + msgFlag;
 		}
 		
-		List<ItemVo> vos = orderService.findItem(route,arrayIdx,order_idx);
-		
-		if(arrayIdx == null){
+		List<ItemVo> vos = orderService.findItem(route,arrayIdx,order_idx,itemVo);
+
+		StoreVo storeVo = adminService.findStoreByCode(store);
+
+	  	
+		if(arrayIdx==null && vos!=null){
 		  	arrayIdx = new String[vos.size()];
 			for(int i=0; i<vos.size(); i++) {
 				ItemVo vo = vos.get(i);
@@ -139,7 +156,7 @@ public class OrderController {
 			}
 		}
 		
-		if(vos.size()<1) {
+		if(vos.size()<1 && itemVo==null) {
 			msgFlag= "notProduct";
 			return "redirect:/msg/" + msgFlag;
 		}
@@ -147,13 +164,15 @@ public class OrderController {
 		  	model.addAttribute("vos", vos);	
 		  	model.addAttribute("route", route);
 		  	model.addAttribute("arrayIdx", arrayIdx);
+		  	model.addAttribute("storeVo", storeVo);
 		}
-	  	
+		
 		return "order/orderInput";
 	}
 	
 	@RequestMapping(value="/insertOrder/{route}", method = RequestMethod.POST)
-	public String insertOrderPost(@PathVariable String route, Model model,HttpSession session, OrdersVo vo, String addIdx) {
+	public String insertOrderPost(@PathVariable String route, Model model,HttpSession session, OrdersVo vo, String addIdx,
+								  @ModelAttribute(value="itemVo") ItemVo itemVo) {
 		if(addIdx==null || addIdx.equals("")) {
 			msgFlag= "notProduct";
 			return "redirect:/msg/" + msgFlag;
@@ -161,18 +180,17 @@ public class OrderController {
 		
 		String mid = (String)session.getAttribute("smid");
 		vo.setMid(mid);
+		itemVo.setMid(mid);
 		
 		String[] arrayIdx = addIdx.split("/");
 		
 		orderService.insertOrders(vo);
 		String order_idx = vo.getOrder_idx();
 		
+		orderService.insertItem(route,order_idx,arrayIdx,itemVo);
+		
 		if(route.equals("cart")) {
-			orderService.insertItemFromCart(order_idx, arrayIdx);
 			orderService.deleteCartByIdx(mid, arrayIdx); 
-		}
-		else {
-			orderService.insertItemFromItem(order_idx, arrayIdx);
 		}
 		
 		return "order/orderInputOk";
@@ -218,16 +236,69 @@ public class OrderController {
 	@RequestMapping(value="/viewOrderEndList", method = RequestMethod.GET)
 	public String viewOrderEndListGet(Model model,HttpSession session) {
 		String mid = (String)session.getAttribute("smid");
+		int month =0;
 		
-		List<OrdersVo> vos = orderService.findOrdersGroupByIdx("mid",mid,"only","state-04");
+		List<OrdersVo> vos = orderService.findOrderEndByMid(mid, month);
 		
 	  	model.addAttribute("vos", vos);
 		
 		return "order/orderEndList";
 	}
-
-
 	
+	@RequestMapping(value="/viewOrderStoreList", method = RequestMethod.GET)
+	public String viewOrderStoreListGet(Model model,HttpSession session) {
+		List<StoreVo> vos =  adminService.findStore();
+		
+		model.addAttribute("vos", vos);
+		
+		return "order/orderStoreList";
+	}
+
+	@RequestMapping(value="/setStore", method = RequestMethod.GET)
+	public String setStoreGet(Model model,HttpSession session, String store) {
+		
+		session.setAttribute("store", store);
+		
+		return "redirect:/order/viewProductList/PROD-001";
+	}
+	
+	@RequestMapping(value="/findCartStoreByMidAjax", method = RequestMethod.POST)
+	@ResponseBody
+	public String findCartStoreByMidAjaxPost(HttpSession session) {
+		String mid = (String)session.getAttribute("smid");
+
+		List<CartVo> vos = orderService.findCartByMid(mid);
+		String store = "";
+		
+		if(vos.size() != 0) {
+			store = vos.get(0).getStore();			
+		}
+		
+		return store;
+	}
+	
+	@RequestMapping(value="/deleteCartByMidAjax", method = RequestMethod.POST)
+	@ResponseBody
+	public String deleteCartByMidAjaxPost(HttpSession session) {
+		String mid = (String)session.getAttribute("smid");
+				
+		orderService.deleteCartByMid(mid);
+		
+		return "";
+	}
+	
+	@RequestMapping(value="/viewOrderInfo", method = RequestMethod.GET)
+	public String viewOrderInfoGet(Model model,String order_idx) {
+		
+		List<ItemVo> vos = orderService.findItemByOrderIdx(new String[] {order_idx});
+		
+		OrdersVo orderVo = orderService.findOrderByIdx(order_idx);
+		
+		model.addAttribute("vos", vos);
+		model.addAttribute("orderVo", orderVo);
+		
+		return "order/orderInfo";
+	}
 }
 
 

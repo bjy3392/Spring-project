@@ -1,19 +1,25 @@
 package com.spring.bae2020.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.spring.bae2020.dao.AdminDao;
 import com.spring.bae2020.dao.OrderDao;
 import com.spring.bae2020.vo.CartVo;
 import com.spring.bae2020.vo.ItemVo;
 import com.spring.bae2020.vo.OrdersVo;
+import com.spring.bae2020.vo.ProductVo;
 
 @Service
 public class OrderServiceImp implements OrderService {
 	@Autowired
 	OrderDao orderDao;	
+	
+	@Autowired
+	AdminDao adminDao;
 	
 	@Override
 	public void insertCart(CartVo vo) {
@@ -86,18 +92,54 @@ public class OrderServiceImp implements OrderService {
 	}
 
 	@Override
-	public List<ItemVo> findItem(String route, String[] arrayIdx, String order_idx) {
-		List<ItemVo> vos = null;
+	public List<ItemVo> findItem(String route, String[] arrayIdx, String order_idx,ItemVo itemVo) {
+		List<ItemVo> vos = new ArrayList<ItemVo>();
 		
 		if(route.equals("cart")) {
 			vos = orderDao.findCartByIdx(arrayIdx);
 		}
-		
-		else {
+		else if(route.equals("order")) {
 			vos = orderDao.findItemByOrderIdx(new String[] {order_idx});
+		}
+		else {
+			ProductVo product = adminDao.findProductByCode(itemVo.getProduct());
+			itemVo.setProduct_name(product.getProduct_name());
+			itemVo.setCnt("1");
+			vos.add(itemVo);
 		}
 		
 		return vos;
+	}
+
+	@Override
+	public void deleteCartByMid(String mid) {
+		orderDao.deleteCartByMid(mid);
+	}
+
+	@Override
+	public List<OrdersVo> findOrderEndByMid(String mid, int month) {
+		return orderDao.findOrderEndByMid(mid,month);
+	}
+
+	@Override
+	public void insertItem(String route, String order_idx, String[] arrayIdx, ItemVo itemVo) {
+
+		if(route.equals("cart")) {
+			orderDao.insertItemFromCart(order_idx, arrayIdx);
+		}
+		else if(route.equals("order")) {
+			orderDao.insertItemFromItem(order_idx, arrayIdx);
+		}
+		else {
+			itemVo.setCnt("1");
+			orderDao.insertItem(order_idx, itemVo);
+		}
+		
+	}
+
+	@Override
+	public OrdersVo findOrderByIdx(String order_idx) {
+		return orderDao.findOrderByIdx(order_idx);
 	}
 
 	
