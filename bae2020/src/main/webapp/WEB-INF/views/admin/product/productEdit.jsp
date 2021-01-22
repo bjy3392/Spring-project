@@ -6,7 +6,7 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>title</title>
+	<title>SUBWAY</title>
 	<script src="https://use.fontawesome.com/releases/v5.2.0/js/all.js"></script>
 	<script>
 		function insertProductAjax(){
@@ -38,22 +38,22 @@
 			}
 		} 
 		
-		function editProduct(idx){
+		function editProduct(idx,code){
 		
 			$("#product_name_"+idx).prop("disabled", false);
 			$("#price_"+idx).prop("disabled", false);
 			$("#file_"+idx).attr("type", "file");
 			$("#fileSpan_"+idx).html("") 
 			$("#span_"+idx).html("<button class='w3-round-xlarge' id='btn_str' onclick='updateProductAjax("+idx+")'>적용</button>"+
-					"<button class='w3-round-xlarge' id='btn_str' onclick='cancelEdit("+idx+")'>취소</button>");
+					"<button class='w3-round-xlarge' id='btn_str' onclick='cancelEdit("+idx+",\""+code+"\")'>취소</button>");
 		}
 		
-		function cancelEdit(idx){
+		function cancelEdit(idx,code){
 			$("#product_name_"+idx).prop("disabled", true);
 			$("#price_"+idx).prop("disabled", true);
 			$("#file_"+idx).attr("type", "hidden");
-			$("#fileSpan_"+idx).html("<button type='button' class='w3-round-xlarge' id='btn_str'>미리보기</button>")
-			$("#span_"+idx).html("<button type='button' class='w3-round-xlarge' id='btn_str' onclick='editProduct("+idx+")'>편집</button>"+
+			$("#fileSpan_"+idx).html("<button type='button' class='w3-round-xlarge' id='btn_str' onclick='viewImageShow(\""+code+"\")'>미리보기</button>")
+			$("#span_"+idx).html("<button type='button' class='w3-round-xlarge' id='btn_str' onclick='editProduct("+idx+",\""+code+"\")'>편집</button>"+
       							  "<button type='button' class='w3-round-xlarge' id='btn_str'>삭제</button>");
 		}
 		
@@ -214,6 +214,11 @@
 				return "checkOk";
 			}
 		}
+		
+		function viewImageShow(product){
+			var url = "${contextPath}/admin/viewImageShow?code="+product+"&classify=prod";
+			window.open(url,"nwin","width=300px, height=300px");
+		}
 	</script>
 	<style>
 	body{
@@ -338,9 +343,9 @@
 			                              	<td>
 			                              	<input type="hidden" id='file_${status.count}' name='file' accept='.zip,.jpg,.gif,.png,.jpeg'>
 			                              	<input type="hidden" id='fileEx_${status.count}' name='fileEx' >
-			                              	<span id="fileSpan_${status.count}"><button type="button" class="w3-round-xlarge" id="btn_str">미리보기</button></span></td>
+			                              	<span id="fileSpan_${status.count}"><button type="button" class="w3-round-xlarge" id="btn_str" onclick="viewImageShow('${vo.product_code}')">미리보기</button></span></td>
 			                              	<td>
-			                              		<span id="span_${status.count}"><button type="button" class="w3-round-xlarge" id="btn_str" onclick="editProduct(${status.count})">편집</button>
+			                              		<span id="span_${status.count}"><button type="button" class="w3-round-xlarge" id="btn_str" onclick="editProduct(${status.count},'${vo.product_code}')">편집</button>
 			                              		<button type="button" class="w3-round-xlarge" id="btn_str" onclick="deleteProductAjax(${status.count})">삭제</button></span>
 			                              	</td>
 			                              	<input type="hidden" name="category_code" value="${category_code }"/>

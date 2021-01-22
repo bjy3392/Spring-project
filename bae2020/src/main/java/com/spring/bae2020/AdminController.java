@@ -2,9 +2,11 @@ package com.spring.bae2020;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -192,7 +194,7 @@ public class AdminController {
 	
 	@RequestMapping(value="/viewStoreList", method = RequestMethod.GET)
 	public String viewStoreListGet(Model model) {
-		List<CategoryVo> vos =  adminService.findStore();
+		List<StoreVo> vos =  adminService.findStore();
 		
 		model.addAttribute("vos", vos);
 		
@@ -288,7 +290,47 @@ public class AdminController {
 		return vos;
 	}
 	
+	@RequestMapping(value="/viewImageShow", method = RequestMethod.GET)
+	public String viewImageShowGet(Model model, String code, String classify) {
+		
+		if(classify.equals("prod")) {
+			ProductVo vo = adminService.findProductByCode(code);
+			model.addAttribute("vo", vo);
+			model.addAttribute("classify", classify);
+		}
+		else if(classify.equals("opt")) {
+			OptionsVo vo = adminService.findOptionByCode(code);
+			model.addAttribute("vo", vo);
+			model.addAttribute("classify", classify);
+		}
+		
+		return "admin/product/ImageShow";
+	}
 
+	@RequestMapping(value="/viewUserList", method = RequestMethod.GET)
+	public String viewUserListGet(HttpServletRequest request, Model model) {
+		// 페이징처리 준비 시작...
+		int totRecCnt = adminService.totUserRecCnt();  // 총레코드건수 구하기
+		int pageSize = request.getParameter("pageSize")==null ? 5 : Integer.parseInt(request.getParameter("pageSize")); // 한페이지 분량
+		int blockSize = 3; // 한개 블록의 크기는 3으로 지정
+		int pag = request.getParameter("pag")==null ? 1 : Integer.parseInt(request.getParameter("pag"));  // 현재 페이지 번호
+		int totPage = (totRecCnt % pageSize)==0 ? totRecCnt/pageSize : (int)(totRecCnt/pageSize) + 1; // 총페이지 수
+		int startNo = (pag - 1) * pageSize; // 시작 인덱스 번호
+		int curScrNo = totRecCnt - startNo; // 해당 페이지의 시작문항의 번호
+		// 이까지 페이징 처리 준비 완료..
+		
+		
+		List<UserVo> vos = adminService.findUser(startNo,pageSize);
+		
+		model.addAttribute("vos", vos);
+		model.addAttribute("pageSize", pageSize);
+		model.addAttribute("blockSize", blockSize);
+		model.addAttribute("pag", pag);
+		model.addAttribute("totPage", totPage);
+		model.addAttribute("curScrNo", curScrNo);
+		
+		return "admin/user/userList";
+	}
 }
 
 

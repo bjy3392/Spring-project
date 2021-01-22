@@ -49,6 +49,11 @@
 			});  
 		}
 	}
+	
+	function viewOrderInfo(order_idx){
+		var url = "${contextPath}/order/viewOrderInfo?order_idx="+order_idx;
+		window.open(url,"nwin","width=1100px, height=600px");
+	}
 
 </script>
 
@@ -199,7 +204,7 @@
 						<table>
 							<c:forEach var="vo" items="${vos }">
 								<tr id="tr_${vo.order_idx }">
-									<td class="opt_td">${vo.update_dt }</td>
+									<td class="opt_td">${vo.update_dt }<br/>(${vo.store_name })</td>
 									<td><font style="font-weight: bold; font-size: 20px;"> ${vo.product_name }</font>  <c:if test="${vo.cnt ne 1 }">외 ${vo.cnt-1 }개</c:if>
 										<button class="icon_btn" disabled >
 											<i class="fas fa-chevron-down"></i>
@@ -210,9 +215,9 @@
 												<div id="detail_${vo.order_idx }"  >
 													<span class="w3-text-grey prod">${voItem.product_name }</span>
 													<span class="w3-text-grey">${voItem.cnt }개&nbsp;<fmt:formatNumber value="${voItem.price * voItem.cnt }" pattern="#,###" /></span><br/> 
-													<span class="w3-text-grey opt">옵션:${voItem.option_unit }</span><br/>
-													<span class="w3-text-grey opt">추가:${voItem.add_unit }</span><br/> 
-													<span class="w3-text-grey opt">미트:${voItem.meat_unit }</span><br/>  
+													<c:if test="${voItem.option_unit !=''}"><span class="w3-text-grey opt">옵션:${voItem.option_unit }</span><br/></c:if>
+													<c:if test="${voItem.add_unit !=''}"><span class="w3-text-grey opt">추가:${voItem.add_unit }</span><br/></c:if>
+													<c:if test="${voItem.meat_unit !=''}"><span class="w3-text-grey opt">미트:${voItem.meat_unit }</span><br/></c:if>  
 													<p></p>
 												</div>
 											</c:if>
@@ -220,8 +225,7 @@
 									</td>
 									<td class="opt_td">
 										<fmt:formatNumber value="${vo.total }" pattern="#,###" />
-										<button class="w3-round-xlarge btn_str">상세</button>
-										
+										<button class="w3-round-xlarge btn_str" onclick="viewOrderInfo('${vo.order_idx}')">상세</button>
 									</td>
 									<td class="opt_td">
 										${vo.state_name } 

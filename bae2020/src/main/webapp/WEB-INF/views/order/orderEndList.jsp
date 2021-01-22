@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <c:set var="contextPath" value="${pageContext.request.contextPath }" />
 <%@ include file="/WEB-INF/views/include/nav.jsp"%>
 <!DOCTYPE html>
@@ -42,6 +43,11 @@
 	
 	function formSubmit(idx){
 		$("#myform_"+idx).submit();
+	}
+	
+	function viewOrderInfo(order_idx){
+		var url = "${contextPath}/order/viewOrderInfo?order_idx="+order_idx;
+		window.open(url,"nwin","width=1100px, height=600px");
 	}
 	
 </script>
@@ -193,19 +199,22 @@
 						<table>
 							<c:forEach var="vo" items="${vos }">
 								<tr id="tr_${vo.order_idx }">
-									<td class="opt_td">${vo.update_dt }</td>
-									<td><font style="font-weight: bold; font-size: 20px;"> ${vo.product_name }</font>  <c:if test="${vo.cnt ne 1 }">외 ${vo.cnt-1 }개</c:if>
-										지점정보 추가하기
+									<td class="opt_td">
+										${fn:substring(vo.update_dt ,0,10)}
+									</td>
+									<td>
+										<font style="font-weight: bold; font-size: 20px;"> ${vo.store_name }</font>
+										<span class="w3-text-grey">${vo.product_name }<c:if test="${vo.cnt ne 1 }">외 ${vo.cnt-1 }개</c:if></span>  
 									</td>
 									<td class="opt_td">
 										<fmt:formatNumber value="${vo.total }" pattern="#,###" />
-										<button class="w3-round-xlarge btn_str">상세</button>
-										
+										<button class="w3-round-xlarge btn_str" onclick="viewOrderInfo('${vo.order_idx}')">상세</button>
 									</td>
 									<td class="opt_td">
 										<button class="w3-round-xlarge btn_str" type="button" onclick="formSubmit(${vo.order_idx })">재주문</button>
 										<form id="myform_${vo.order_idx }" method="post" action="${contextPath }/order/viewOrderInput/order">
 									    	<input type="hidden" id="order_idx" name="order_idx" value="${vo.order_idx }"/>
+									    	<input type="hidden" id="store" name="store" value="${vo.store}"/>
 									    </form>
 									</td>
 								</tr>

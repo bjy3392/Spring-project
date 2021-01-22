@@ -37,6 +37,10 @@ public class MsgController {
 			model.addAttribute("msg", "등록되었습니다.");
 			model.addAttribute("url", "admin/viewStoreList");
 		}
+		else if(msgFlag.equals("wrongPasswordCheck")) {
+			model.addAttribute("msg", "비밀번호를 확인해주세요.");
+			model.addAttribute("url", "user/viewPasswordCheck");
+		}
 		return "include/msg";
 	}	
 }

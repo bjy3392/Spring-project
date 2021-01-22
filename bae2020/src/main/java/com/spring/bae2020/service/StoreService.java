@@ -15,5 +15,7 @@ public interface StoreService {
 
 	List<OrdersVo> findOrderByDeliveryState(String store_code);
 
+	void getCalendar();
+
 
 }

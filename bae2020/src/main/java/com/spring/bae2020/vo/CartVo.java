@@ -12,6 +12,8 @@ public class CartVo {
 	private String price_add;
 	private String price_meat;
 	private String cnt;
+	private String store;
+	private String store_name;
 	private String create_dt;
 	private String update_dt;
 	private String image;
@@ -48,6 +50,12 @@ public class CartVo {
 	}
 	public String getCnt() {
 		return cnt;
+	}
+	public String getStore() {
+		return store;
+	}
+	public String getStore_name() {
+		return store_name;
 	}
 	public String getCreate_dt() {
 		return create_dt;
@@ -94,6 +102,12 @@ public class CartVo {
 	public void setCnt(String cnt) {
 		this.cnt = cnt;
 	}
+	public void setStore(String store) {
+		this.store = store;
+	}
+	public void setStore_name(String store_name) {
+		this.store_name = store_name;
+	}
 	public void setCreate_dt(String create_dt) {
 		this.create_dt = create_dt;
 	}
@@ -111,8 +125,8 @@ public class CartVo {
 		return "CartVo [cart_idx=" + cart_idx + ", mid=" + mid + ", product=" + product + ", product_name="
 				+ product_name + ", option_unit=" + option_unit + ", add_unit=" + add_unit + ", meat_unit=" + meat_unit
 				+ ", price=" + price + ", price_add=" + price_add + ", price_meat=" + price_meat + ", cnt=" + cnt
-				+ ", create_dt=" + create_dt + ", update_dt=" + update_dt + ", image=" + image + ", category_code="
-				+ category_code + "]";
+				+ ", store=" + store + ", store_name=" + store_name + ", create_dt=" + create_dt + ", update_dt="
+				+ update_dt + ", image=" + image + ", category_code=" + category_code + "]";
 	}
 	
 	

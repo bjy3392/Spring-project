@@ -3,7 +3,7 @@
 <mapper namespace="com.spring.bae2020.dao.OrderDao">
 
 	<insert id="insertCart">
-		insert into cart value (default, #{vo.mid}, #{vo.product}, #{vo.option_unit}, #{vo.add_unit}, #{vo.meat_unit}, #{vo.price}, #{vo.price_add}, #{vo.price_meat}, default, default, default);
+		insert into cart value (default, #{vo.mid}, #{vo.product}, #{vo.option_unit}, #{vo.add_unit}, #{vo.meat_unit}, #{vo.price}, #{vo.price_add}, #{vo.price_meat}, default,#{vo.store} ,default, default);
 	</insert>
 	
 	<select id="findCartByMid" resultType="com.spring.bae2020.vo.CartVo">
@@ -68,8 +68,8 @@
 	</insert>
 	
 	<insert id="insertItemFromCart">
-		insert into item (order_idx ,product, option_unit, add_unit, meat_unit, price, price_add,price_meat, cnt )
-			(select #{order_idx} as order_idx, product, option_unit, add_unit, meat_unit, price, price_add,price_meat, cnt 
+		insert into item (order_idx , mid,product, option_unit, add_unit, meat_unit, price, price_add,price_meat, cnt, create_dt )
+			(select #{order_idx} as order_idx,mid, product, option_unit, add_unit, meat_unit, price, price_add,price_meat, cnt, now() 
 		  	from cart 
 		  	where cart_idx in 
 		  	<foreach collection="arrayIdx" item="cart_idx" index="index" open="(" separator="," close=")">
@@ -79,8 +79,8 @@
 	</insert>
 	
 	<insert id="insertItemFromItem">
-		insert into item (order_idx ,product, option_unit, add_unit, meat_unit, price, price_add,price_meat, cnt )
-			(select #{order_idx} as order_idx, product, option_unit, add_unit, meat_unit, price, price_add,price_meat, cnt 
+		insert into item (order_idx , mid,product, option_unit, add_unit, meat_unit, price, price_add,price_meat, cnt, create_dt )
+			(select #{order_idx} as order_idx,mid, product, option_unit, add_unit, meat_unit, price, price_add,price_meat, cnt, now() 
 		  	from item 
 		  	where item_idx in 
 		  	<foreach collection="arrayIdx" item="item_idx" index="index" open="(" separator="," close=")">
@@ -89,25 +89,31 @@
        	 <!-- 이렇게 한번에 여러값을 insert 할 경우 auto_increment가 값을 건너뛰고 들어갈수도 있다. --> 	
 	</insert>
 	
+	<insert id="insertItem">
+		insert into item values (default,#{order_idx}, #{itemVo.mid}, #{itemVo.product}, #{itemVo.option_unit}, #{itemVo.add_unit}, #{itemVo.meat_unit}, #{itemVo.price}, #{itemVo.price_add}, #{itemVo.price_meat}, #{itemVo.cnt},default);
+	</insert>
+	
 	<select id="findOrdersGroupByIdx"  resultType="com.spring.bae2020.vo.OrdersVo">
-		select orders.*, state.state_name, prod.product_name , count(*) as cnt
+		select orders.*, state.state_name, prod.product_name , store.store_name, count(*) as cnt
 		  from item
 		 inner join orders 
 		    on item.order_idx = orders.order_idx
 		   and orders.${group} = #{mid} 
-		 inner join product prod
-		    on item.product = prod.product_code
-		 inner join state
-			on state.state_code = orders.state
-		 where 1=1
-		    <if test="delimiter == 'not'">
+		   <if test="delimiter == 'not'">
 		   and orders.state != #{state} 
 		   </if>
 		   <if test="delimiter == 'only'">
 		   and orders.state = #{state} 
 		   </if> 
 		   and date(orders.create_dt) = date(now())
-		 group by orders.order_idx;
+		 inner join product prod
+		    on item.product = prod.product_code
+		 inner join state
+			on orders.state = state.state_code
+		 inner join store
+		    on orders.store = store.store_code
+		 where 1=1
+		 group by item.order_idx;
 	</select>
 	
 
@@ -119,11 +125,38 @@
 		delete from item where order_idx=#{order_idx};	
 	</delete>
 
+	<delete id="deleteCartByMid">
+		delete from cart where mid = #{mid}
+	</delete>
+	
+	<select id="findOrderEndByMid" resultType="com.spring.bae2020.vo.OrdersVo">
+		select orders.order_idx, orders.total, orders.store, orders.update_dt, store.store_name, prod.product_name, item.cnt
+	  	  from orders
+	  	 inner join (select product, count(*) as cnt, order_idx 
+	  	 			   from item 
+	  	 			  where 1=1
+	  	 			    and mid = #{mid} 
+	  	 			    and period_diff(month(now()),month(create_dt)) <![CDATA[<=]]>  #{month}
+	  	 			  group by order_idx) item
+   		   on orders.order_idx = item.order_idx  
+	  	 inner join store
+	  	    on orders.store = store.store_code
+	  	 inner join product prod
+  		    on item.product = prod.product_code
+	     where 1=1
+	       and orders.mid = #{mid}
+	       and orders.state='state-04'
+	       and period_diff(month(now()),month(update_dt)) <![CDATA[<=]]>  #{month};
+	</select>
+	
+	<select id="findOrderByIdx" resultType="com.spring.bae2020.vo.OrdersVo">
+		select * from orders where order_idx=#{order_idx};
+	</select>
 	
 </mapper>
 
 
-
+ 
 
  
 

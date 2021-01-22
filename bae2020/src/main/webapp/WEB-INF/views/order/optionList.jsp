@@ -95,83 +95,135 @@
 		    /*  출처: https://fruitdev.tistory.com/160 [과일가게 개발자] */
 	    }
 		
-		//장바구니에 넣기
-		function insertCartAjax(){
-			 if('${category_code}'=='PROD_001' && !$(':input:radio[name=bread]:checked').val()) {   
-				   alert("1개 이상 선택해 주세요.");
-				   return;
-				}
-			
-			
-			var option_unit =""
-			var add_unit =""
-			var meat_unit =""
-			
-			var count = document.getElementsByName("bread").length;
-	        for (var i=0; i<count; i++) {
-	            if (document.getElementsByName("bread")[i].checked == true) {
-	            	option_unit += document.getElementsByName("bread")[i].value +"/";
-	            }
-	        }
-	        count = document.getElementsByName("veggie").length;
-	        for (var i=0; i<count; i++) {
-	            if (document.getElementsByName("veggie")[i].checked == true) {
-	            	option_unit += document.getElementsByName("veggie")[i].value  +"/";
-	            }
-	        }
-	        count = document.getElementsByName("cheese").length;
-	        for (var i=0; i<count; i++) {
-	            if (document.getElementsByName("cheese")[i].checked == true) {
-	            	option_unit += document.getElementsByName("cheese")[i].value  +"/";
-	            }
-	        }
-	        count = document.getElementsByName("sauce").length;
-	        for (var i=0; i<count; i++) {
-	            if (document.getElementsByName("sauce")[i].checked == true) {
-	            	option_unit += document.getElementsByName("sauce")[i].value  +"/";
-	            }
-	        }
-	        count = document.getElementsByName("add").length;
-	        for (var i=0; i<count; i++) {
-	            if (document.getElementsByName("add")[i].checked == true) {
-	            	var name = document.getElementsByName("add")[i].value;
-	            	name = name.split("/")[0];
-	            	add_unit += name  +"/";
-	            }
-	        }
-	        count = document.getElementsByName("meat").length;
-	        for (var i=0; i<count; i++) {
-	        	if (document.getElementsByName("meat")[i].checked == true) {
-	            	var name = document.getElementsByName("meat")[i].value;
-	            	name = name.split("/")[0];
-	            	meat_unit += name  +"/";
-	            }
-	        }
-	        
-	        myform.option_unit.value = option_unit;
-	        myform.add_unit.value = add_unit;
-	        myform.meat_unit.value = meat_unit;
-	        
-	        var formData = new FormData($('#myform')[0]);
-	        
-         	$.ajax({
-				url: "${contextPath}/order/insertCartAjax",
+		function findCartStoreByMidAjax(){
+			var store = '${store}'
+			$.ajax({
+				url: "${contextPath}/order/findCartStoreByMidAjax",
 				type: "post",
-				data: formData,
-				processData: false, 
-				contentType: false, 
 				success:function(data){
-					var res = confirm("장바구니에 추가되었습니다. 장바구니로 이동하시겠습니까?");
-					if(!res){
-						location.href = "${contextPath}/order/viewProductList/${voP.category_code}";
+					if(data!='' && data != store){
+						var res=confirm("장바구니에는 같은 매장의 메뉴만 담을 수 있습니다."
+								+"현재 메뉴를 담을 경우 이전 메뉴는 삭제 됩니다. 장바구니에 담으시겠습니까?");
+						if(!res){
+							return false;
+						}
+						else{
+							deleteCartByMidAjax()
+						}
 					}
 					else{
-						location.href = "${contextPath}/order/viewCartList";
+						alert("장바구니에 추가합니다.");
+						insertCartAjax();
 					}
 				}
 			});  
-			
 		} 
+		
+		function deleteCartByMidAjax(){
+			$.ajax({
+				url: "${contextPath}/order/deleteCartByMidAjax",
+				type: "post",
+				success:function(data){
+					alert("장바구니에 추가합니다.");
+					insertCartAjax();
+				}
+			});  
+		} 
+		
+		function unionItem(){
+			if('${category_code}'=='PROD-001' && !$(':input:radio[name=bread]:checked').val()) {   
+				   alert("빵은 필수 선택입니다.");
+				   return false;
+			}
+			else{			
+				var option_unit =""
+				var add_unit =""
+				var meat_unit =""
+				
+				var count = document.getElementsByName("bread").length;
+		        for (var i=0; i<count; i++) {
+		            if (document.getElementsByName("bread")[i].checked == true) {
+		            	option_unit += document.getElementsByName("bread")[i].value +"/";
+		            }
+		        }
+		        count = document.getElementsByName("veggie").length;
+		        for (var i=0; i<count; i++) {
+		            if (document.getElementsByName("veggie")[i].checked == true) {
+		            	option_unit += document.getElementsByName("veggie")[i].value  +"/";
+		            }
+		        }
+		        count = document.getElementsByName("cheese").length;
+		        for (var i=0; i<count; i++) {
+		            if (document.getElementsByName("cheese")[i].checked == true) {
+		            	option_unit += document.getElementsByName("cheese")[i].value  +"/";
+		            }
+		        }
+		        count = document.getElementsByName("sauce").length;
+		        for (var i=0; i<count; i++) {
+		            if (document.getElementsByName("sauce")[i].checked == true) {
+		            	option_unit += document.getElementsByName("sauce")[i].value  +"/";
+		            }
+		        }
+		        count = document.getElementsByName("add").length;
+		        for (var i=0; i<count; i++) {
+		            if (document.getElementsByName("add")[i].checked == true) {
+		            	var name = document.getElementsByName("add")[i].value;
+		            	name = name.split("/")[0];
+		            	add_unit += name  +"/";
+		            }
+		        }
+		        count = document.getElementsByName("meat").length;
+		        for (var i=0; i<count; i++) {
+		        	if (document.getElementsByName("meat")[i].checked == true) {
+		            	var name = document.getElementsByName("meat")[i].value;
+		            	name = name.split("/")[0];
+		            	meat_unit += name  +"/";
+		            }
+		        }
+		        
+		        myform.option_unit.value = option_unit;
+		        myform.add_unit.value = add_unit;
+		        myform.meat_unit.value = meat_unit;
+		        
+		        return true;
+			}
+		}
+		
+		//장바구니에 넣기
+		function insertCartAjax(){			
+			if(!unionItem()){
+				return false;
+			}
+			else{
+		        var formData = new FormData($('#myform')[0]);
+		        
+	         	$.ajax({
+					url: "${contextPath}/order/insertCartAjax",
+					type: "post",
+					data: formData,
+					processData: false, 
+					contentType: false, 
+					success:function(data){
+						var res = confirm("장바구니에 추가되었습니다. 장바구니로 이동하시겠습니까?");
+						if(!res){
+							location.href = "${contextPath}/order/viewProductList/${voP.category_code}";
+						}
+						else{
+							location.href = "${contextPath}/order/viewCartList";
+						}
+					}
+				});  
+			}
+		} 
+		
+		function directOrder(){
+			if(!unionItem()){
+				return false;
+			}
+			else{
+				$("#myform").submit();
+			}
+		}
 		
 		
 		$(document).ready(function() { 
@@ -384,8 +436,8 @@
 			  		  총 주문 금액 <strong style="font-size: 40px; color:#ff8300"><span id="totPrice"><fmt:formatNumber value="${voP.price}" pattern="#,###" /></span></strong> 원
 			 	</div>
 			    <div class="w3-col l4 w3-padding-small" >
-					<button class="w3-round-xlarge w3-right" id="btn" type="button" onclick="insertCartAjax()">주문하기</button> 
-					<button class="w3-round-xlarge w3-right" id="btn" type="button" onclick="insertCartAjax()">장바구니</button>
+					<button class="w3-round-xlarge w3-right" id="btn" type="button" onclick="directOrder()">주문하기</button> 
+					<button class="w3-round-xlarge w3-right" id="btn" type="button" onclick="findCartStoreByMidAjax()">장바구니</button>
 					<%-- <input name="product" type="hidden" value="${prod.product_code }"/>
 					<input name="totPriceVal" type="hidden" value="${prod.price }"/> --%>
 				</div>
@@ -402,7 +454,7 @@
 					<span id="meatPrice"></span><br/>
 				</div>
 	        </div>
-	        <form id="myform">
+	        <form id="myform" method="post" action="${contextPath }/order/viewOrderInput/direct">
 				<input type="hidden" name="product" value="${voP.product_code }"/>
 				<input type="hidden" name="option_unit" value=""/>
 				<input type="hidden" name="add_unit" value=""/>
@@ -410,6 +462,7 @@
 				<input type="hidden" id="price" name="price" value="${voP.price }"/>
 				<input type="hidden" id="price_add" name="price_add" value="0"/>
 				<input type="hidden" id="price_meat" name="price_meat" value="0"/>
+				<input type="hidden" id="store" name="store" value="${store }"/>
         	</form>
 		</div>
 	</div>

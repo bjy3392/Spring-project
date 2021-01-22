@@ -3,7 +3,7 @@
 <mapper namespace="com.spring.bae2020.dao.UserDao">
 
 	<select id="findUserByMid" resultType="com.spring.bae2020.vo.UserVo">
-		select * from user where mid=#{mid} ;
+		select * from user where mid=#{mid} and use_yn = 'y' ;
 	</select>
 	
 	<insert id="insertUser">
@@ -33,4 +33,27 @@
 		select * from ask_manager where mid=#{mid};
 	</select>
 	
+	<update id="updateUser">
+		update user set name=#{vo.name}, tel=#{vo.tel}, postcode=#{vo.postcode}, roadAddress=#{vo.roadAddress}, detailAddress=#{vo.detailAddress}
+		<if test="!(vo.pwd == null or vo.pwd.equals('')) ">
+   			, pwd=#{vo.pwd}
+  		</if>
+  		where mid=#{vo.mid}; 
+	</update>
+	
+	<update id="deleteUser">
+		update user set use_yn = 'n', join_dt=now() where mid=#{mid};
+	</update>
+	
+	<insert id="insertDeleteUser">
+		insert into delete_user values (default, #{reason}, #{message}, default);
+	</insert>
+	
 </mapper>
+
+
+
+
+
+
+

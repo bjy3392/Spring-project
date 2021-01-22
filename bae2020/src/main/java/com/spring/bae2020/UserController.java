@@ -111,7 +111,61 @@ public class UserController {
 		session.invalidate();
 		return "redirect:/";
 	}
-
+	
+	@RequestMapping(value="/viewPasswordCheck", method=RequestMethod.GET)
+	public String viewPasswordCheckGet() {
+		return "user/passwordCheck";
+	}
+	
+	//비밀번호가 일치하면 update화면을 띄운다.
+	@RequestMapping(value="/passwordCheck", method=RequestMethod.POST)
+	public String mPassCheckPost(HttpSession sseion, String pwd) {
+		String mid = (String)sseion.getAttribute("smid");
+		UserVo vo = userService.findUserByMid(mid);
+		
+		if(passwordEncoder.matches(pwd, vo.getPwd())) {
+			return "redirect:/user/viewUserUpdate";
+		}
+		else{
+			msgFlag = "wrongPasswordCheck";
+			return "redirect:/msg/" + msgFlag;
+		}
+	}
+	
+	@RequestMapping(value="/viewUserUpdate", method=RequestMethod.GET)
+	public String viewUserUpdateGet(HttpSession session, Model model) {
+		String mid = (String)session.getAttribute("smid");
+		UserVo vo = userService.findUserByMid(mid);
+		model.addAttribute("vo", vo);
+		
+		return "user/userUpdate";
+	}
+	
+	@RequestMapping(value="/updateUser", method=RequestMethod.POST)
+	public String updateUserPost(HttpSession session, UserVo vo) {
+		if(!vo.getPwd().equals("")) {
+			String encPwd = passwordEncoder.encode(vo.getPwd());
+			vo.setPwd(encPwd);
+		}
+		
+		userService.updateUser(vo);
+		
+		return "user/userUpdateOk";
+	}
+	
+	@RequestMapping(value="/viewUserDelete", method=RequestMethod.GET)
+	public String viewUserDeleteGet() {
+		return "user/userDelete";
+	}
+	
+	@RequestMapping(value="/deleteUser", method=RequestMethod.POST)
+	public String deleteUserPost(String mid, String reason, String message) {
+		userService.deleteUser(mid);
+		
+		userService.insertDeleteUser(reason,message);
+		
+		return "redirect:/user/userLogout";
+	}
 	
 	@RequestMapping(value="/viewManagerInput", method=RequestMethod.GET)
 	public String managerInputGet(Model model) {
@@ -137,4 +191,7 @@ public class UserController {
 		
 		return "user/managerPassOk";
 	}
+	
+
+	
 }

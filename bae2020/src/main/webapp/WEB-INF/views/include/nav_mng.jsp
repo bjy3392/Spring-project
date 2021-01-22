@@ -63,7 +63,7 @@
 			      	<a href="${contextPath }/admin/viewCategoryEdit" class="w3-bar-item w3-button w3-padding-large">재고관리</a>
 			    </li>
 			    <li class="nav-item">
-			      	<a href="${contextPath }/order/viewProductList" class="w3-bar-item w3-button w3-padding-large w3-hide-small">매출관리</a>
+			      	<a href="${contextPath }/store/viewSalesCalendar" class="w3-bar-item w3-button w3-padding-large w3-hide-small">매출관리</a>
 			    </li>
 			    <li class="nav-item">
 			      	<a href="${contextPath }/admin/viewManagerList" class="w3-bar-item w3-button w3-padding-large w3-hide-small">고객관리</a>

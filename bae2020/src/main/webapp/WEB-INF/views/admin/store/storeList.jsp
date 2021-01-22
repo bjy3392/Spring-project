@@ -15,7 +15,7 @@
 		
 		function viewStore(store_code){
 			var url = "${contextPath}/admin/viewStoreInfo?store_code="+store_code;
-			window.open(url,"nwin","width=600px, height=400px");
+			window.open(url,"nwin","width=600px, height=700px");
 		}
 		
 	</script>
