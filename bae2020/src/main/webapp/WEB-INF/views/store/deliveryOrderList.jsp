@@ -2,7 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <c:set var="contextPath" value="${pageContext.request.contextPath }"/>
-<%@ include file="/WEB-INF/views/include/nav_mng.jsp" %>
+<%@ include file="/WEB-INF/views/include/nav.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>

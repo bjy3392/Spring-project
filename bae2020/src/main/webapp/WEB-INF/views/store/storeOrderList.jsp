@@ -1,8 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <c:set var="contextPath" value="${pageContext.request.contextPath }"/>
-<%@ include file="/WEB-INF/views/include/nav_mng.jsp" %>
+<%@ include file="/WEB-INF/views/include/nav.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -42,6 +43,11 @@
 					}
 				});   	
 			
+		}
+		
+		function viewCancelInput(idx) {
+			var url = "${contextPath}/store/viewCancelInput?order_idx="+idx;
+			window.open(url,"nwin","width=1100px, height=600px");
 		}
 	</script>
 	<style>
@@ -213,6 +219,7 @@
 									<td rowspan="2">
 										<c:if test="${state == 'state-01'}">
 											<button class="w3-round-xlarge btn_str" type="button" onclick="updateOrderByStateAjax('${vo.order_idx}','state-02')">접수</button>
+											<button class="w3-round-xlarge btn_str" type="button" onclick="viewCancelInput('${vo.order_idx}')">취소</button>
 										</c:if>
 										<c:if test="${state == 'state-02'}">
 											<button class="w3-round-xlarge btn_str" type="button" onclick="updateOrderByStateAjax('${vo.order_idx}','state-03')">준비완료</button>
@@ -221,12 +228,19 @@
 								</tr>
 								<tr>
 									<td colspan="5">
+			                       		<c:forEach var="stock" items="${stockVos}">
+											<c:if test="${vo.order_idx == stock.order_idx && state == 'state-01'}">
+												<font color='red'>재고 수량을 초과하였습니다.</font><br/>
+				                       			주문제품 : ${stock.option_name } /주문수량 : ${stock.cnt } /재고수량 : ${stock.quantity }<br/>
+											</c:if> 
+			                       		</c:forEach>
 										<font style="font-weight: bold; font-size: 20px;"> ${vo.product_name }</font>  <c:if test="${vo.cnt ne 1 }">외 ${vo.cnt-1 }개</c:if>
 										<c:forEach var="voItem" items="${vosItem }">
 											<c:if test="${vo.order_idx eq voItem.order_idx }">
 												<div id="detail_${vo.order_idx }"  >
 													<span class="w3-text-grey prod">${voItem.product_name }</span>
-													<span class="w3-text-grey">${voItem.cnt }개&nbsp;<fmt:formatNumber value="${voItem.price * voItem.cnt }" pattern="#,###" /></span><br/> 
+													<span class="w3-text-grey">${voItem.cnt }개&nbsp;<fmt:formatNumber value="${(voItem.price+voItem.price_add+voItem.price_meat) * voItem.cnt }" pattern="#,###" /></span><br/>
+													<c:if test="${voItem.quantity ==0 && state == 'state-01'}"><font color='red'>품절 상품을 포함하고 있습니다.</font><br/></c:if> 
 													<span class="w3-text-grey opt">옵션:${voItem.option_unit }</span><br/>
 													<span class="w3-text-grey opt">추가:${voItem.add_unit }</span><br/> 
 													<span class="w3-text-grey opt">미트:${voItem.meat_unit }</span><br/>  

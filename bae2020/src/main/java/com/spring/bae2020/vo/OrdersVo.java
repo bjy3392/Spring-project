@@ -11,6 +11,7 @@ public class OrdersVo {
 	private String tel;
 	private String demand;
 	private String store;
+	private String cancel;
 	private String delivery;
 	private String distance;
 	private String coupon;
@@ -51,6 +52,9 @@ public class OrdersVo {
 	}
 	public String getStore() {
 		return store;
+	}
+	public String getCancel() {
+		return cancel;
 	}
 	public String getDelivery() {
 		return delivery;
@@ -115,6 +119,9 @@ public class OrdersVo {
 	public void setStore(String store) {
 		this.store = store;
 	}
+	public void setCancel(String cancel) {
+		this.cancel = cancel;
+	}
 	public void setDelivery(String delivery) {
 		this.delivery = delivery;
 	}
@@ -152,12 +159,12 @@ public class OrdersVo {
 	public String toString() {
 		return "OrdersVo [order_idx=" + order_idx + ", mid=" + mid + ", total=" + total + ", payment=" + payment
 				+ ", postcode=" + postcode + ", roadAddress=" + roadAddress + ", detailAddress=" + detailAddress
-				+ ", tel=" + tel + ", demand=" + demand + ", store=" + store + ", delivery=" + delivery + ", distance="
-				+ distance + ", coupon=" + coupon + ", point=" + point + ", create_dt=" + create_dt + ", update_dt="
-				+ update_dt + ", state=" + state + ", state_name=" + state_name + ", product_name=" + product_name
-				+ ", store_name=" + store_name + ", cnt=" + cnt + "]";
+				+ ", tel=" + tel + ", demand=" + demand + ", store=" + store + ", cancel=" + cancel + ", delivery="
+				+ delivery + ", distance=" + distance + ", coupon=" + coupon + ", point=" + point + ", create_dt="
+				+ create_dt + ", update_dt=" + update_dt + ", state=" + state + ", state_name=" + state_name
+				+ ", product_name=" + product_name + ", store_name=" + store_name + ", cnt=" + cnt + "]";
 	}
-
+	
 	
 	
 	

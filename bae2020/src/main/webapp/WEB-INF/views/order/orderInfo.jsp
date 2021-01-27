@@ -119,6 +119,10 @@
 		    text-align: center; 
         	padding: 20px 0 20px 0;
         }
+        #cancel{
+	      padding: 50px;
+	    }
+        
 	</style>
 </head>
 <body>
@@ -132,6 +136,7 @@
 			<div class="list_start">
 				<div class="list_detail">
 					<h3 class="title">주문내역</h3>
+					<c:if test="${orderVo.state =='state-05'}"><span id="cancel"><font color='red'>취소사유:${orderVo.cancel }</font></span><br/></c:if>
 					<table>
 						<c:set var="total" value="0"/>
 						<c:forEach var="vo" items="${vos }">
@@ -144,7 +149,7 @@
 						  		</td>
 	                            <td id="opt_td">
 	                             	합계:<fmt:formatNumber value="${(vo.price+vo.price_add+vo.price_meat ) * vo.cnt }" pattern="#,###" /><br/>
-	                             	메뉴:<fmt:formatNumber value="${vo.price+vo.price_add+vo.price_meat }" pattern="#,###" /><br/>
+	                             	메뉴:<fmt:formatNumber value="${vo.price }" pattern="#,###" /><br/>
 	                             	<c:if test="${vo.add_unit !=''}">추가:<fmt:formatNumber value="${vo.price_add }" pattern="#,###" /><br/></c:if>
 	                             	<c:if test="${vo.meat_unit !=''}">미트:<fmt:formatNumber value="${vo.price_meat }" pattern="#,###" /><br/></c:if>
 						  		</td>

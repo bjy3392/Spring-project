@@ -5,6 +5,7 @@ import java.util.List;
 import com.spring.bae2020.vo.CartVo;
 import com.spring.bae2020.vo.ItemVo;
 import com.spring.bae2020.vo.OrdersVo;
+import com.spring.bae2020.vo.StockVo;
 
 public interface OrderService {
 
@@ -16,7 +17,7 @@ public interface OrderService {
 
 	void deleteCartByIdx(String mid, String[] arrayCartIdx);
 
-	List<ItemVo> findCartByIdx(String mid, String[] arrayIdx);
+//	List<ItemVo> findCartByIdx(String mid, String[] arrayIdx);
 
 	CartVo findCartByProduct(CartVo vo);
 
@@ -26,7 +27,7 @@ public interface OrderService {
 
 	List<OrdersVo> findOrdersGroupByIdx(String group, String mid, String delimiter, String state);
 
-	List<ItemVo> findItemByOrderIdx(String[] arrayOrderIdx);
+	List<ItemVo> findItemByOrderIdx(String[] arrayOrderIdx, String store_code);
 
 	void deleteOrderByIdx(String mid, String order_idx);
 
@@ -36,7 +37,7 @@ public interface OrderService {
 
 	void insertItemFromItem(String order_idx, String[] arrayIdx);
 
-	List<ItemVo> findItem(String route, String[] arrayIdx, String order_idx, ItemVo itemVo);
+	List<ItemVo> findItem(String route, String[] arrayIdx, String order_idx, ItemVo itemVo, String store);
 
 	void deleteCartByMid(String mid);
 
@@ -45,6 +46,16 @@ public interface OrderService {
 	void insertItem(String route, String order_idx, String[] arrayIdx, ItemVo itemVo);
 
 	OrdersVo findOrderByIdx(String order_idx);
+
+	List<StockVo> findStock(String route, String[] arrayIdx, String order_idx, ItemVo itemVo, String store);
+
+	List<StockVo> findItemStockByOption(String[] arrayOrderIdx, String store_code);
+
+	void insertPoint(OrdersVo vo);
+
+	String findPointByMid(String mid);
+
+	void insertMinusPoint(OrdersVo vo);
 
 
 

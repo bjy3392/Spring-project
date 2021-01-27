@@ -38,7 +38,7 @@ public interface AdminService {
 
 	void deleteSubcategory(String subcategory_code);
 
-	List<OptionsVo> findOptionBySubcategory(String subcategory_code);
+	List<OptionsVo> findOptionBySubcategory(String subcategory_code, String store_code);
 
 	void insertOption(MultipartFile file, OptionsVo vo);
 
@@ -65,6 +65,8 @@ public interface AdminService {
 	int totUserRecCnt();
 
 	List<UserVo> findUser(int startNo, int pageSize);
+
+	void insertStockinit(StoreVo vo);
 
 
 

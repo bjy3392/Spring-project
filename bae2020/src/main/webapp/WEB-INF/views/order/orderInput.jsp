@@ -191,6 +191,58 @@
 			myform.submit();
 		}
 		
+		function calcPoint(){
+			var usePoint = $('#usePoint').val();
+			var myPoint = $('#myPoint').val();
+			
+			var regExpNum=/^[0-9]*$/;
+			if(usePoint == ""){
+				alert("시용할 포인트 입력하세요.");
+				$('#usePoint').focus();
+				return false;
+			}
+			else if(!regExpNum.test(usePoint)){
+				alert("숫자만 입력하세요.");
+				$("#usePoint").val("");
+				return false;
+			}
+			else if($('#total').val() < parseInt(usePoint)){
+				alert("상품금액을 초과할 수 없습니다.");
+				$("#usePoint").val("");
+				return false;				
+			}
+			else if(parseInt(usePoint) > parseInt(myPoint)){
+				alert("보유금액을 초과하였습니다.");
+				$("#usePoint").val("");
+				return false;
+			}
+			else{
+				var calcPrice =  $('#calcPrice').val() - usePoint;
+				
+				applyPoint = addComma(usePoint);
+				calcPrice = addComma(calcPrice);
+				
+				$("#point").val(usePoint);
+				$("#totalView").html(calcPrice);
+				$("#applyPoint").html(applyPoint);
+			}
+		};
+		
+		//천단위 콤마 펑션
+        function addComma(num){
+        	var len, point, str; 
+            num = num + ""; 
+            point = num.length % 3 ;
+            len = num.length; 
+            str = num.substring(0, point); 
+            while (point < len) { 
+                if (str != "") str += ","; 
+                str += num.substring(point, point + 3); 
+                point += 3; 
+            } 
+            return str;
+		    /*  출처: https://fruitdev.tistory.com/160 [과일가게 개발자] */
+	    }
 		
 	</script>
 	<style>
@@ -301,6 +353,9 @@
         #title_name{
             font-size:25px;
         }
+        #stock{
+        	padding: 0 0 0 25px;
+        }
 	</style>
 </head>
 <body>
@@ -362,15 +417,18 @@
                                         <option value="coupon2">coupon2</option>
                                     </select>
 						  		</td>
-                                <td id="end_td"><button class="btn_str">적용하기</button></td>
+                                <td id="end_td"><button type="button" class="btn_str">적용하기</button></td>
 							</tr>
                             <tr>
 						  		<th>포인트</th>
 						  		<td>
-						  			<input class="w3-border" type="text" name="point" value="0"/> 보유포인트 : P
+						  			<input class="w3-border" type="text" id="usePoint" name="usePoint" value="" <c:if test="${point==null}">disabled</c:if>/> 보유포인트 : <c:if test="${point!=null}"><fmt:formatNumber value="${point}" pattern="#,###" /></c:if> <c:if test="${point==null}">0</c:if>  P
+						  			<c:if test="${point!=null}"><c:set var="myPoint" value="${point }" /></c:if> 
+						  			<c:if test="${point==null}"><c:set var="myPoint" value="0" /></c:if> 	
+  									<input type="hidden" id="myPoint" value="${myPoint }">
 						  			
 						  		</td>
-                                <td><button class="btn_str">적용하기</button></td>
+                                <td><button type="button" class="btn_str" onclick="calcPoint()" <c:if test="${point==null}">disabled</c:if>>적용하기</button></td>
 							</tr>
 						</table>
 						<hr style="width:100%"/>
@@ -390,13 +448,25 @@
 						</table>
                         <hr style="width:100%"/>
                        	<h3 class="title">주문내역</h3>
+                       	<c:if test="${fn:length(stockVos) != 0 }">
+                       	<div id="stock">
+                       		<font color='red'>재고 수량을 초과하였습니다.</font>
+                       		<c:forEach var="stock" items="${stockVos}">
+                       			<br/>주문제품 : ${stock.option_name } /주문수량 : ${stock.cnt } /재고수량 : ${stock.quantity }
+                       		</c:forEach>
+                       	</div>
+                       	</c:if>
 						<table>
 							<c:set var="total" value="0"/>
+							<c:set var="quantity" value= "ok"/>
 							<c:forEach var="vo" items="${vos }">
 								<c:set var="total" value= "${total + ((vo.price+vo.price_add+vo.price_meat ) * vo.cnt) }"/>
 								<tr>
 							  		<td id="prod_td">
 	                                 <span id="prod">${vo.product_name }</span><span class="w3-text-grey">${vo.cnt } 개</span><br/>
+	                                 <c:if test="${vo.quantity <=0 }"><font color='red'>품절 상품을 포함하고 있습니다.</font><br/>
+	                                 	<c:set var="quantity" value= "no"/>
+	                                 </c:if>
 	                                 <c:if test="${vo.option_unit !=''}"><span class="w3-text-grey" id="opt">옵션:${vo.option_unit }</span><br/></c:if>
 	                                 <c:if test="${vo.add_unit !=''}"><span class="w3-text-grey" id="opt">추가:${vo.add_unit }</span><br/></c:if>
 	                                 <c:if test="${vo.meat_unit !=''}"><span class="w3-text-grey" id="opt">미트:${vo.meat_unit }</span><br/></c:if>
@@ -421,15 +491,19 @@
 						<table>
 							<tr>
 						  		<td>
-                                 	총 결제 금액 : <fmt:formatNumber value="${total}" pattern="#,###" /> <br/>
-                                 <span class="w3-text-grey" id="opt">할인내역을 적어준다</span>
+                                 	총 결제 금액 : <span id="totalView"><fmt:formatNumber value="${total}" pattern="#,###" /></span><br/>(10,000원이상 결제시 결제금액의 10%를 적립. 포인트 사용시 적립되지 않습니다.)<br/>
+                                 	<input type="hidden" id="calcPrice" value="${total }">
+                                 <span class="w3-text-grey" id="opt_sale">
+                                 	+<fmt:formatNumber value="${total}" pattern="#,###" /><br/>
+                                 	- <span id="applyPoint">0</span> P
+                                 </span>
 						  		</td>
 							</tr>
 						</table>
                         <div id="bottom_btn">
                           <button class="w3-round-xlarg btn" type="button" onclick="location.href = '${contextPath}/order/setStore?store=${storeVo.store_code }'">메뉴선택</button>
                           <button class="w3-round-xlarge btn" type="button" onclick="location.href = '${contextPath}/order/viewCartList'">장바구니</button>
-                          <button class="w3-round-xlarge btn" type="button" onclick="javascript:insertOrder()">주문하기</button>
+                          <button class="w3-round-xlarge btn" type="button" onclick="javascript:insertOrder()" <c:if test="${quantity == 'no'  || fn:length(stockVos) != 0}">disabled</c:if> >주문하기</button>
                     	</div>
 					</div>
 				</div>
@@ -441,6 +515,7 @@
   			<input type="hidden" name="delivery" />
   			<input type="hidden" name="distance" />
   			<input type="hidden" id="total" name="total" value="${total }"/>
+  			<input type="hidden" id="point" name="point" value="0">
 		</form>
 	</div>
 </body>

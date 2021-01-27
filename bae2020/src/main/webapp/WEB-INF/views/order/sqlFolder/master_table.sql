@@ -20,6 +20,7 @@ insert into state value ('state-01','주문접수 중','admin',default);
 insert into state value ('state-02','준비 중','admin',default);
 insert into state value ('state-03','배달 중','admin',default);
 insert into state value ('state-04','배달완료','admin',default);
+insert into state value ('state-05','주문취소','admin',default);
 
 desc level
 
@@ -34,3 +35,5 @@ select * from product
 where product_code = 'SAND-003'
 
 desc product
+
+select * from 

@@ -291,7 +291,7 @@
 				<div class="list_start">
 					<div class="w3-row w3-padding-10 w3-white" style="text-align:left">
 						<div class="w3-row w3-padding-large">
-							장바구니가 비었습니다.
+							<img src="${contextPath }/resources/images/cart.PNG" style="width:100%">
 						</div>
 					</div>
 					

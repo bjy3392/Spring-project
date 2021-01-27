@@ -1,15 +1,16 @@
 package com.spring.bae2020.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
 import com.spring.bae2020.vo.CartVo;
-import com.spring.bae2020.vo.CategoryVo;
 import com.spring.bae2020.vo.ItemVo;
-import com.spring.bae2020.vo.OptionsVo;
 import com.spring.bae2020.vo.OrdersVo;
+import com.spring.bae2020.vo.PointEventVo;
 import com.spring.bae2020.vo.ProductVo;
+import com.spring.bae2020.vo.StockVo;
 
 public interface OrderDao {
 
@@ -21,7 +22,7 @@ public interface OrderDao {
 
 	void deleteCartByIdx(@Param("mid")String mid, @Param("arrayCartIdx")String[] arrayCartIdx);
 
-	List<ItemVo> findCartByIdx(@Param("arrayIdx")String[] arrayIdx);
+	List<ItemVo> findCartByIdx(@Param("arrayIdx")String[] arrayIdx, @Param("store_code")String store);
 
 	CartVo findCartByProduct(@Param("vo")CartVo vo);
 
@@ -31,7 +32,7 @@ public interface OrderDao {
 
 	List<OrdersVo> findOrdersGroupByIdx(@Param("group")String group, @Param("mid")String mid, @Param("delimiter")String delimiter, @Param("state")String state);
 
-	List<ItemVo> findItemByOrderIdx(@Param("arrayOrderIdx")String[] arrayOrderIdx);
+	List<ItemVo> findItemByOrderIdx(@Param("arrayOrderIdx")String[] arrayOrderIdx, @Param("store_code")String store_code);
 
 	void deleteOrderByIdx(@Param("mid")String mid, @Param("order_idx")String order_idx);
 
@@ -50,6 +51,27 @@ public interface OrderDao {
 	void insertItem(@Param("order_idx")String order_idx, @Param("itemVo")ItemVo itemVo);
 
 	OrdersVo findOrderByIdx(@Param("order_idx")String order_idx);
+
+	String checkStockByName(@Param("bread")String bread, @Param("store")String store);
+
+	String findCartOptionByIdx(@Param("idx")String idx);
+
+	List<StockVo> findItemStockByOption(@Param("arrayOrderIdx")String[] arrayOrderIdx, @Param("store")String store);
+
+	List<StockVo> findCartStockByOption(@Param("arrayIdx")String[] arrayIdx, @Param("store")String store);
+
+	void insertPoint(@Param("voP")PointEventVo voP);
+
+	void insertPointDetail(@Param("voP")PointEventVo voP);
+	
+	void updatePointDetail(@Param("voP")PointEventVo voP);
+	
+	String findPointByMid(@Param("mid")String mid);
+
+	List<Map<String, String>> findPointGroupBySaveIdx(@Param("mid")String mid);
+
+
+
 
 	
 

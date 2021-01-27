@@ -83,13 +83,12 @@
 			height: auto;
 			border: 0px solid;
 			margin-bottom: 5px;
-			background-color: #fff;
+			background-color: #8ccd31;
 		}
 		
 		table {
 			margin: 0px auto;
 			width: 150px;
-			border: 1px solid #ccc;
 			padding: 12px;
 			border-collapse: collapse;
 			table-layout: fixed;
@@ -99,8 +98,10 @@
 		td {
 			text-align: center;
 			width: 150px;
-			border: 1px solid #ccc;
 			padding: 12px;
+			font-weight: bold;
+			color: #666666;
+			font-size: 18px;
 		} 
 		.title {
 			margin: 10px 30px;
@@ -120,9 +121,6 @@
 			cursor: pointer;
 			font-weight: bold;
 		}
-		#left_div{
-			text-align: center;
-		}
 	</style>
 </head>
 <body>
@@ -138,7 +136,8 @@
 				<div class="list_detail">
 					<div class="w3-row">
 						<div class="w3-col s3">
-							<h3 class="title">매장 리스트</h3>
+							<img src="${contextPath }/resources/images/store.PNG" style="width:100%">
+							
 							<table>
 								<c:forEach var="vo" items="${vos }" varStatus="status">
 									<c:if test="${vo.open_yn == 'y' }">

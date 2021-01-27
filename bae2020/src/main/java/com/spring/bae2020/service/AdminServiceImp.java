@@ -147,8 +147,8 @@ public class AdminServiceImp implements AdminService{
 	}
 
 	@Override
-	public List<OptionsVo> findOptionBySubcategory(String subcategory_code) {
-		return adminDao.findOptionBySubcategory(subcategory_code);
+	public List<OptionsVo> findOptionBySubcategory(String subcategory_code, String store_code) {
+		return adminDao.findOptionBySubcategory(subcategory_code,store_code);
 	}
 
 	@Override
@@ -263,6 +263,11 @@ public class AdminServiceImp implements AdminService{
 	@Override
 	public List<UserVo> findUser(int startNo, int pageSize) {
 		return adminDao.findUser(startNo, pageSize);
+	}
+
+	@Override
+	public void insertStockinit(StoreVo vo) {
+		adminDao.insertStockinit(vo);		
 	}
 
 
