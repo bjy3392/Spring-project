@@ -8,7 +8,8 @@ create table orders (
 	detailAddress	varchar(50) ,
 	tel				varchar(20) not null,		
 	demand			varchar(100) ,
-	store			varchar(20) not null,
+	store			varchar(20) not null,	
+	cancel			varchar(100) ,
 	delivery		varchar(20) ,
 	distance		DECIMAL(3,2) ,
 	coupon			varchar(50) not null default 0,
@@ -21,6 +22,9 @@ create table orders (
 ALTER TABLE orders ADD FOREIGN KEY (state)  REFERENCES state(state_code) ON DELETE RESTRICT ON UPDATE CASCADE ;
 ALTER TABLE orders ADD FOREIGN KEY (mid)  REFERENCES user(mid) ON DELETE RESTRICT ON UPDATE CASCADE ;
 --쿠폰이랑 매장, 배달 코드도 외래키 연결 해줘야함
+
+alter table orders add cancel varchar(100);
+
 
 ALTER TABLE orders MODIFY distance DECIMAL(3,2) ;
 
@@ -74,33 +78,21 @@ ALTER TABLE item ADD FOREIGN KEY (product)  REFERENCES product(product_code) ON 
 select * from item
 desc item
 
-select orders.order_idx,orders.total, state.state_name, prod.product_name , count(*) as cnt
-from item
-inner join orders 
-on item.order_idx = orders.order_idx
-and orders.mid = 'admin'
-inner join product prod
-on item.product = prod.product_code
-inner join state
-on state.state_code = orders.state
-where orders.state = 'state0'
+select ctg.category_name, sum(item.price+item.price_add+item.price_meat) as sum_price
+  from item 
+ inner join orders
+    on item.order_idx = orders.order_idx
+   and date(orders.update_dt) = '2021-01-21' 
+ inner join store 
+    on orders.store = store.store_code
+   and store.manager = 'manager1'
+ inner join product prod
+    on item.product = prod.product_code
+ inner join category ctg
+    on prod.category_code = ctg.category_code
+ group by prod.category_code
 
-group by orders.order_idx
-
-
-select item.* , prod.product_name as product
-from item
-inner join orders 
-on item.order_idx = orders.order_idx
-and orders.mid = 'admin'
-inner join product prod
-on item.product = prod.product_code
-where orders.state <> 'state0'
-
-select '3' as order_idx, product, option_unit, add_unit, meat_unit, price, price_add,price_meat, cnt 
-  	from cart 
-  	where cart_idx =2
-
+select * from store
 
 select * from cart
 
@@ -122,7 +114,8 @@ create table cart(
 );
 
 desc cart
-
+insert into cart value (default, #{vo.mid}, #{vo.product}, #{vo.option_unit}, #{vo.add_unit}, #{vo.meat_unit}, #{vo.price}, #{vo.price_add}, #{vo.price_meat}, default,#{vo.store} ,default, default);
+	
 insert into cart value (default, 'admin', 'COOKIE-002', '', '', '', 1000, 0,'', default, default, default);
 update cart set STORE='STORE-001' where cart_idx=23
 alter table cart add store varchar(20) not null;
@@ -131,25 +124,28 @@ alter table cart add store varchar(20) not null;
 
 delete from orders where order_idx=26
 
-select orders.order_idx, orders.total, orders.update_dt, store.store_name, prod.product_name, item.cnt
-  from orders
- inner join (select product, count(*) as cnt, order_idx 
- 			   from item  
- 			  where 1=1
- 			    and mid = 'bjy1234'
- 			  group by order_idx) item
-   on orders.order_idx = item.order_idx  
- inner join store
-    on orders.store = store.store_code
- inner join product prod
-    on item.product = prod.product_code
- where 1=1
-   and mid = 'bjy1234'
-   and orders.state='state-04'
- 
-   select * from orders
-   where 1=1
-   and mid = 'bjy1234'
-   and orders.state='state-04'
-select * from item where mid = 'bjy1234'
-   update item set mid='bjy1234' where order_idx=24
+select * from cart where cart_idx = 13;
+
+select * from orders
+
+select item.option_name, item.cnt, stock.quantity 
+  from (select item.order_idx, item.option_name, sum(item.cnt) as cnt
+  		  from (select order_idx, substring_index(item.option_unit,'/',1) as option_name, cnt from item where order_idx in ('54') )item
+ 		 group by item.option_name, item.order_idx) item
+  inner join stock 
+     on item.option_name = stock.option_name
+    and stock.store = 'store-001' 
+ 	and stock.subcategory_code = 'opt-001'
+  where item.cnt > stock.quantity
+  
+ select cart.option_name, cart.cnt, stock.quantity 
+  from (select cart.option_name, sum(cart.cnt) as cnt
+  		  from (select substring_index(cart.option_unit,'/',1) as option_name, cnt from cart where cart_idx in ('62', '63') )cart
+ 		 group by cart.option_name) cart
+  inner join stock 
+     on cart.option_name = stock.option_name
+    and stock.store = 'store-001' 
+ 	and stock.subcategory_code = 'opt-001'
+  where cart.cnt > stock.quantity
+  
+select * from product	  

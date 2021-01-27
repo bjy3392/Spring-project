@@ -344,9 +344,9 @@
 		          		<div class="w3-col l10">
 		          			<c:forEach var="vo" items="${BREADvos }"  varStatus="status">
 			               		<div class="list_detail" id="a_list_detail">
-			               			<input type="radio" name="bread" id="${vo.option_code }" class="input-hidden" value="${vo.option_name }" />
+			               			<input type="radio" name="bread" id="${vo.option_code }" class="input-hidden" value="${vo.option_name }" <c:if test="${vo.quantity <= 0 }">disabled</c:if> />
 			                 		<label for="${vo.option_code }">
-			                   			<img src="${contextPath }/option/${vo.subcategory_code }/${vo.image }" style="width:100px;"><p>${vo.option_name }</p>
+			                   			<img src="${contextPath }/option/${vo.subcategory_code }/${vo.image }" style="width:100px;"><p>${vo.option_name }<c:if test="${vo.quantity <= 0 }"><br/>(품절)</c:if></p>
 			                 		</label>
 			                	</div>
 				       		</c:forEach>               		

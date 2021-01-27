@@ -7,8 +7,10 @@ public class OptionsVo {
 	private String price;
 	private String image;
 	private String user_id;
+	private String use_yn;
 	private String create_dt;
 	private String fileEx; //파일 존재 유무
+	private String quantity;
 	public String getOption_code() {
 		return option_code;
 	}
@@ -27,8 +29,17 @@ public class OptionsVo {
 	public String getUser_id() {
 		return user_id;
 	}
+	public String getUse_yn() {
+		return use_yn;
+	}
 	public String getCreate_dt() {
 		return create_dt;
+	}
+	public String getFileEx() {
+		return fileEx;
+	}
+	public String getQuantity() {
+		return quantity;
 	}
 	public void setOption_code(String option_code) {
 		this.option_code = option_code;
@@ -48,21 +59,24 @@ public class OptionsVo {
 	public void setUser_id(String user_id) {
 		this.user_id = user_id;
 	}
+	public void setUse_yn(String use_yn) {
+		this.use_yn = use_yn;
+	}
 	public void setCreate_dt(String create_dt) {
 		this.create_dt = create_dt;
-	}
-	public String getFileEx() {
-		return fileEx;
 	}
 	public void setFileEx(String fileEx) {
 		this.fileEx = fileEx;
 	}
+	public void setQuantity(String quantity) {
+		this.quantity = quantity;
+	}
 	@Override
 	public String toString() {
 		return "OptionsVo [option_code=" + option_code + ", option_name=" + option_name + ", subcategory_code="
-				+ subcategory_code + ", price=" + price + ", image=" + image + ", user_id=" + user_id + ", create_dt="
-				+ create_dt + ", fileEx=" + fileEx + "]";
+				+ subcategory_code + ", price=" + price + ", image=" + image + ", user_id=" + user_id + ", use_yn="
+				+ use_yn + ", create_dt=" + create_dt + ", fileEx=" + fileEx + ", quantity=" + quantity + "]";
 	}
-
+	
 	
 }

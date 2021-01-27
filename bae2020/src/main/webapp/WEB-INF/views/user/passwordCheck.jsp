@@ -33,6 +33,9 @@
 	</style>
 </head>
 <body>
+	<p><br/></p>
+	<p><br/></p>
+	<p><br/></p>
 	<div class="w3-content" style="max-width: 1200px; margin-top: 250px;">
 		<div class="main">
 			<h2 class="w3-wide w3-center">Password Check</h2>
@@ -47,7 +50,11 @@
 		     </form>
 		</div>
 	</div>
-	
+	<p><br/></p>
+	<p><br/></p>
+	<p><br/></p>
+	<p><br/></p>
+	<p><br/></p>	
 </body>
 <%@ include file="/WEB-INF/views/include/footer.jsp" %>
 </html>

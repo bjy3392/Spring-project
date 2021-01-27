@@ -28,10 +28,14 @@
 	</delete>
 	
 	<select id="findCartByIdx" resultType="com.spring.bae2020.vo.ItemVo">
-		select cart.*, prod.product_name
+		select cart.*, prod.product_name, st.quantity
 		  from cart cart
 		 inner join product prod
 		    on cart.product = prod.product_code
+		  left outer join stock st
+		    on substring_index(cart.option_unit,'/',1) = st.option_name
+		   and st.subcategory_code = 'opt-001'  
+		   and st.store=#{store_code}
 		 where 1=1
 		   and cart_idx in
 		<foreach collection="arrayIdx" item="cart_idx" index="index" open="(" separator="," close=")">
@@ -41,16 +45,19 @@
 	</select>
 	
 	<select id="findItemByOrderIdx"  resultType="com.spring.bae2020.vo.ItemVo">
-	select item.* , prod.product_name
+	select item.* , prod.product_name, st.quantity
 	  from item
-	 inner join orders 
-	    on item.order_idx = orders.order_idx
-	   and orders.order_idx in
-	  <foreach collection="arrayOrderIdx" item="order_idx" index="index" open="(" separator="," close=")">
-   	    	#{order_idx}
-   	  </foreach>
-	 inner join product prod
+	  inner join product prod
 	    on item.product = prod.product_code
+	  left outer join stock st
+	    on substring_index(item.option_unit,'/',1) = st.option_name
+	   and st.subcategory_code = 'opt-001'  
+	   and st.store=#{store_code}
+	 where 1=1
+	   and item.order_idx in 
+	   <foreach collection="arrayOrderIdx" item="order_idx" index="index" open="(" separator="," close=")">
+  	    	#{order_idx}
+  	   </foreach>   
 	</select>
 	
 	
@@ -64,7 +71,7 @@
 	</select>
 	
 	<insert id="insertOrders" parameterType="com.spring.bae2020.vo.OrdersVo" useGeneratedKeys="true" keyProperty="vo.order_idx" keyColumn="order_idx">
-		insert into orders value (default, #{vo.mid}, #{vo.total}, #{vo.payment}, #{vo.postcode}, #{vo.roadAddress}, #{vo.detailAddress}, #{vo.tel}, #{vo.demand}, #{vo.store}, #{vo.delivery},#{vo.distance}, #{vo.coupon}, #{vo.point}, default, default, default);	
+		insert into orders value (default, #{vo.mid}, #{vo.total}, #{vo.payment}, #{vo.postcode}, #{vo.roadAddress}, #{vo.detailAddress}, #{vo.tel}, #{vo.demand}, #{vo.store}, #{vo.cancel},#{vo.delivery},#{vo.distance}, #{vo.coupon}, #{vo.point}, default, default, default);	
 	</insert>
 	
 	<insert id="insertItemFromCart">
@@ -145,13 +152,96 @@
   		    on item.product = prod.product_code
 	     where 1=1
 	       and orders.mid = #{mid}
-	       and orders.state='state-04'
+	       and orders.state in ('state-04','state-05')
 	       and period_diff(month(now()),month(update_dt)) <![CDATA[<=]]>  #{month};
 	</select>
 	
 	<select id="findOrderByIdx" resultType="com.spring.bae2020.vo.OrdersVo">
 		select * from orders where order_idx=#{order_idx};
 	</select>
+	
+	<select id="checkStockByName" resultType="String">
+		select st.quantity as quantity
+		  from stock st
+		 inner join options opt
+		    on st.option_code = opt.option_code
+		   and opt.option_name=#{bread}
+		 where st.store = #{store} 
+	</select>
+	
+	<select id="findCartOptionByIdx" resultType="String">
+		select option_unit from cart where cart_idx = #{idx};
+	</select>
+	
+	<select id="findItemStockByOption" resultType="com.spring.bae2020.vo.StockVo">
+		select item.order_idx, item.option_name, item.cnt, stock.quantity 
+		  from (select item.order_idx, item.option_name, sum(item.cnt) as cnt
+		  		  from (select order_idx, substring_index(item.option_unit,'/',1) as option_name, cnt 
+		  		          from item 
+		  		         where 1=1
+		  		           and order_idx in 
+					   <foreach collection="arrayOrderIdx" item="order_idx" index="index" open="(" separator="," close=")">
+				  	    	#{order_idx}
+				  	   </foreach> )item
+		 		 group by item.option_name, item.order_idx) item
+		  inner join stock 
+		     on item.option_name = stock.option_name
+		    and stock.store = #{store}
+		 	and stock.subcategory_code = 'opt-001'
+		  where item.cnt > stock.quantity
+	</select>
+	
+	<select id="findCartStockByOption" resultType="com.spring.bae2020.vo.StockVo">
+	 	select cart.option_name, cart.cnt, stock.quantity 
+		  from (select cart.option_name, sum(cart.cnt) as cnt
+		  		  from (select substring_index(cart.option_unit,'/',1) as option_name, cnt 
+		  		          from cart 
+		  		         where 1=1
+		  		         and cart_idx in
+							<foreach collection="arrayIdx" item="cart_idx" index="index" open="(" separator="," close=")">
+					       		#{cart_idx}
+					       	</foreach>  )cart
+		 		 group by cart.option_name) cart
+		  inner join stock 
+		     on cart.option_name = stock.option_name
+		    and stock.store = #{store} 
+		 	and stock.subcategory_code = 'opt-001'
+		  where cart.cnt > stock.quantity
+	</select>
+	
+	<insert id="insertPoint" parameterType="com.spring.bae2020.vo.PointEventVo" useGeneratedKeys="true" keyProperty="voP.event_idx" keyColumn="event_idx">
+		insert into point_event value (default, #{voP.mid}, #{voP.order_idx}, #{voP.way}, #{voP.amount}, now(), date(date_add(now(), interval 7 day)));
+	</insert>
+	
+	<insert id="insertPointDetail" parameterType="com.spring.bae2020.vo.PointEventVo" useGeneratedKeys="true" keyProperty="voP.detail_idx" keyColumn="detail_idx">
+		insert into point_detail value (default, #{voP.mid}, #{voP.way}, #{voP.amount},#{voP.save_detail_idx} , #{voP.event_idx}, now(), date(date_add(now(), interval 7 day)));
+	</insert>
+	
+	<update id="updatePointDetail">
+		update point_detail set save_detail_idx = #{voP.detail_idx} where detail_idx=#{voP.detail_idx};
+	</update>
+	
+	<select id="findPointByMid" resultType="String">
+		select sum(amount) as amount
+		  from point_event
+		 where mid = #{mid} 
+		 group by mid
+	</select>
+	
+	<select id="findPointGroupBySaveIdx" resultMap="selectMapList">
+		select * 
+		from (select cast(sum(amount) as char(10)) as amount, cast(save_detail_idx as char(10)) as save_detail_idx
+		  		from point_detail
+		 		where mid=#{mid}
+		 		group by save_detail_idx
+		 		order by event_dt) point_detail
+		where amount != 0
+	</select>
+	
+	<resultMap type="map" id="selectMapList"> 
+		<result column="amount" property="amount"/> 
+		<result column="save_detail_idx" property="save_detail_idx"/> 
+	</resultMap>
 	
 </mapper>
 

@@ -49,7 +49,7 @@
     </div>
     <div class="row">
       
-      <div class="col-sm-12" style="text-align:left;height:500px;">
+      <div class="col-sm-12" style="text-align:left;height:auto;">
         <table class="table table-bordered" style="height:100%">
           <tr style="text-align:center;font-size:1em;background-color:#eee;height:10%">
             <th style="color:red;width:13%;vertical-align:middle;">일</th>

@@ -41,6 +41,14 @@ public class MsgController {
 			model.addAttribute("msg", "비밀번호를 확인해주세요.");
 			model.addAttribute("url", "user/viewPasswordCheck");
 		}
+		else if(msgFlag.equals("notStore")) {
+			model.addAttribute("msg", "매장이 아직 지정되지 않았습니다.");
+			model.addAttribute("url", "/");
+		}
+		else if(msgFlag.equals("notOption")) {
+			model.addAttribute("msg", "품절된 상품을 포함하고 있습니다.");
+			model.addAttribute("url", "order/viewCartList");
+		}
 		return "include/msg";
 	}	
 }

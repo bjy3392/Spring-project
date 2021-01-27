@@ -8,6 +8,7 @@ public class ProductVo {
 	private String price;
 	private String image;
 	private String user_id;
+	private String use_yn;
 	private String create_dt;
 	private String fileEx; //파일 존재 유무
 	public String getProduct_code() {
@@ -31,8 +32,14 @@ public class ProductVo {
 	public String getUser_id() {
 		return user_id;
 	}
+	public String getUse_yn() {
+		return use_yn;
+	}
 	public String getCreate_dt() {
 		return create_dt;
+	}
+	public String getFileEx() {
+		return fileEx;
 	}
 	public void setProduct_code(String product_code) {
 		this.product_code = product_code;
@@ -55,11 +62,11 @@ public class ProductVo {
 	public void setUser_id(String user_id) {
 		this.user_id = user_id;
 	}
+	public void setUse_yn(String use_yn) {
+		this.use_yn = use_yn;
+	}
 	public void setCreate_dt(String create_dt) {
 		this.create_dt = create_dt;
-	}
-	public String getFileEx() {
-		return fileEx;
 	}
 	public void setFileEx(String fileEx) {
 		this.fileEx = fileEx;
@@ -68,8 +75,9 @@ public class ProductVo {
 	public String toString() {
 		return "ProductVo [product_code=" + product_code + ", product_name=" + product_name + ", category_code="
 				+ category_code + ", first_code=" + first_code + ", price=" + price + ", image=" + image + ", user_id="
-				+ user_id + ", create_dt=" + create_dt + ", fileEx=" + fileEx + "]";
+				+ user_id + ", use_yn=" + use_yn + ", create_dt=" + create_dt + ", fileEx=" + fileEx + "]";
 	}
+	
 	
 	
 	

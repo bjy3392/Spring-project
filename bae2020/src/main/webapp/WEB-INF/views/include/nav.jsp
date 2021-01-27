@@ -105,18 +105,18 @@
 	  		</ul>
 		</nav>
 	</c:if>
-	<%-- <c:if test="${slevel eq 'level-05' }">
+	<c:if test="${slevel eq 'level-05' }">
 		<nav class="navbar navbar-expand-sm justify-content-center" id="admin_bar">
 			<div class="navbar-brand" >매니저 메뉴</div>
 	  		<ul class="navbar-nav" >
 	  			<li class="nav-item">
-			      	<a href="${contextPath }/manager/viewStoreOrderList" class="w3-bar-item w3-button w3-padding-large w3-hide-small">주문현황</a>
+			      	<a href="${contextPath }/store/viewStoreOrderList/state-01" class="w3-bar-item w3-button w3-padding-large w3-hide-small">주문현황</a>
 			    </li>
 	    		<li class="nav-item">
-			      	<a href="${contextPath }/admin/viewCategoryEdit" class="w3-bar-item w3-button w3-padding-large">재고관리</a>
+			      	<a href="${contextPath }/store/viewStockEdit" class="w3-bar-item w3-button w3-padding-large">재고관리</a>
 			    </li>
 			    <li class="nav-item">
-			      	<a href="${contextPath }/order/viewProductList" class="w3-bar-item w3-button w3-padding-large w3-hide-small">매출관리</a>
+			      	<a href="${contextPath }/store/viewSalesCalendar" class="w3-bar-item w3-button w3-padding-large w3-hide-small">매출관리</a>
 			    </li>
 			    <li class="nav-item">
 			      	<a href="${contextPath }/admin/viewManagerList" class="w3-bar-item w3-button w3-padding-large w3-hide-small">고객관리</a>
@@ -126,7 +126,7 @@
 			    </li>
 	  		</ul>
 		</nav>
-	</c:if>   --%>
+	</c:if>
 	  <%-- <div class="bar" style="text-align:center;">
 		    <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
 		    <a href="${contextPath }" class="w3-bar-item w3-button w3-padding-large">HOME</a>

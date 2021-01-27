@@ -25,4 +25,71 @@
 		 order by state, update_dt;
 	</select>
 	
+	<select id="findItemGroupByProduct" resultType="com.spring.bae2020.vo.ItemVo">
+		select ctg.category_name, sum(item.price+item.price_add+item.price_meat) as sum_price
+		  from item 
+		 inner join orders
+		    on item.order_idx = orders.order_idx
+		   and date(orders.update_dt) = #{ymd} 
+		 inner join store 
+		    on orders.store = store.store_code
+		   and store.manager = #{mid}
+		 inner join product prod
+		    on item.product = prod.product_code
+		 inner join category ctg
+		    on prod.category_code = ctg.category_code
+		 group by prod.category_code 
+	</select>
+	
+	<select id="findStockBtStore" resultType="com.spring.bae2020.vo.StockVo">
+		select * from stock where store=#{store_code} and use_yn = 'y';
+	</select>
+	
+	<update id="updateStock">
+		update stock set quantity=quantity+#{quantity} where option_code=#{option_code} and store=#{store};
+	</update>
+	
+	<update id="updateOrderByCancel">
+		update orders set cancel=#{cancel} where order_idx=#{order_idx};
+	</update>
+	
+	<!-- <select id="findOrderOptionGroupByCode" resultMap="Map">
+		select opt.option_code,sum(item.cnt), orders.store  
+		  from item
+		 inner join options opt
+			 on substring_index(item.option_unit,'/',1) = opt.option_name
+			and opt.subcategory_code = 'opt-001'
+		 inner join orders
+		     on item.order_idx = orders.order_idx
+		  where orders.order_idx = #{order_idx}
+		  group by opt.option_code
+	</select> -->
+	
+	<select id="findOrderOptionGroupByCode" resultMap="selectMapList">
+		select opt.option_code,sum(item.cnt) as cnt, orders.store  
+		  from item
+		 inner join options opt
+			 on substring_index(item.option_unit,'/',1) = opt.option_name
+			and opt.subcategory_code = 'opt-001'
+		 inner join orders
+		     on item.order_idx = orders.order_idx
+		  where orders.order_idx = #{order_idx}
+		  group by opt.option_code
+	</select> 
+	<resultMap type="map" id="selectMapList"> 
+		<result column="option_code" property="option_code"/> 
+		<result column="cnt" property="cnt"/> 
+		<result column="store" property="store"/> 
+	</resultMap>
+
+	<update id="updateStockByOption">
+		update stock set quantity=quantity-#{cnt} where option_code=#{option_code} and store=#{store};
+	</update>
+	
 </mapper>
+
+
+
+
+
+

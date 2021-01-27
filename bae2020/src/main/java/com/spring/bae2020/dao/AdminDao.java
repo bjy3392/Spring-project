@@ -40,7 +40,7 @@ public interface AdminDao {
 
 	void deleteSubcategory(@Param("subcategory_code")String subcategory_code);
 
-	List<OptionsVo> findOptionBySubcategory(@Param("subcategory_code")String subcategory_code);
+	List<OptionsVo> findOptionBySubcategory(@Param("subcategory_code")String subcategory_code, @Param("store_code")String store_code);
 
 	String findOptionCodeeByCategory(@Param("subcategory_code")String subcategory_code);
 
@@ -69,6 +69,8 @@ public interface AdminDao {
 	int totUserRecCnt();
 
 	List<UserVo> findUser(@Param("startNo")int startNo, @Param("pageSize")int pageSize);
+
+	void insertStockinit(@Param("vo")StoreVo vo);
 
 	
 }

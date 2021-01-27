@@ -102,7 +102,7 @@
 						<p></p>
 						<img src="${contextPath }/product/${vo.category_code }/${vo.image}" style="width:200px;">
 						<p>${vo.product_name }<br/>${vo.price }</p>
-						<button class="w3-round-xlarge" id="btn" onclick="location.href='${contextPath}/order/viewOptionList/${vo.category_code}?product_code=${vo.product_code }'">주문하기</button>
+						<button class="w3-round-xlarge" id="btn" onclick="location.href='${contextPath}/order/viewOptionList/${vo.category_code}?store_code=${store_code }&product_code=${vo.product_code }'">주문하기</button>
 					</div>
 					    	
 				</c:forEach>

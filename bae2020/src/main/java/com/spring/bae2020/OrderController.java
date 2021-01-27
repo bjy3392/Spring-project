@@ -22,6 +22,7 @@ import com.spring.bae2020.vo.ItemVo;
 import com.spring.bae2020.vo.OptionsVo;
 import com.spring.bae2020.vo.OrdersVo;
 import com.spring.bae2020.vo.ProductVo;
+import com.spring.bae2020.vo.StockVo;
 import com.spring.bae2020.vo.StoreVo;
 import com.spring.bae2020.vo.SubcategoryVo;
 
@@ -46,20 +47,21 @@ public class OrderController {
 		model.addAttribute("vosC", vosC);
 		model.addAttribute("vos", vos);
 		model.addAttribute("category", category);
+		model.addAttribute("store_code", vo.getStore_code());
 		model.addAttribute("store_name", vo.getStore_name());
 		
 		return "order/productList";
 	}
 	
 	@RequestMapping(value="/viewOptionList/{category}", method = RequestMethod.GET)
-	public String viewOptionListGet(@PathVariable String category, Model model, String product_code ) {
+	public String viewOptionListGet(@PathVariable String category, Model model, String product_code, String store_code ) {
 		List<SubcategoryVo> vosS =  adminService.findSubcategoryByCategory(category);
 		ProductVo voP = adminService.findProductByCode(product_code);
 		
 		for(int i=0; i<vosS.size(); i++) {
 			SubcategoryVo vo = vosS.get(i);
 			String subcategory_code = vo.getSubcategory_code();
-			List<OptionsVo> vos = adminService.findOptionBySubcategory(subcategory_code);
+			List<OptionsVo> vos = adminService.findOptionBySubcategory(subcategory_code, store_code);
 			
 			String option_code = vos.get(0).getOption_code();
 			String first_code = option_code.substring(0,option_code.lastIndexOf("-"));			
@@ -87,7 +89,7 @@ public class OrderController {
 			orderService.updateCart(mid, cart_idx, purpose);
 		}
 		else {
-			orderService.insertCart(vo);			
+			orderService.insertCart(vo);
 		}
 		
 		return "";
@@ -142,11 +144,20 @@ public class OrderController {
 			msgFlag= "notProduct";
 			return "redirect:/msg/" + msgFlag;
 		}
+		String mid = (String)session.getAttribute("smid");
 		
-		List<ItemVo> vos = orderService.findItem(route,arrayIdx,order_idx,itemVo);
-
+		List<ItemVo> vos = orderService.findItem(route,arrayIdx,order_idx,itemVo,store);
+		
+		List<StockVo> stockVos = orderService.findStock(route,arrayIdx,order_idx,itemVo,store);
+		
+		String point = orderService.findPointByMid(mid);
+		
+		if(vos==null) {
+			msgFlag= "notOption";
+			return "redirect:/msg/" + msgFlag;
+		}
+		
 		StoreVo storeVo = adminService.findStoreByCode(store);
-
 	  	
 		if(arrayIdx==null && vos!=null){
 		  	arrayIdx = new String[vos.size()];
@@ -162,9 +173,11 @@ public class OrderController {
 		}
 		else {
 		  	model.addAttribute("vos", vos);	
+		  	model.addAttribute("stockVos", stockVos);	
 		  	model.addAttribute("route", route);
 		  	model.addAttribute("arrayIdx", arrayIdx);
 		  	model.addAttribute("storeVo", storeVo);
+		  	model.addAttribute("point", point);	
 		}
 		
 		return "order/orderInput";
@@ -189,6 +202,13 @@ public class OrderController {
 		
 		orderService.insertItem(route,order_idx,arrayIdx,itemVo);
 		
+		if(vo.getPoint().equals("0") && Integer.parseInt(vo.getTotal()) >= 10000) {
+			orderService.insertPoint(vo);			
+		}
+		else if(!vo.getPoint().equals("0")){
+			orderService.insertMinusPoint(vo);
+		}
+		
 		if(route.equals("cart")) {
 			orderService.deleteCartByIdx(mid, arrayIdx); 
 		}
@@ -200,6 +220,7 @@ public class OrderController {
 	public String viewOrderListGet(Model model,HttpSession session) {
 		String mid = (String)session.getAttribute("smid");
 		
+		//당일 데이터만 가져온다.
 		List<OrdersVo> vos = orderService.findOrdersGroupByIdx("mid",mid,"not","state-04");
 		
 		
@@ -211,7 +232,7 @@ public class OrderController {
 				arrayOrderIdx[i] = vo.getOrder_idx();
 			}
 					
-			List<ItemVo> vosItem = orderService.findItemByOrderIdx(arrayOrderIdx);
+			List<ItemVo> vosItem = orderService.findItemByOrderIdx(arrayOrderIdx,"");
 			model.addAttribute("vosItem", vosItem);
 		}
 		
@@ -290,9 +311,8 @@ public class OrderController {
 	@RequestMapping(value="/viewOrderInfo", method = RequestMethod.GET)
 	public String viewOrderInfoGet(Model model,String order_idx) {
 		
-		List<ItemVo> vos = orderService.findItemByOrderIdx(new String[] {order_idx});
-		
-		OrdersVo orderVo = orderService.findOrderByIdx(order_idx);
+		List<ItemVo> vos = orderService.findItemByOrderIdx(new String[] {order_idx},"");
+		OrdersVo orderVo = orderService.findOrderByIdx(order_idx);		
 		
 		model.addAttribute("vos", vos);
 		model.addAttribute("orderVo", orderVo);

@@ -1,7 +1,9 @@
 package com.spring.bae2020.service;
 
+import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -12,7 +14,9 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.spring.bae2020.dao.StoreDao;
+import com.spring.bae2020.vo.ItemVo;
 import com.spring.bae2020.vo.OrdersVo;
+import com.spring.bae2020.vo.StockVo;
 import com.spring.bae2020.vo.StoreVo;
 
 @Service
@@ -27,6 +31,12 @@ public class StoreServiceImp implements StoreService {
 
 	@Override
 	public void updateOrderByState(String order_idx, String state) {
+		if(state.equals("state-02")) {
+			List<Map<String, String>> hm = storeDao.findOrderOptionGroupByCode(order_idx);
+			for(Map<String, String> map :hm) {
+				storeDao.updateStockByOption(String.valueOf(map.get("cnt")),map.get("option_code"),map.get("store"));
+			}
+		}
 		storeDao.updateOrderByState(order_idx, state);
 	}
 
@@ -101,9 +111,21 @@ public class StoreServiceImp implements StoreService {
 			// 화면에 표시할 해달월 해당일자의 각각의 제목을 배열에 담아서 넘긴다.
 			String[] memoryArr = new String[lastDay];
 			String ymd = "";
+			String memory = "";
+			DecimalFormat df = new DecimalFormat("#,###");
+			int total =0;				
 			for(int i=0; i<lastDay; i++) {
 				ymd = yy + "-" + (mm+1) + "-" + (i+1);
-				//memoryArr[i] = storeDao.getMemory(mid, ymd);
+				List<ItemVo> vos = storeDao.findItemGroupByProduct(mid, ymd);
+				for(ItemVo vo : vos) {
+					int sum_price = Integer.parseInt(vo.getSum_price());
+					memory += vo.getCategory_name() + " : " + df.format(sum_price) + "<br/>";
+					total += sum_price;
+				}
+				memory += "<br/>---총 매출" + ":" + df.format(total) +"---";
+				memoryArr[i] = memory;
+				memory ="";
+				total =0;
 			}
 			
 			// 해당 달의 memoryArr을 저장한다.
@@ -128,5 +150,20 @@ public class StoreServiceImp implements StoreService {
 			request.setAttribute("nextMonth", nextMonth);
 			request.setAttribute("nextStartWeek", nextStartWeek);
 		
+	}
+
+	@Override
+	public List<StockVo> findStockBtStore(String store_code) {
+		return storeDao.findStockBtStore(store_code);
+	}
+
+	@Override
+	public void updateStock(String quantity, String option_code, String store) {
+		storeDao.updateStock(quantity,option_code,store);		
+	}
+
+	@Override
+	public void updateOrderByCancel(String order_idx, String cancel) {
+		storeDao.updateOrderByCancel(order_idx,cancel);				
 	}
 }

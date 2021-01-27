@@ -155,7 +155,7 @@ public class AdminController {
 	@RequestMapping(value="/viewOptionEdit", method = RequestMethod.GET)
 	public String viewOptionEditGet(Model model, String subcategory_code) {
 		model.addAttribute("subcategory_code", subcategory_code);
-		List<OptionsVo> vos = adminService.findOptionBySubcategory(subcategory_code);
+		List<OptionsVo> vos = adminService.findOptionBySubcategory(subcategory_code,"");
 		
 		model.addAttribute("subcategory_code", subcategory_code);
 		model.addAttribute("vos", vos);
@@ -208,6 +208,7 @@ public class AdminController {
 	
 	@RequestMapping(value="/insertStore", method = RequestMethod.POST)
 	public String insertStorePost(StoreVo vo) {
+		adminService.insertStockinit(vo);
 		adminService.insertStore(vo);
 		msgFlag= "insertStoreOk";
 		

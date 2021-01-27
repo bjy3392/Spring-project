@@ -6,14 +6,17 @@ public class ItemVo {
 	private String mid;
 	private String product;
 	private String product_name;
+	private String category_name;
 	private String option_unit;
 	private String add_unit;
 	private String meat_unit;
 	private String price;
 	private String price_add;
 	private String price_meat;
+	private String sum_price;
 	private String cnt;
 	private String create_dt;
+	private String quantity;
 	public String getItem_idx() {
 		return item_idx;
 	}
@@ -28,6 +31,9 @@ public class ItemVo {
 	}
 	public String getProduct_name() {
 		return product_name;
+	}
+	public String getCategory_name() {
+		return category_name;
 	}
 	public String getOption_unit() {
 		return option_unit;
@@ -47,11 +53,17 @@ public class ItemVo {
 	public String getPrice_meat() {
 		return price_meat;
 	}
+	public String getSum_price() {
+		return sum_price;
+	}
 	public String getCnt() {
 		return cnt;
 	}
 	public String getCreate_dt() {
 		return create_dt;
+	}
+	public String getQuantity() {
+		return quantity;
 	}
 	public void setItem_idx(String item_idx) {
 		this.item_idx = item_idx;
@@ -67,6 +79,9 @@ public class ItemVo {
 	}
 	public void setProduct_name(String product_name) {
 		this.product_name = product_name;
+	}
+	public void setCategory_name(String category_name) {
+		this.category_name = category_name;
 	}
 	public void setOption_unit(String option_unit) {
 		this.option_unit = option_unit;
@@ -86,22 +101,26 @@ public class ItemVo {
 	public void setPrice_meat(String price_meat) {
 		this.price_meat = price_meat;
 	}
+	public void setSum_price(String sum_price) {
+		this.sum_price = sum_price;
+	}
 	public void setCnt(String cnt) {
 		this.cnt = cnt;
 	}
 	public void setCreate_dt(String create_dt) {
 		this.create_dt = create_dt;
 	}
+	public void setQuantity(String quantity) {
+		this.quantity = quantity;
+	}
 	@Override
 	public String toString() {
 		return "ItemVo [item_idx=" + item_idx + ", order_idx=" + order_idx + ", mid=" + mid + ", product=" + product
-				+ ", product_name=" + product_name + ", option_unit=" + option_unit + ", add_unit=" + add_unit
-				+ ", meat_unit=" + meat_unit + ", price=" + price + ", price_add=" + price_add + ", price_meat="
-				+ price_meat + ", cnt=" + cnt + ", create_dt=" + create_dt + "]";
+				+ ", product_name=" + product_name + ", category_name=" + category_name + ", option_unit=" + option_unit
+				+ ", add_unit=" + add_unit + ", meat_unit=" + meat_unit + ", price=" + price + ", price_add="
+				+ price_add + ", price_meat=" + price_meat + ", sum_price=" + sum_price + ", cnt=" + cnt
+				+ ", create_dt=" + create_dt + ", quantity=" + quantity + "]";
 	}
-	
-	
-	
 	
 	
 	

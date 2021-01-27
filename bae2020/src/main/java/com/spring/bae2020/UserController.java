@@ -86,12 +86,8 @@ public class UserController {
 				session.setAttribute("smid", vo.getMid());
 				session.setAttribute("sname", vo.getName());
 				session.setAttribute("slevel", vo.getLevel());
-				if(vo.getLevel().equals("level-05")) {
-					return "store/storeHome";
-				}
-				else {
-					return "redirect:/";					
-				}
+				
+				return "redirect:/";	
 			}
 			else {
 				//비밀번호가 틀린경우
