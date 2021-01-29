@@ -66,7 +66,7 @@
 		      	<button class="w3-padding-large w3-button" title="More">MY PAGE<i class="fa fa-caret-down"></i></button>     
 					<div class="w3-dropdown-content w3-bar-block w3-card-4">
 						<a href="${contextPath }/user/viewPasswordCheck" class="w3-bar-item w3-button">정보수정</a>
-						<a href="${contextPath }/member/mPassCheck" class="w3-bar-item w3-button">포인트/쿠폰</a>
+						<a href="${contextPath }/user/viewPointList?month=1" class="w3-bar-item w3-button">포인트</a>
 						<a href="${contextPath }/order/viewOrderList" class="w3-bar-item w3-button">주문확인</a>
 					</div>
     		</li>
@@ -121,9 +121,9 @@
 			    <li class="nav-item">
 			      	<a href="${contextPath }/admin/viewManagerList" class="w3-bar-item w3-button w3-padding-large w3-hide-small">고객관리</a>
 			    </li>
-			    <li class="nav-item">
+			    <%-- <li class="nav-item">
 			       	<a href="${contextPath }/order/viewCartList" class="w3-bar-item w3-button w3-padding-large w3-hide-small">쿠폰관리</a>
-			    </li>
+			    </li> --%>
 	  		</ul>
 		</nav>
 	</c:if>

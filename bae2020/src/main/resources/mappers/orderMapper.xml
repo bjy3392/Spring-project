@@ -71,7 +71,7 @@
 	</select>
 	
 	<insert id="insertOrders" parameterType="com.spring.bae2020.vo.OrdersVo" useGeneratedKeys="true" keyProperty="vo.order_idx" keyColumn="order_idx">
-		insert into orders value (default, #{vo.mid}, #{vo.total}, #{vo.payment}, #{vo.postcode}, #{vo.roadAddress}, #{vo.detailAddress}, #{vo.tel}, #{vo.demand}, #{vo.store}, #{vo.cancel},#{vo.delivery},#{vo.distance}, #{vo.coupon}, #{vo.point}, default, default, default);	
+		insert into orders value (default, #{vo.mid}, #{vo.total}, #{vo.payment}, #{vo.postcode}, #{vo.roadAddress}, #{vo.detailAddress}, #{vo.tel}, #{vo.demand}, #{vo.store}, #{vo.cancel},#{vo.delivery},#{vo.distance}, #{vo.point}, default, default, default);	
 	</insert>
 	
 	<insert id="insertItemFromCart">
@@ -143,7 +143,7 @@
 	  	 			   from item 
 	  	 			  where 1=1
 	  	 			    and mid = #{mid} 
-	  	 			    and period_diff(month(now()),month(create_dt)) <![CDATA[<=]]>  #{month}
+	  	 			    and date_sub(now(), interval #{month} month) <![CDATA[<]]> create_dt
 	  	 			  group by order_idx) item
    		   on orders.order_idx = item.order_idx  
 	  	 inner join store
@@ -153,7 +153,8 @@
 	     where 1=1
 	       and orders.mid = #{mid}
 	       and orders.state in ('state-04','state-05')
-	       and period_diff(month(now()),month(update_dt)) <![CDATA[<=]]>  #{month};
+	       and date_sub(now(), interval #{month} month) <![CDATA[<]]> orders.create_dt
+	     order by orders.create_dt desc;
 	</select>
 	
 	<select id="findOrderByIdx" resultType="com.spring.bae2020.vo.OrdersVo">
@@ -210,7 +211,7 @@
 	</select>
 	
 	<insert id="insertPoint" parameterType="com.spring.bae2020.vo.PointEventVo" useGeneratedKeys="true" keyProperty="voP.event_idx" keyColumn="event_idx">
-		insert into point_event value (default, #{voP.mid}, #{voP.order_idx}, #{voP.way}, #{voP.amount}, now(), date(date_add(now(), interval 7 day)));
+		insert into point_event value (default, #{voP.mid}, #{voP.order_idx}, #{voP.way}, #{voP.amount}, now());
 	</insert>
 	
 	<insert id="insertPointDetail" parameterType="com.spring.bae2020.vo.PointEventVo" useGeneratedKeys="true" keyProperty="voP.detail_idx" keyColumn="detail_idx">
@@ -228,9 +229,18 @@
 		 group by mid
 	</select>
 	
-	<select id="findPointGroupBySaveIdx" resultMap="selectMapList">
+	<insert id="insertMinusPoint" parameterType="com.spring.bae2020.vo.PointEventVo" useGeneratedKeys="true" keyProperty="voP.event_idx" keyColumn="event_idx">
+		insert into point_event (event_idx, mid, order_idx, way, amount, event_dt) 
+		value (default, #{voP.mid}, #{voP.order_idx}, #{voP.way}, #{voP.amount}, now());
+	</insert>
+	
+	<insert id="insertMinusPointDetail" parameterType="com.spring.bae2020.vo.PointEventVo" useGeneratedKeys="true" keyProperty="voP.detail_idx" keyColumn="detail_idx">
+		insert into point_detail value (default, #{voP.mid}, #{voP.way}, #{voP.amount},#{voP.save_detail_idx} , #{voP.event_idx}, now(), #{voP.expiry_dt});
+	</insert>
+	
+	<select id="findPointGroupBySaveIdx" resultType="com.spring.bae2020.vo.PointEventVo">
 		select * 
-		from (select cast(sum(amount) as char(10)) as amount, cast(save_detail_idx as char(10)) as save_detail_idx
+		from (select sum(amount) as amount, save_detail_idx,  expiry_dt
 		  		from point_detail
 		 		where mid=#{mid}
 		 		group by save_detail_idx
@@ -238,10 +248,63 @@
 		where amount != 0
 	</select>
 	
-	<resultMap type="map" id="selectMapList"> 
+	<select id="findSumPointByExpiry" resultType="String">
+		select sum(amount) 
+		from (select sum(amount) as amount, save_detail_idx ,  expiry_dt
+		  		from point_detail
+		 		where mid=#{mid}
+		 		group by save_detail_idx
+		 		order by event_dt) point_detail
+		where amount != 0
+		  and expiry_dt <![CDATA[<]]> date(now())
+	</select>
+	
+	<select id="findPointByExpiry" resultType="com.spring.bae2020.vo.PointEventVo">
+		select * 
+		from (select sum(amount) as amount, save_detail_idx as save_detail_idx, expiry_dt as expiry_dt
+		  		from point_detail
+		 		where mid=#{mid}
+		 		group by save_detail_idx
+		 		order by event_dt) point_detail
+		where amount != 0
+		  and expiry_dt <![CDATA[<]]> date(now())
+	</select>
+	
+	<!-- <resultMap type="map" id="selectMapList"> 
 		<result column="amount" property="amount"/> 
-		<result column="save_detail_idx" property="save_detail_idx"/> 
-	</resultMap>
+		<result column="save_detail_idx" property="save_detail_idx"/>
+		<result column="expiry_dt" property="expiry_dt"/> 
+	</resultMap> -->
+	
+	<select id="findPointByMonth" resultType="com.spring.bae2020.vo.PointEventVo">
+		select * 
+		  from point_event 
+		 where 1=1
+		   and mid = #{mid}
+		   and date_sub(now(), interval #{month} month) <![CDATA[<]]> event_dt
+		 order by event_dt desc;
+	</select>
+	
+	<select id="findPointDetailByExpiry" resultType="com.spring.bae2020.vo.PointEventVo">
+		select *
+		  from (select sum(amount)  as amount, save_detail_idx, expiry_dt
+				  		from point_detail
+				 		where mid=#{mid}
+				 		group by save_detail_idx
+				 		order by event_dt) point_detail
+		 where amount != 0
+		   and expiry_dt > date(now())
+		 limit 1
+	</select>
+	
+	<select id="findPointDetailByOrderIdx" resultType="com.spring.bae2020.vo.PointEventVo">
+		 select pd.amount, pd.save_detail_idx as save_detail_idx, pd.expiry_dt
+		   from point_detail pd
+		  inner join point_event pe
+		     on pe.event_idx = pd.original_idx
+		    and pe.order_idx=#{order_idx}
+	</select>
+	
 	
 </mapper>
 

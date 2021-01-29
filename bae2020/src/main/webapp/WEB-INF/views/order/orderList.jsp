@@ -50,6 +50,11 @@
 		}
 	}
 	
+	function viewCancelInput(idx) {
+		var url = "${contextPath}/store/viewCancelInput?order_idx="+idx;
+		window.open(url,"nwin","width=1100px, height=600px");
+	}
+	
 	function viewOrderInfo(order_idx){
 		var url = "${contextPath}/order/viewOrderInfo?order_idx="+order_idx;
 		window.open(url,"nwin","width=1100px, height=600px");
@@ -185,7 +190,7 @@
 					<table id="bar_table">
 						<tr>
 							<td id="bar_td_select">진행중</td>
-							<td id="bar_td" onclick="location.href='${contextPath}/order/viewOrderEndList'">완료</td>
+							<td id="bar_td" onclick="location.href='${contextPath}/order/viewOrderEndList?month=1'">완료</td>
 						</tr>
 					</table>
 					<p><br/></p>
@@ -206,9 +211,6 @@
 								<tr id="tr_${vo.order_idx }">
 									<td class="opt_td">${vo.update_dt }<br/>(${vo.store_name })</td>
 									<td><font style="font-weight: bold; font-size: 20px;"> ${vo.product_name }</font>  <c:if test="${vo.cnt ne 1 }">외 ${vo.cnt-1 }개</c:if>
-										<button class="icon_btn" disabled >
-											<i class="fas fa-chevron-down"></i>
-										</button>
 										<p></p>
 										<c:forEach var="voItem" items="${vosItem }">
 											<c:if test="${vo.order_idx eq voItem.order_idx }">
@@ -230,7 +232,7 @@
 									<td class="opt_td">
 										${vo.state_name }
 										<c:if test="${vo.state_name =='주문취소'}"><br/><span class="w3-text-grey">(취소사유는 상세를 참조해주세요.)</span></c:if>
-										<c:if test="${vo.state eq 'state-01' }"><button class="w3-round-xlarge btn_str" type="button" onclick="deleteOrderAjax(${vo.order_idx})">취소</button></c:if>
+										<c:if test="${vo.state eq 'state-01' }"><button class="w3-round-xlarge btn_str" type="button" onclick="viewCancelInput('${vo.order_idx}')">취소</button></c:if>
 									</td>
 								</tr>
 							</c:forEach>	

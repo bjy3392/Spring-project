@@ -31,4 +31,6 @@ public interface StoreDao {
 	List<Map<String, String>> findOrderOptionGroupByCode(@Param("order_idx")String order_idx);
 
 	void updateStockByOption(@Param("cnt")String cnt, @Param("option_code")String option_code, @Param("store")String store);
+
+	List<Map<String, String>> findOrderGroupByHour(@Param("store")String store);
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import com.spring.bae2020.vo.CartVo;
 import com.spring.bae2020.vo.ItemVo;
 import com.spring.bae2020.vo.OrdersVo;
+import com.spring.bae2020.vo.PointEventVo;
 import com.spring.bae2020.vo.StockVo;
 
 public interface OrderService {
@@ -41,7 +42,7 @@ public interface OrderService {
 
 	void deleteCartByMid(String mid);
 
-	List<OrdersVo> findOrderEndByMid(String mid, int month);
+	List<OrdersVo> findOrderEndByMid(String mid, String month);
 
 	void insertItem(String route, String order_idx, String[] arrayIdx, ItemVo itemVo);
 
@@ -56,6 +57,16 @@ public interface OrderService {
 	String findPointByMid(String mid);
 
 	void insertMinusPoint(OrdersVo vo);
+
+	void insertMinusPointByExpiry(String mid);
+
+	List<PointEventVo> findPointByMonth(String mid, String month);
+
+	PointEventVo findPointDetailByExpiry(String mid);
+
+	void insertMinusPointByCancel(OrdersVo vo);
+
+	void insertPointByCancel(OrdersVo vo);
 
 
 

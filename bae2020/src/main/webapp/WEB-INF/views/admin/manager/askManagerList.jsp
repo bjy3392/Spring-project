@@ -180,7 +180,7 @@
 								<td>${vo.mid }</td>
 								<td>${vo.tel }</td>
 								<td>
-									<button class="w3-round-xlarge btn_str" type="button" onclick="">메세지보기</button>
+									${vo.message }
 								</td>
 								<td>
 									<span><button class="w3-round-xlarge btn_str" type="button" onclick="updateAskManagerAjax(${vo.ask_idx},'y','${vo.mid }')">수락</button></span>

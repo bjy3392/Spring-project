@@ -46,7 +46,7 @@ public interface OrderDao {
 
 	void deleteCartByMid(@Param("mid")String mid);
 
-	List<OrdersVo> findOrderEndByMid(@Param("mid")String mid, @Param("month")int month);
+	List<OrdersVo> findOrderEndByMid(@Param("mid")String mid, @Param("month")String month);
 
 	void insertItem(@Param("order_idx")String order_idx, @Param("itemVo")ItemVo itemVo);
 
@@ -68,7 +68,22 @@ public interface OrderDao {
 	
 	String findPointByMid(@Param("mid")String mid);
 
-	List<Map<String, String>> findPointGroupBySaveIdx(@Param("mid")String mid);
+	List<PointEventVo> findPointGroupBySaveIdx(@Param("mid")String mid);
+
+	void insertMinusPoint(@Param("voP")PointEventVo voP);
+
+	void insertMinusPointDetail(@Param("voP")PointEventVo voP);
+
+	String findSumPointByExpiry(@Param("mid")String mid);
+
+	List<PointEventVo> findPointByExpiry(@Param("mid")String mid);
+
+	List<PointEventVo> findPointByMonth(@Param("mid")String mid, @Param("month")String month);
+
+	PointEventVo findPointDetailByExpiry(@Param("mid")String mid);
+
+	List<PointEventVo> findPointDetailByOrderIdx(@Param("order_idx")String order_idx);
+
 
 
 

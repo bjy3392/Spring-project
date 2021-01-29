@@ -154,7 +154,7 @@ public class OrderServiceImp implements OrderService {
 	}
 
 	@Override
-	public List<OrdersVo> findOrderEndByMid(String mid, int month) {
+	public List<OrdersVo> findOrderEndByMid(String mid, String month) {
 		return orderDao.findOrderEndByMid(mid,month);
 	}
 
@@ -212,38 +212,102 @@ public class OrderServiceImp implements OrderService {
 		voP.setOrder_idx(vo.getOrder_idx());
 		voP.setWay("사용");
 		voP.setAmount(String.valueOf(-point));
-		orderDao.insertPoint(voP);
+		orderDao.insertMinusPoint(voP);
 		
-		List<Map<String, String>> mapPoint = orderDao.findPointGroupBySaveIdx(vo.getMid());
+		List<PointEventVo> vos = orderDao.findPointGroupBySaveIdx(vo.getMid());
 		
-		for(Map<String, String> map : mapPoint) {
+		for(PointEventVo voPoint : vos) {
 			if(point<=0) {
 				break;
 			}
-//			int amount = Integer.parseInt(String.valueOf(map.get("amount")));
-//			if(point >= amount) {
-//				voP.setAmount("-"+String.valueOf(map.get("amount")));
-//				voP.setSave_detail_idx(String.valueOf(map.get("save_detail_idx")));
-//				orderDao.insertPointDetail(voP);
-//			}
-//			else if(point < amount) {
-//				voP.setAmount("-"+Integer.toString(point));
-//				voP.setSave_detail_idx(String.valueOf(map.get("save_detail_idx")));
-//				orderDao.insertPointDetail(voP);
-//			}
 			
-			int amount = Integer.parseInt(map.get("amount"));
+			int amount = Integer.parseInt(voPoint.getAmount());
+			voP.setExpiry_dt(voPoint.getExpiry_dt());
+			voP.setSave_detail_idx(voPoint.getSave_detail_idx());
 			if(point >= amount) {
-				voP.setAmount("-"+map.get("amount"));
-				voP.setSave_detail_idx(map.get("save_detail_idx"));
-				orderDao.insertPointDetail(voP);
+				voP.setAmount("-"+voPoint.getAmount());
 			}
 			else if(point < amount) {
 				voP.setAmount("-"+Integer.toString(point));
-				voP.setSave_detail_idx(map.get("save_detail_idx"));
-				orderDao.insertPointDetail(voP);
 			}
+			orderDao.insertMinusPointDetail(voP);
 			point = point-amount;
+		}
+	}
+
+	@Override
+	public void insertMinusPointByExpiry(String mid) {
+		PointEventVo voP = new PointEventVo();
+		
+		String sumPoint = orderDao.findSumPointByExpiry(mid);
+		
+		if(sumPoint != null) {
+			voP.setMid(mid);
+			voP.setWay("유효기간 만료");
+			voP.setAmount("-"+sumPoint);
+			orderDao.insertMinusPoint(voP);
+			
+			List<PointEventVo> vos = orderDao.findPointByExpiry(mid);
+			for(PointEventVo voPoint : vos) {
+
+				voP.setExpiry_dt(voPoint.getExpiry_dt());
+				voP.setSave_detail_idx(voPoint.getSave_detail_idx());
+				voP.setAmount("-"+voPoint.getAmount());
+				
+				orderDao.insertMinusPointDetail(voP);
+			}
+		}		
+	}
+
+	@Override
+	public List<PointEventVo> findPointByMonth(String mid, String month) {
+		return orderDao.findPointByMonth(mid,month);
+	}
+
+	@Override
+	public PointEventVo findPointDetailByExpiry(String mid) {
+		return orderDao.findPointDetailByExpiry(mid);
+	}
+
+	@Override
+	public void insertMinusPointByCancel(OrdersVo vo) {
+		
+		PointEventVo voP = new PointEventVo();
+		double amount = Integer.parseInt(vo.getTotal()) * 0.1 ;
+		
+		voP.setMid(vo.getMid());
+		voP.setOrder_idx(vo.getOrder_idx());
+		voP.setWay("주문취소");
+		voP.setAmount(String.valueOf(-amount));
+		orderDao.insertMinusPoint(voP);
+		
+		List<PointEventVo> vos = orderDao.findPointDetailByOrderIdx(vo.getOrder_idx());
+		
+		PointEventVo voPoint = vos.get(0);
+		
+		voP.setSave_detail_idx(voPoint.getSave_detail_idx());
+		voP.setExpiry_dt(voPoint.getExpiry_dt());
+		System.out.println(voP);
+		orderDao.insertMinusPointDetail(voP);		
+	}
+
+	@Override
+	public void insertPointByCancel(OrdersVo vo) {
+		PointEventVo voP = new PointEventVo();
+		voP.setMid(vo.getMid());
+		voP.setOrder_idx(vo.getOrder_idx());
+		voP.setWay("주문취소(재적립)");
+		voP.setAmount(vo.getPoint());
+		orderDao.insertPoint(voP);
+		
+		List<PointEventVo> vos = orderDao.findPointDetailByOrderIdx(vo.getOrder_idx());
+		
+		for(PointEventVo voPoint : vos) {
+			int amount = Integer.parseInt(voPoint.getAmount()) * -1;
+			voP.setExpiry_dt(voPoint.getExpiry_dt());
+			voP.setSave_detail_idx(voPoint.getSave_detail_idx());
+			voP.setAmount(Integer.toString(amount));
+			orderDao.insertMinusPointDetail(voP);
 		}
 	}
 

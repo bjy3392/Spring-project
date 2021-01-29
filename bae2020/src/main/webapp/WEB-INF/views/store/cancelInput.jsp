@@ -120,12 +120,22 @@
 						<table>
 							<tr>
 								<td>
-									<select id="sel" name="sel">
-										<option value="" selected>-- 선택 --</option>
-										<option value="재료소진">재료소진</option>
-										<option value="영업종료">영업종료</option>
-										<option value="기타">기타</option>
-									</select>
+									<c:if test="${slevle == 'level-05' }">
+										<select id="sel" name="sel">
+											<option value="" selected>-- 선택 --</option>
+											<option value="재료소진">재료소진</option>
+											<option value="영업종료">영업종료</option>
+											<option value="기타">기타</option>
+										</select>
+									</c:if>
+									<c:if test="${slevle != 'level-05' }">
+										<select id="sel" name="sel">
+											<option value="" selected>-- 선택 --</option>
+											<option value="메뉴변경">메뉴변경</option>
+											<option value="다른 매장 선택">다른 매장 선택</option>
+											<option value="기타">기타</option>
+										</select>
+									</c:if>
 								</td>
 							</tr>
 							<tr>

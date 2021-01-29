@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <c:set var="contextPath" value="${pageContext.request.contextPath }" />
 <%@ include file="/WEB-INF/views/include/nav.jsp"%>
 <!DOCTYPE html>
@@ -12,44 +11,12 @@
 <script src="https://use.fontawesome.com/releases/v5.2.0/js/all.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
-
-/* 	function findItemForReOrderAjax(idx){
-		var order = {
-				order_idx : idx
-		};
-		
-		var isSubmit = false;
-		var arrayIdx = [];
-		
-		$.ajax({
-			url: "${contextPath}/order/findItemForReOrderAjax",
-			type: "post",
-			data: order,
-			success:function(data){	
-				for (i in data) {
-					arrayIdx.push(data[i].name);
-	            }
-				
-				$("#arrayIdx").val(arrayIdx); 
-				
-				isSubmit = true;
-			}
-		}); 
-		
-		
-		$("#myform_"+idx).submit();
-	} */
-	
-	
-	function formSubmit(idx){
-		$("#myform_"+idx).submit();
-	}
 	
 	function viewOrderInfo(order_idx){
 		var url = "${contextPath}/order/viewOrderInfo?order_idx="+order_idx;
 		window.open(url,"nwin","width=1100px, height=600px");
 	}
-	
+
 </script>
 
 <style>
@@ -73,7 +40,7 @@
 	.list_detail {
 		text-align: left;
 		display: inline-block;
-		width: 800px;
+		width: 900px;
 		height: auto;
 		border: 0px solid;
 		margin-bottom: 5px;
@@ -82,7 +49,7 @@
 	
 	table {
 		margin: 0px auto;
-		width: 650px;
+		width: 800px;
 		border: 1px solid #ccc;
 		padding: 12px;
 		border-collapse: collapse;
@@ -91,12 +58,12 @@
 	
 	th {
 		text-align: center;
-		width: 120px;
+		width: 100px;
 		border: 1px solid #ccc;
 	}
 	
 	td {
-		width: 410px;
+		width: 100px;
 		border: 1px solid #ccc;
 		padding: 12px;
 	}
@@ -110,7 +77,7 @@
 	
 	#bar_table {
 		margin: 0px auto;
-		width: 800px;
+		width: 900px;
 		padding: 12px;
 		border-collapse: collapse;
 		table-layout: fixed;
@@ -118,13 +85,13 @@
 		border: none;
 	}
 	#bar_td {
-		width: 400px;
+		width: 300px;
 		border: none;
 		cursor: pointer;
 	}
 	
 	#bar_td_select {
-		width: 400px;
+		width: 300px;
 		border: none;
 		background-color: #009223;
 		color: #fff;
@@ -143,30 +110,11 @@
 		text-decoration: none;
 		display: inline-block;
 		font-size: 16px;
-		margin: 10px 0px;
 		cursor: pointer;
 		font-weight: bold;
 		border-color: #009223;
 		border-width: 3px;
 		border-style: solid;
-	}
-	.prod {
-		font-weight: bold;
-		font-size: 17px;
-		padding: 10px 10px 10px 10px;
-	}
-	.opt {
-		padding: 10px 10px 10px 10px;
-	}
-	.icon_btn {
-		padding: 0;
-		border: none;
-		background: none;
-		color: #009223;
-	}
-	#dateTd{
-		width: 256px;
-		text-align: center;
 	}
 </style>
 </head>
@@ -183,8 +131,9 @@
 				<div class="list_detail">
 					<table id="bar_table">
 						<tr>
-							<td id="bar_td" onclick="location.href='${contextPath}/order/viewOrderList'">진행중</td>
-							<td id="bar_td_select">완료</td>
+							<td id="<c:if test="${month == 1}">bar_td_select</c:if><c:if test="${month != 1}">bar_td</c:if>"  onclick="location.href='${contextPath}/user/viewPointList?month=1'">1개월</td>
+							<td id="<c:if test="${month == 2}">bar_td_select</c:if><c:if test="${month != 2}">bar_td</c:if>" onclick="location.href='${contextPath}/user/viewPointList?month=2'">2개월</td>
+							<td id="<c:if test="${month == 3}">bar_td_select</c:if><c:if test="${month != 3}">bar_td</c:if>" onclick="location.href='${contextPath}/user/viewPointList?month=3'">3개월</td>
 						</tr>
 					</table>
 					<p><br/></p>
@@ -192,43 +141,34 @@
 						<div class="list_start">
 							<div class="w3-row w3-padding-10 w3-white" style="text-align:left">
 								<div class="w3-row w3-padding-large">
-									주문내역이 없습니다.
+									거래 내역이 없습니다.
 								</div>
 							</div>
 							
 						</div>
 					</c:if>
 					<c:if test="${not empty vos}">
-						<h3 class="title">주문내역</h3>
+						<h3 class="title">거래내역</h3>
 						<p></p>
-						<table id="dateTable">
+						<table>
 							<tr>
-								<td id="dateTd" onclick="location.href='${contextPath}/order/viewOrderEndList?month=1'">1개월<c:if test="${month == 1}"><i class="fas fa-check"></i></c:if></td>
-								<td id="dateTd" onclick="location.href='${contextPath}/order/viewOrderEndList?month=2'">2개월<c:if test="${month == 2}"><i class="fas fa-check"></i></c:if></td>
-								<td id="dateTd" onclick="location.href='${contextPath}/order/viewOrderEndList?month=3'">3개월<c:if test="${month == 3}"><i class="fas fa-check"></i></c:if></td>
+								<td>포인트 잔액</td>
+								<td><fmt:formatNumber value="${point }" pattern="#,###" /> P</td>
+							</tr>
+							<tr>
+								<td>만료 예정 포인트</td>
+								<td><fmt:formatNumber value="${voP.amount }" pattern="#,###" /> P (${voP.expiry_dt })</td>
 							</tr>
 						</table>
 						<p></p>
 						<table>
 							<c:forEach var="vo" items="${vos }">
-								<tr id="tr_${vo.order_idx }">
-									<td class="opt_td">
-										${fn:substring(vo.update_dt ,0,10)}
-									</td>
+								<tr>
+									<td>${vo.event_dt }</td>
+									<td>${vo.way }</td>
+									<td><fmt:formatNumber value="${vo.amount }" pattern="#,###" /></td>
 									<td>
-										<font style="font-weight: bold; font-size: 20px;"> ${vo.store_name }</font>
-										<span class="w3-text-grey">${vo.product_name }<c:if test="${vo.cnt ne 1 }">외 ${vo.cnt-1 }개</c:if></span>  
-									</td>
-									<td class="opt_td">
-										<fmt:formatNumber value="${vo.total }" pattern="#,###" />
-										<button class="w3-round-xlarge btn_str" onclick="viewOrderInfo('${vo.order_idx}')">상세</button>
-									</td>
-									<td class="opt_td">
-										<button class="w3-round-xlarge btn_str" type="button" onclick="formSubmit(${vo.order_idx })">재주문</button>
-										<form id="myform_${vo.order_idx }" method="post" action="${contextPath }/order/viewOrderInput/order">
-									    	<input type="hidden" id="order_idx" name="order_idx" value="${vo.order_idx }"/>
-									    	<input type="hidden" id="store" name="store" value="${vo.store}"/>
-									    </form>
+									<c:if test="${vo.way != '유효기간 만료' }"><button class="w3-round-xlarge btn_str" onclick="viewOrderInfo('${vo.order_idx}')">주문내역</button></c:if>
 									</td>
 								</tr>
 							</c:forEach>	
