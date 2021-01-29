@@ -22,9 +22,13 @@ create table orders (
 ALTER TABLE orders ADD FOREIGN KEY (state)  REFERENCES state(state_code) ON DELETE RESTRICT ON UPDATE CASCADE ;
 ALTER TABLE orders ADD FOREIGN KEY (mid)  REFERENCES user(mid) ON DELETE RESTRICT ON UPDATE CASCADE ;
 --쿠폰이랑 매장, 배달 코드도 외래키 연결 해줘야함
+alter table orders drop coupon;
+
 
 alter table orders add cancel varchar(100);
 
+insert into orders (order_idx, mid, total, payment, tel, store, coupon, point,create_dt, state)
+value (default, 'bjy1234', 15000, '카드결제','010-5555-1111' ,'STORE-001',default, default, '2020-11-15 00:00:00' ,'state-04')
 
 ALTER TABLE orders MODIFY distance DECIMAL(3,2) ;
 
@@ -41,7 +45,7 @@ select orders.*
 select * from orders
 where date(create_dt) = date(now());
 
-update orders set STORE='STORE-001' where order_idx=20
+update orders set state='state-01' where order_idx=96
 
 select * from orders;
 select * from store
@@ -148,4 +152,6 @@ select item.option_name, item.cnt, stock.quantity
  	and stock.subcategory_code = 'opt-001'
   where cart.cnt > stock.quantity
   
-select * from product	  
+select * from product	 
+
+select * from orders where state in ('state-04', 'state-05')

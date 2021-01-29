@@ -408,27 +408,16 @@
                         <hr style="width:100%"/>
                        	<h3 class="title">할인방법 선택(예정)</h3>
 						<table>
-							<tr>
-						  		<th>쿠폰</th>
-						  		<td id="mid_td">
-                                    <select id="coupon" name="coupon">
-                                        <option value="0">쿠폰선택</option>
-                                        <option value="coupon1">coupon1</option>
-                                        <option value="coupon2">coupon2</option>
-                                    </select>
-						  		</td>
-                                <td id="end_td"><button type="button" class="btn_str">적용하기</button></td>
-							</tr>
                             <tr>
 						  		<th>포인트</th>
-						  		<td>
+						  		<td id="mid_td">
 						  			<input class="w3-border" type="text" id="usePoint" name="usePoint" value="" <c:if test="${point==null}">disabled</c:if>/> 보유포인트 : <c:if test="${point!=null}"><fmt:formatNumber value="${point}" pattern="#,###" /></c:if> <c:if test="${point==null}">0</c:if>  P
 						  			<c:if test="${point!=null}"><c:set var="myPoint" value="${point }" /></c:if> 
 						  			<c:if test="${point==null}"><c:set var="myPoint" value="0" /></c:if> 	
   									<input type="hidden" id="myPoint" value="${myPoint }">
 						  			
 						  		</td>
-                                <td><button type="button" class="btn_str" onclick="calcPoint()" <c:if test="${point==null}">disabled</c:if>>적용하기</button></td>
+                                <td id="end_td"><button type="button" class="btn_str" onclick="calcPoint()" <c:if test="${point==null}">disabled</c:if>>적용하기</button></td>
 							</tr>
 						</table>
 						<hr style="width:100%"/>

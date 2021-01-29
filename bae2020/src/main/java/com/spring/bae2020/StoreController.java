@@ -18,6 +18,7 @@ import com.spring.bae2020.vo.ItemVo;
 import com.spring.bae2020.vo.OrdersVo;
 import com.spring.bae2020.vo.StockVo;
 import com.spring.bae2020.vo.StoreVo;
+import com.spring.bae2020.vo.TimeTableVo;
 
 @Controller
 @RequestMapping("/store")
@@ -156,10 +157,40 @@ public class StoreController {
 	@RequestMapping(value="/insertCancel", method=RequestMethod.POST)
 	public String insertCancelPost(String order_idx, String cancel) {
 		
-		storeService.updateOrderByState(order_idx, "state-05");
+		storeService.updateOrderByState(order_idx, "state-05"); 
 		storeService.updateOrderByCancel(order_idx, cancel);
+
+		OrdersVo vo = orderService.findOrderByIdx(order_idx);
+		if(vo.getPoint().equals("0")  && Integer.parseInt(vo.getTotal()) >= 10000) {
+			//적립취소 vo.getTotal() * 0.1 를 Minus
+			orderService.insertMinusPointByCancel(vo);
+		}
+		else if(!vo.getPoint().equals("0")){
+			//vo.getPoint() 다시 적립
+			orderService.insertPointByCancel(vo);
+		}
 		
 	  	return "store/cancelInput";
+	}
+	
+	@RequestMapping(value="/viewChart", method = RequestMethod.GET)
+	public String viewChartTestGet(HttpSession session, Model model) {
+		String mid = (String)session.getAttribute("smid");
+		StoreVo vo = storeService.findStoreByMid(mid);
+		
+		model.addAttribute("store", vo.getStore_code());
+		
+		return "store/analysisChart";
+	}
+	
+	
+	@RequestMapping(value="/findChart", method = RequestMethod.POST)
+	@ResponseBody
+	public List<TimeTableVo> findChartTestPost(Model model, String store) {
+		List<TimeTableVo> timeTable = storeService.findOrderGroupByHour(store);
+		
+		
+		return timeTable;
 	}
 }
 

@@ -145,14 +145,13 @@
 		 	<!-- 상단 제목 -->
 			<div class="main_title">
 				<p></p>
-				<h2>옵션</h2>
+				<h2>재고관리</h2>
 				<p><br/><br/></p>
 			</div>
             <div class="list_start">
               	<div class="list_detail">
               		<p></p>
-              		<button type="button" class="w3-round-xlarge icon_btn" id="back" onclick="window.history.back()"><i class="fas fa-reply"></i></button><label for="back">뒤로가기</label>
-                  	<div id="content_input">
+              		<div id="content_input">
                     	<table>
                         	<tr>
                               	<th>이름</th>

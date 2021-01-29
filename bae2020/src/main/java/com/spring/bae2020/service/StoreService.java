@@ -1,10 +1,12 @@
 package com.spring.bae2020.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.spring.bae2020.vo.OrdersVo;
 import com.spring.bae2020.vo.StockVo;
 import com.spring.bae2020.vo.StoreVo;
+import com.spring.bae2020.vo.TimeTableVo;
 
 public interface StoreService {
 
@@ -23,6 +25,8 @@ public interface StoreService {
 	void updateStock(String quantity, String option_code, String store);
 
 	void updateOrderByCancel(String order_idx, String cancel);
+
+	List<TimeTableVo> findOrderGroupByHour(String store);
 
 
 }

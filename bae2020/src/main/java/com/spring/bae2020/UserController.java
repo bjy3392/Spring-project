@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.spring.bae2020.service.AdminService;
+import com.spring.bae2020.service.OrderService;
 import com.spring.bae2020.service.UserService;
 import com.spring.bae2020.vo.AskManagerVo;
+import com.spring.bae2020.vo.PointEventVo;
 import com.spring.bae2020.vo.UserVo;
 
 @Controller
@@ -27,6 +29,9 @@ public class UserController {
 	
 	@Autowired
 	AdminService adminService;
+
+	@Autowired
+	OrderService orderService;
 	
 	@Autowired
 	BCryptPasswordEncoder passwordEncoder;
@@ -86,6 +91,8 @@ public class UserController {
 				session.setAttribute("smid", vo.getMid());
 				session.setAttribute("sname", vo.getName());
 				session.setAttribute("slevel", vo.getLevel());
+				
+				orderService.insertMinusPointByExpiry(vo.getMid());
 				
 				return "redirect:/";	
 			}
@@ -188,6 +195,21 @@ public class UserController {
 		return "user/managerPassOk";
 	}
 	
+	@RequestMapping(value="/viewPointList", method=RequestMethod.GET)
+	public String viewPointListGet(HttpSession session, Model model, String month) {
+		String mid = (String)session.getAttribute("smid");
+		
+		List<PointEventVo> vos =orderService.findPointByMonth(mid, month);
+		PointEventVo voP = orderService.findPointDetailByExpiry(mid);
+		String point = orderService.findPointByMid(mid);
+		
+		model.addAttribute("vos", vos);
+		model.addAttribute("voP", voP);
+		model.addAttribute("point", point);
+		model.addAttribute("month", month);
+		
+		return "user/pointList";
+	}
 
 	
 }

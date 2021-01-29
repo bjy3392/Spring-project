@@ -1,6 +1,7 @@
 package com.spring.bae2020.service;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +19,7 @@ import com.spring.bae2020.vo.ItemVo;
 import com.spring.bae2020.vo.OrdersVo;
 import com.spring.bae2020.vo.StockVo;
 import com.spring.bae2020.vo.StoreVo;
+import com.spring.bae2020.vo.TimeTableVo;
 
 @Service
 public class StoreServiceImp implements StoreService {
@@ -165,5 +167,21 @@ public class StoreServiceImp implements StoreService {
 	@Override
 	public void updateOrderByCancel(String order_idx, String cancel) {
 		storeDao.updateOrderByCancel(order_idx,cancel);				
+	}
+
+	@Override
+	public List<TimeTableVo> findOrderGroupByHour(String store) {
+		
+		List<Map<String, String>> timeTable = storeDao.findOrderGroupByHour(store);
+		TimeTableVo vo = new TimeTableVo();
+		List<TimeTableVo> data = new ArrayList<TimeTableVo>();
+		
+		for(Map<String, String> t :timeTable) {
+			vo = new TimeTableVo();
+			vo.setTitle(t.get("title"));
+			vo.setCnt(String.valueOf(t.get("cnt")));
+			data.add(vo);
+		}
+		return data;			
 	}
 }

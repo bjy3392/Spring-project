@@ -255,13 +255,13 @@ public class OrderController {
 
 	
 	@RequestMapping(value="/viewOrderEndList", method = RequestMethod.GET)
-	public String viewOrderEndListGet(Model model,HttpSession session) {
+	public String viewOrderEndListGet(Model model,HttpSession session, String month) {
 		String mid = (String)session.getAttribute("smid");
-		int month =0;
 		
 		List<OrdersVo> vos = orderService.findOrderEndByMid(mid, month);
 		
 	  	model.addAttribute("vos", vos);
+	  	model.addAttribute("month", month);
 		
 		return "order/orderEndList";
 	}

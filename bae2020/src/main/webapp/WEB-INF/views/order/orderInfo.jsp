@@ -162,8 +162,11 @@
 					<table>
 						<tr>
 					  		<td>
-	                           	<span id="prod">총 결제 금액 : <fmt:formatNumber value="${orderVo.total}" pattern="#,###" />원<br/></span>
-	                           <span class="w3-text-grey" id="opt">할인내역을 적어준다</span>
+	                           	<span id="prod">총 결제 금액 : <fmt:formatNumber value="${orderVo.total - orderVo.point}" pattern="#,###" />원<br/></span>
+	                           	<span class="w3-text-grey" id="opt_sale">
+                                 	+<fmt:formatNumber value="${orderVo.total}" pattern="#,###" />원<br/>
+                                 	-<fmt:formatNumber value="${orderVo.point}" pattern="#,###" /> P
+                                 </span>
 					  		</td>
 						</tr>
 					</table>
