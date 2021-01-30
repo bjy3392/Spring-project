@@ -11,6 +11,7 @@ public class ProductVo {
 	private String use_yn;
 	private String create_dt;
 	private String fileEx; //파일 존재 유무
+	private String cnt;
 	public String getProduct_code() {
 		return product_code;
 	}
@@ -40,6 +41,9 @@ public class ProductVo {
 	}
 	public String getFileEx() {
 		return fileEx;
+	}
+	public String getCnt() {
+		return cnt;
 	}
 	public void setProduct_code(String product_code) {
 		this.product_code = product_code;
@@ -71,14 +75,16 @@ public class ProductVo {
 	public void setFileEx(String fileEx) {
 		this.fileEx = fileEx;
 	}
+	public void setCnt(String cnt) {
+		this.cnt = cnt;
+	}
 	@Override
 	public String toString() {
 		return "ProductVo [product_code=" + product_code + ", product_name=" + product_name + ", category_code="
 				+ category_code + ", first_code=" + first_code + ", price=" + price + ", image=" + image + ", user_id="
-				+ user_id + ", use_yn=" + use_yn + ", create_dt=" + create_dt + ", fileEx=" + fileEx + "]";
+				+ user_id + ", use_yn=" + use_yn + ", create_dt=" + create_dt + ", fileEx=" + fileEx + ", cnt=" + cnt
+				+ "]";
 	}
-	
-	
 	
 	
 	

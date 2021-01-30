@@ -6,6 +6,7 @@ public class CategoryVo {
 	private String first_code;
 	private String user_id;
 	private String create_dt;
+	private String cnt;
 	public String getCategory_code() {
 		return category_code;
 	}
@@ -20,6 +21,9 @@ public class CategoryVo {
 	}
 	public String getCreate_dt() {
 		return create_dt;
+	}
+	public String getCnt() {
+		return cnt;
 	}
 	public void setCategory_code(String category_code) {
 		this.category_code = category_code;
@@ -36,11 +40,15 @@ public class CategoryVo {
 	public void setCreate_dt(String create_dt) {
 		this.create_dt = create_dt;
 	}
+	public void setCnt(String cnt) {
+		this.cnt = cnt;
+	}
 	@Override
 	public String toString() {
 		return "CategoryVo [category_code=" + category_code + ", category_name=" + category_name + ", first_code="
-				+ first_code + ", user_id=" + user_id + ", create_dt=" + create_dt + "]";
+				+ first_code + ", user_id=" + user_id + ", create_dt=" + create_dt + ", cnt=" + cnt + "]";
 	}
+	
 	
 	
 }

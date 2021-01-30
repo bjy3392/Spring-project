@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.spring.bae2020.service.OrderService;
 import com.spring.bae2020.service.StoreService;
+import com.spring.bae2020.vo.CategoryVo;
 import com.spring.bae2020.vo.ItemVo;
 import com.spring.bae2020.vo.OrdersVo;
+import com.spring.bae2020.vo.ProductVo;
 import com.spring.bae2020.vo.StockVo;
 import com.spring.bae2020.vo.StoreVo;
 import com.spring.bae2020.vo.TimeTableVo;
@@ -186,11 +188,38 @@ public class StoreController {
 	
 	@RequestMapping(value="/findChart", method = RequestMethod.POST)
 	@ResponseBody
-	public List<TimeTableVo> findChartTestPost(Model model, String store) {
+	public List<TimeTableVo> findChartTestPost(String store) {
 		List<TimeTableVo> timeTable = storeService.findOrderGroupByHour(store);
 		
 		
 		return timeTable;
+	}
+	
+	@RequestMapping(value="/findChartByCategory", method = RequestMethod.POST)
+	@ResponseBody
+	public List<TimeTableVo> findChartByCategoryPost(String store) {
+		List<TimeTableVo> dataTable = storeService.findOrderGroupByCategory(store);
+		
+		
+		return dataTable;
+	}
+	
+	@RequestMapping(value="/findPieChart", method = RequestMethod.POST)
+	@ResponseBody
+	public List<CategoryVo> findPieChartPost(String store) {
+		List<CategoryVo> dataTable = storeService.findPieChar(store);
+		
+		
+		return dataTable;
+	}
+	
+	@RequestMapping(value="/findOrderGroupByProduct", method = RequestMethod.POST)
+	@ResponseBody
+	public List<ProductVo> findOrderGroupByProductPost(String store, String category) {
+		List<ProductVo> dataTable = storeService.findOrderGroupByProduct("STORE-002", category);
+		
+		
+		return dataTable;
 	}
 }
 

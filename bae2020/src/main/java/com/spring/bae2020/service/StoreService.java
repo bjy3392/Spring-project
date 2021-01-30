@@ -3,7 +3,9 @@ package com.spring.bae2020.service;
 import java.util.List;
 import java.util.Map;
 
+import com.spring.bae2020.vo.CategoryVo;
 import com.spring.bae2020.vo.OrdersVo;
+import com.spring.bae2020.vo.ProductVo;
 import com.spring.bae2020.vo.StockVo;
 import com.spring.bae2020.vo.StoreVo;
 import com.spring.bae2020.vo.TimeTableVo;
@@ -27,6 +29,12 @@ public interface StoreService {
 	void updateOrderByCancel(String order_idx, String cancel);
 
 	List<TimeTableVo> findOrderGroupByHour(String store);
+
+	List<TimeTableVo> findOrderGroupByCategory(String store);
+
+	List<CategoryVo> findPieChar(String store);
+
+	List<ProductVo> findOrderGroupByProduct(String store, String category);
 
 
 }

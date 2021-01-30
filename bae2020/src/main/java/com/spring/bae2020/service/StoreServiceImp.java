@@ -15,8 +15,10 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.spring.bae2020.dao.StoreDao;
+import com.spring.bae2020.vo.CategoryVo;
 import com.spring.bae2020.vo.ItemVo;
 import com.spring.bae2020.vo.OrdersVo;
+import com.spring.bae2020.vo.ProductVo;
 import com.spring.bae2020.vo.StockVo;
 import com.spring.bae2020.vo.StoreVo;
 import com.spring.bae2020.vo.TimeTableVo;
@@ -172,16 +174,29 @@ public class StoreServiceImp implements StoreService {
 	@Override
 	public List<TimeTableVo> findOrderGroupByHour(String store) {
 		
-		List<Map<String, String>> timeTable = storeDao.findOrderGroupByHour(store);
-		TimeTableVo vo = new TimeTableVo();
-		List<TimeTableVo> data = new ArrayList<TimeTableVo>();
+		List<TimeTableVo> timeTable = storeDao.findOrderGroupByHour(store);
 		
-		for(Map<String, String> t :timeTable) {
-			vo = new TimeTableVo();
-			vo.setTitle(t.get("title"));
-			vo.setCnt(String.valueOf(t.get("cnt")));
-			data.add(vo);
-		}
-		return data;			
+		return timeTable;			
+	}
+
+	@Override
+	public List<TimeTableVo> findOrderGroupByCategory(String store) {
+		List<TimeTableVo> dataTable = storeDao.findOrderGroupByCategory(store);
+	
+		return dataTable;	
+	}
+
+	@Override
+	public List<CategoryVo> findPieChar(String store) {
+		List<CategoryVo> dataTable = storeDao.findPieChar(store);
+	
+		return dataTable;	
+	}
+
+	@Override
+	public List<ProductVo> findOrderGroupByProduct(String store, String category) {
+		List<ProductVo> dataTable = storeDao.findOrderGroupByProduct(store,category);
+	
+		return dataTable;
 	}
 }

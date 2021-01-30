@@ -48,5 +48,21 @@ public class TestController {
 		return timeTable;
 	}
 	
+	@RequestMapping(value="/viewChartTestAddColumn", method = RequestMethod.GET)
+	public String viewChartTestAddColumnGet(Model model) {
+		
+		
+		return "test/chartTest";
+	}
 	
+	@RequestMapping(value="/findChartTestAddColumn", method = RequestMethod.POST)
+	@ResponseBody
+	public List<TimeTableVo> findChartTestAddColumnPost(Model model) {
+		List<TimeTableVo> dataTable = storeService.findOrderGroupByCategory("STORE-001");
+		
+		
+		return dataTable;
+	}
+	
+
 }
