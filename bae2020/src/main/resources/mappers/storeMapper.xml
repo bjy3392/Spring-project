@@ -86,7 +86,7 @@
 		update stock set quantity=quantity-#{cnt} where option_code=#{option_code} and store=#{store};
 	</update>
 	
-	<select id="findOrderGroupByHour" resultMap="hourMapList">
+	<select id="findOrderGroupByHour" resultType="com.spring.bae2020.vo.TimeTableVo">
 		SELECT TIME_TABLE.TITLE
  	         , IFNULL(ORDERS.CNT,0) AS CNT
 		 FROM (SELECT '09-10' AS TITLE UNION 
@@ -101,35 +101,38 @@
 		 	   SELECT '18-19' AS TITLE UNION
 		 	   SELECT '19-20' AS TITLE UNION
 		 	   SELECT '20-21' AS TITLE UNION
-		 	   SELECT '21-22' AS TITLE ) TIME_TABLE
+		 	   SELECT '21-22' AS TITLE UNION 
+		 	   SELECT '22-23' AS TITLE ) TIME_TABLE
 		 LEFT OUTER JOIN (SELECT TITLE, COUNT(*) AS CNT
-		 				    FROM (SELECT (CASE WHEN HOUR(CREATE_DT) BETWEEN '09' AND '10'
-											    THEN '09-10'
-											    WHEN HOUR(CREATE_DT) BETWEEN '10' AND '11'
-											    THEN '10-11'
-											    WHEN HOUR(CREATE_DT) BETWEEN '11' AND '12'
-											    THEN '11-12'
-											    WHEN HOUR(CREATE_DT) BETWEEN '12' AND '13'
-											    THEN '12-13'
-											    WHEN HOUR(CREATE_DT) BETWEEN '13' AND '14'
-											    THEN '13-14'
-											    WHEN HOUR(CREATE_DT) BETWEEN '14' AND '15'
-											    THEN '14-15'
-											    WHEN HOUR(CREATE_DT) BETWEEN '15' AND '16'
-											    THEN '15-16'
-											    WHEN HOUR(CREATE_DT) BETWEEN '16' AND '17'
-											    THEN '16-17'
-											    WHEN HOUR(CREATE_DT) BETWEEN '17' AND '18'
-											    THEN '17-18'
-											    WHEN HOUR(CREATE_DT) BETWEEN '18' AND '19'
-											    THEN '18-19'
-											    WHEN HOUR(CREATE_DT) BETWEEN '19' AND '20'
-											    THEN '19-20'
-											    WHEN HOUR(CREATE_DT) BETWEEN '20' AND '21'
-											    THEN '20-21'
-											    WHEN HOUR(CREATE_DT) BETWEEN '21' AND '22'
-											    THEN '21-22'
-											    ELSE '' END ) AS TITLE
+		 				    FROM (SELECT (CASE WHEN HOUR(ORDERS.CREATE_DT) <![CDATA[>=]]> '09' AND HOUR(ORDERS.CREATE_DT) <![CDATA[<]]>'10'
+									    THEN '09-10'
+									    WHEN HOUR(ORDERS.CREATE_DT) <![CDATA[>=]]> '10' AND HOUR(ORDERS.CREATE_DT) <![CDATA[<]]>'11'
+									    THEN '10-11'
+									    WHEN HOUR(ORDERS.CREATE_DT) <![CDATA[>=]]> '11' AND HOUR(ORDERS.CREATE_DT) <![CDATA[<]]>'12'
+									    THEN '11-12'
+									    WHEN HOUR(ORDERS.CREATE_DT) <![CDATA[>=]]> '12' AND HOUR(ORDERS.CREATE_DT) <![CDATA[<]]>'13'
+									    THEN '12-13'
+									    WHEN HOUR(ORDERS.CREATE_DT) <![CDATA[>=]]> '13' AND HOUR(ORDERS.CREATE_DT) <![CDATA[<]]>'14'
+									    THEN '13-14'
+									    WHEN HOUR(ORDERS.CREATE_DT) <![CDATA[>=]]> '14' AND HOUR(ORDERS.CREATE_DT) <![CDATA[<]]>'15'
+									    THEN '14-15'
+									    WHEN HOUR(ORDERS.CREATE_DT) <![CDATA[>=]]> '15' AND HOUR(ORDERS.CREATE_DT) <![CDATA[<]]>'16'
+									    THEN '15-16'
+									    WHEN HOUR(ORDERS.CREATE_DT) <![CDATA[>=]]> '16' AND HOUR(ORDERS.CREATE_DT) <![CDATA[<]]>'17'
+									    THEN '16-17'
+									    WHEN HOUR(ORDERS.CREATE_DT) <![CDATA[>=]]> '17' AND HOUR(ORDERS.CREATE_DT) <![CDATA[<]]>'18'
+									    THEN '17-18'
+									    WHEN HOUR(ORDERS.CREATE_DT) <![CDATA[>=]]> '18' AND HOUR(ORDERS.CREATE_DT) <![CDATA[<]]>'19'
+									    THEN '18-19'
+									    WHEN HOUR(ORDERS.CREATE_DT) <![CDATA[>=]]> '19' AND HOUR(ORDERS.CREATE_DT) <![CDATA[<]]>'20'
+									    THEN '19-20'
+									    WHEN HOUR(ORDERS.CREATE_DT) <![CDATA[>=]]> '20' AND HOUR(ORDERS.CREATE_DT) <![CDATA[<]]>'21'
+									    THEN '20-21'
+									    WHEN HOUR(ORDERS.CREATE_DT) <![CDATA[>=]]> '21' AND HOUR(ORDERS.CREATE_DT) <![CDATA[<]]>'22'
+									    THEN '21-22'
+									    WHEN HOUR(ORDERS.CREATE_DT) <![CDATA[>=]]> '22' AND HOUR(ORDERS.CREATE_DT) <![CDATA[<]]>'23'
+									    THEN '22-23'
+									    ELSE '' END ) AS TITLE
 									 FROM ORDERS
 									WHERE 1=1 
 									  AND STORE=#{store}
@@ -138,10 +141,119 @@
 		   ON TIME_TABLE.TITLE = ORDERS.TITLE
 		ORDER BY TIME_TABLE.TITLE;
 	</select>
-	<resultMap type="map" id="hourMapList"> 
+	<!-- <resultMap type="map" id="hourMapList"> 
 		<result column="title" property="title"/> 
 		<result column="cnt" property="cnt"/> 
-	</resultMap>
+	</resultMap> -->
+	
+	<select id="findOrderGroupByCategory" resultType="com.spring.bae2020.vo.TimeTableVo">
+		SELECT TIME_TABLE.TITLE
+			 , IFNULL(ORDERS.SUM1,0) AS SUM1
+			 , IFNULL(ORDERS.SUM2,0) AS SUM2
+			 , IFNULL(ORDERS.SUM3,0) AS SUM3
+			 , IFNULL(ORDERS.SUM4,0) AS SUM4
+			FROM (SELECT '09-10' AS TITLE UNION 
+				   SELECT '10-11' AS TITLE UNION
+				   SELECT '11-12' AS TITLE UNION
+				   SELECT '12-13' AS TITLE UNION
+				   SELECT '13-14' AS TITLE UNION
+				   SELECT '14-15' AS TITLE UNION
+				   SELECT '15-16' AS TITLE UNION
+				   SELECT '16-17' AS TITLE UNION
+				   SELECT '17-18' AS TITLE UNION
+				   SELECT '18-19' AS TITLE UNION
+				   SELECT '19-20' AS TITLE UNION
+				   SELECT '20-21' AS TITLE UNION
+				   SELECT '21-22' AS TITLE UNION
+				   SELECT '22-23' AS TITLE ) TIME_TABLE 	   
+			LEFT OUTER JOIN (SELECT TITLE, SUM(CNT1) AS SUM1, SUM(CNT2) AS SUM2, SUM(CNT3) AS SUM3, SUM(CNT4) AS SUM4
+							    FROM (SELECT (CASE WHEN HOUR(ORDERS.CREATE_DT) <![CDATA[>=]]> '09' AND HOUR(ORDERS.CREATE_DT) <![CDATA[<]]>'10'
+											    THEN '09-10'
+											    WHEN HOUR(ORDERS.CREATE_DT) <![CDATA[>=]]> '10' AND HOUR(ORDERS.CREATE_DT) <![CDATA[<]]>'11'
+											    THEN '10-11'
+											    WHEN HOUR(ORDERS.CREATE_DT) <![CDATA[>=]]> '11' AND HOUR(ORDERS.CREATE_DT) <![CDATA[<]]>'12'
+											    THEN '11-12'
+											    WHEN HOUR(ORDERS.CREATE_DT) <![CDATA[>=]]> '12' AND HOUR(ORDERS.CREATE_DT) <![CDATA[<]]>'13'
+											    THEN '12-13'
+											    WHEN HOUR(ORDERS.CREATE_DT) <![CDATA[>=]]> '13' AND HOUR(ORDERS.CREATE_DT) <![CDATA[<]]>'14'
+											    THEN '13-14'
+											    WHEN HOUR(ORDERS.CREATE_DT) <![CDATA[>=]]> '14' AND HOUR(ORDERS.CREATE_DT) <![CDATA[<]]>'15'
+											    THEN '14-15'
+											    WHEN HOUR(ORDERS.CREATE_DT) <![CDATA[>=]]> '15' AND HOUR(ORDERS.CREATE_DT) <![CDATA[<]]>'16'
+											    THEN '15-16'
+											    WHEN HOUR(ORDERS.CREATE_DT) <![CDATA[>=]]> '16' AND HOUR(ORDERS.CREATE_DT) <![CDATA[<]]>'17'
+											    THEN '16-17'
+											    WHEN HOUR(ORDERS.CREATE_DT) <![CDATA[>=]]> '17' AND HOUR(ORDERS.CREATE_DT) <![CDATA[<]]>'18'
+											    THEN '17-18'
+											    WHEN HOUR(ORDERS.CREATE_DT) <![CDATA[>=]]> '18' AND HOUR(ORDERS.CREATE_DT) <![CDATA[<]]>'19'
+											    THEN '18-19'
+											    WHEN HOUR(ORDERS.CREATE_DT) <![CDATA[>=]]> '19' AND HOUR(ORDERS.CREATE_DT) <![CDATA[<]]>'20'
+											    THEN '19-20'
+											    WHEN HOUR(ORDERS.CREATE_DT) <![CDATA[>=]]> '20' AND HOUR(ORDERS.CREATE_DT) <![CDATA[<]]>'21'
+											    THEN '20-21'
+											    WHEN HOUR(ORDERS.CREATE_DT) <![CDATA[>=]]> '21' AND HOUR(ORDERS.CREATE_DT) <![CDATA[<]]>'22'
+											    THEN '21-22'
+											    WHEN HOUR(ORDERS.CREATE_DT) <![CDATA[>=]]> '22' AND HOUR(ORDERS.CREATE_DT) <![CDATA[<]]>'23'
+											    THEN '22-23'
+											    ELSE '' END ) AS TITLE 
+											  , IF(CTG.CATEGORY_NAME='샌드위치',1,0) AS CNT1
+										 	  , IF(CTG.CATEGORY_NAME='찹샐러드',1,0) AS CNT2
+										 	  , IF(CTG.CATEGORY_NAME='쿠키',1,0) AS CNT3
+										 	  , IF(CTG.CATEGORY_NAME='랩',1,0) AS CNT4
+									 FROM ORDERS
+									INNER JOIN ITEM
+									   ON ORDERS.ORDER_IDX = ITEM.ORDER_IDX
+									INNER JOIN PRODUCT PROD
+									   ON ITEM.PRODUCT = PROD.PRODUCT_CODE
+									INNER JOIN CATEGORY CTG
+									   ON PROD.CATEGORY_CODE = CTG.CATEGORY_CODE
+									WHERE 1=1 
+									  AND STORE=#{store}
+									  AND DATE_SUB(NOW(), INTERVAL 1 MONTH) <![CDATA[<]]>  ORDERS.CREATE_DT) ORDERS
+						  GROUP BY ORDERS.TITLE) ORDERS
+			  ON TIME_TABLE.TITLE = ORDERS.TITLE;
+	</select>
+	<!-- <resultMap type="map" id="ctgMapList"> 
+		<result column="title" property="title"/> 
+		<result column="sum1" property="sum1"/> 
+		<result column="sum2" property="sum2"/> 
+		<result column="sum3" property="sum3"/> 
+		<result column="sum4" property="sum4"/> 
+	</resultMap> -->
+	
+	<select id="findPieChar"  resultType="com.spring.bae2020.vo.CategoryVo">
+		SELECT PROD.CATEGORY_CODE, CTG.CATEGORY_NAME, COUNT(*) AS CNT
+		  FROM ORDERS
+		  INNER JOIN ITEM
+             ON ORDERS.ORDER_IDX = ITEM.ORDER_IDX
+          INNER JOIN PRODUCT PROD
+             ON ITEM.PRODUCT = PROD.PRODUCT_CODE
+          INNER JOIN CATEGORY CTG
+             ON PROD.CATEGORY_CODE = CTG.CATEGORY_CODE
+          WHERE 1=1 
+            AND STORE=#{store}
+            AND DATE_SUB(NOW(), INTERVAL 1 MONTH) <![CDATA[<]]>  ORDERS.CREATE_DT
+          GROUP BY CATEGORY_NAME
+          ORDER BY CNT DESC
+	</select>
+	
+	<select id="findOrderGroupByProduct" resultType="com.spring.bae2020.vo.ProductVo">
+		SELECT PROD.PRODUCT_NAME, COUNT(*) AS CNT
+	      FROM ORDERS
+	     INNER JOIN ITEM
+	        ON ORDERS.ORDER_IDX = ITEM.ORDER_IDX
+	     INNER JOIN PRODUCT PROD
+	        ON ITEM.PRODUCT = PROD.PRODUCT_CODE
+	     INNER JOIN CATEGORY CTG
+	        ON PROD.CATEGORY_CODE = CTG.CATEGORY_CODE
+	       AND CTG.CATEGORY_NAME = #{category}
+	     WHERE 1=1 
+	       AND STORE=#{store}
+	       AND DATE_SUB(NOW(), INTERVAL 1 MONTH) <![CDATA[<]]> ORDERS.CREATE_DT
+	     GROUP BY PROD.PRODUCT_NAME
+	     ORDER BY CNT DESC
+	</select>
+	
 </mapper>
 
 
