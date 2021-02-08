@@ -1,14 +1,15 @@
 package com.spring.bae2020.service;
 
 import java.util.List;
-import java.util.Map;
 
 import com.spring.bae2020.vo.CategoryVo;
 import com.spring.bae2020.vo.OrdersVo;
 import com.spring.bae2020.vo.ProductVo;
+import com.spring.bae2020.vo.ReorderVo;
 import com.spring.bae2020.vo.StockVo;
 import com.spring.bae2020.vo.StoreVo;
 import com.spring.bae2020.vo.TimeTableVo;
+import com.spring.bae2020.vo.UserVo;
 
 public interface StoreService {
 
@@ -35,6 +36,10 @@ public interface StoreService {
 	List<CategoryVo> findPieChar(String store);
 
 	List<ProductVo> findOrderGroupByProduct(String store, String category);
+
+	List<ReorderVo> findUserByStore(String store);
+
+	List<UserVo> findUserByOrderCnt(String store);
 
 
 }

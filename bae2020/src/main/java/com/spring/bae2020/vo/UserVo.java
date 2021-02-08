@@ -12,6 +12,7 @@ public class UserVo {
 	private String level;
 	private String use_yn;
 	private String level_name;
+	private String cnt;
 	public String getMid() {
 		return mid;
 	}
@@ -44,6 +45,9 @@ public class UserVo {
 	}
 	public String getLevel_name() {
 		return level_name;
+	}
+	public String getCnt() {
+		return cnt;
 	}
 	public void setMid(String mid) {
 		this.mid = mid;
@@ -78,13 +82,15 @@ public class UserVo {
 	public void setLevel_name(String level_name) {
 		this.level_name = level_name;
 	}
+	public void setCnt(String cnt) {
+		this.cnt = cnt;
+	}
 	@Override
 	public String toString() {
 		return "UserVo [mid=" + mid + ", pwd=" + pwd + ", name=" + name + ", tel=" + tel + ", postcode=" + postcode
 				+ ", roadAddress=" + roadAddress + ", detailAddress=" + detailAddress + ", join_dt=" + join_dt
-				+ ", level=" + level + ", use_yn=" + use_yn + ", level_name=" + level_name + "]";
+				+ ", level=" + level + ", use_yn=" + use_yn + ", level_name=" + level_name + ", cnt=" + cnt + "]";
 	}
-	
 	
 
 }

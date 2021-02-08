@@ -54,11 +54,11 @@ public class HomeController {
 	
 	@RequestMapping(value="/findProductByCategoryAjax", method = RequestMethod.POST)
 	@ResponseBody
-	public String findProductByCategoryAjaxPost(String category_code) {
+	public List<ProductVo> findProductByCategoryAjaxPost(String category_code) {
 
-		List<ProductVo> vos = adminService.findProductByCategory("PROD-001");
+		List<ProductVo> vos = adminService.findProductByCategory(category_code);
 		
-		return "";
+		return vos;
 	}
 	
 }

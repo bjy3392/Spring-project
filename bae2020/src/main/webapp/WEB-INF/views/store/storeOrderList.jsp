@@ -230,8 +230,10 @@
 									<td colspan="5">
 			                       		<c:forEach var="stock" items="${stockVos}">
 											<c:if test="${vo.order_idx == stock.order_idx && state == 'state-01'}">
-												<font color='red'>재고 수량을 초과하였습니다.</font><br/>
-				                       			주문제품 : ${stock.option_name } /주문수량 : ${stock.cnt } /재고수량 : ${stock.quantity }<br/>
+												<c:if test="${stock.quantity !=0 }">
+													<font color='red'>재고 수량을 초과하였습니다.</font><br/>
+					                       			주문제품 : ${stock.option_name } /주문수량 : ${stock.cnt } /재고수량 : ${stock.quantity }<br/>
+				                       			</c:if>
 											</c:if> 
 			                       		</c:forEach>
 										<font style="font-weight: bold; font-size: 20px;"> ${vo.product_name }</font>  <c:if test="${vo.cnt ne 1 }">외 ${vo.cnt-1 }개</c:if>

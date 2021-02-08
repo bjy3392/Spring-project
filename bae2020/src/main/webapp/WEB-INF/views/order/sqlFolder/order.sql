@@ -12,7 +12,6 @@ create table orders (
 	cancel			varchar(100) ,
 	delivery		varchar(20) ,
 	distance		DECIMAL(3,2) ,
-	coupon			varchar(50) not null default 0,
 	point			int	not null default 0,
 	create_dt		datetime default now(),
 	update_dt		datetime default now(),
@@ -21,10 +20,17 @@ create table orders (
 );
 ALTER TABLE orders ADD FOREIGN KEY (state)  REFERENCES state(state_code) ON DELETE RESTRICT ON UPDATE CASCADE ;
 ALTER TABLE orders ADD FOREIGN KEY (mid)  REFERENCES user(mid) ON DELETE RESTRICT ON UPDATE CASCADE ;
+ALTER TABLE orders ADD FOREIGN KEY (store)  REFERENCES store(store_code) ON DELETE RESTRICT ON UPDATE CASCADE ;
+
+select * from orders
+where store not in (select store_code from store)
+
+update orders set store="STORE-001" where store = '미정' 
+
+desc orders
+
 --쿠폰이랑 매장, 배달 코드도 외래키 연결 해줘야함
 alter table orders drop coupon;
-
-
 alter table orders add cancel varchar(100);
 
 insert into orders (order_idx, mid, total, payment, tel, store, coupon, point,create_dt, state)
@@ -74,6 +80,10 @@ create table item (
 alter table item add mid varchar(20) not null;
 alter table item add create_dt datetime default now();
 
+
+
+delete from item where item_idx=30
+
 --drop table item
 ALTER TABLE item ADD FOREIGN KEY (order_idx)  REFERENCES orders(order_idx) ON DELETE RESTRICT ON UPDATE CASCADE ;
 ALTER TABLE item ADD FOREIGN KEY (product)  REFERENCES product(product_code) ON DELETE RESTRICT ON UPDATE CASCADE ;
@@ -116,6 +126,15 @@ create table cart(
 	update_dt	datetime default now(),
 	primary key(cart_idx)
 );
+
+
+ALTER TABLE cart ADD FOREIGN KEY (product)  REFERENCES product(product_code) ON DELETE RESTRICT ON UPDATE CASCADE ;
+ALTER TABLE cart ADD FOREIGN KEY (store)  REFERENCES store(store_code) ON DELETE RESTRICT ON UPDATE CASCADE ;
+
+select * from cart
+where store not in (select store_code from store)
+
+delete from cart where cart_idx=6
 
 desc cart
 insert into cart value (default, #{vo.mid}, #{vo.product}, #{vo.option_unit}, #{vo.add_unit}, #{vo.meat_unit}, #{vo.price}, #{vo.price_add}, #{vo.price_meat}, default,#{vo.store} ,default, default);
@@ -167,4 +186,22 @@ WHERE STORE='STORE-002'
 
  AND DATE_SUB(NOW(), INTERVAL 1 MONTH) < ORDERS.CREATE_DT
  
-SELECT * FROM ITEM WHERE ORDER_IDX = 
+select * from orders
+join item 
+on orders.order_idx= item.order_idx
+where store="STORE-002"
+
+select item.order_idx, item.option_name, sum(item.cnt) as cnt
+		  		  from (select order_idx, substring_index(item.option_unit,'/',1) as option_name,  sum(item.cnt) as cnt
+		  		          from item 
+		  		         where 1=1
+		  		           and order_idx in ('108','60','3','4','5','85')
+		  		           and substring_index(item.product,'-',1)='SAND' 
+		  		           group by option_name, item.order_idx
+		  		           
+		  		           )item
+		 		 
+		  
+		  select * from orders
+		  
+		  select * from cart

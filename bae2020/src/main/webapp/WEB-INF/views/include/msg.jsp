@@ -6,7 +6,7 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>title</title>
+	<title>SUBWAY</title>
 	<script>
 		var msg = "${msg}";
 		var url = "${contextPath}/${url}"

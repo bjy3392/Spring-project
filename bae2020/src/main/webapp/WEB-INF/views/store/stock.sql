@@ -9,6 +9,10 @@ create table stock (
 	primary key(option_code,store)
 );
 
+ALTER TABLE stock ADD FOREIGN KEY (store)  REFERENCES store(store_code) ON DELETE RESTRICT ON UPDATE CASCADE ;
+ALTER TABLE stock ADD FOREIGN KEY (option_code)  REFERENCES options(option_code) ON DELETE RESTRICT ON UPDATE CASCADE ;
+ALTER TABLE stock ADD FOREIGN KEY (subcategory_code)  REFERENCES subcategory(subcategory_code) ON DELETE RESTRICT ON UPDATE CASCADE ;
+
 
 insert into stock (option_code, option_name, subcategory_code,store, quantity, user_id, use_yn, create_dt)
 (select option_code, option_name, subcategory_code,'STORE-001', 0, #{user_id}, 'y', now()

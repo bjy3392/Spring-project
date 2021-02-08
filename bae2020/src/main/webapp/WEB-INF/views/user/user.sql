@@ -52,6 +52,8 @@ create table ask_manager(
 --drop table ask_manager
 select * from ask_manager
 
+ALTER TABLE ask_manager ADD FOREIGN KEY (mid)  REFERENCES user(mid) ON DELETE RESTRICT ON UPDATE CASCADE ;
+
 ALTER TABLE ask_manager CHANGE pass_dt ask_dt datetime default now();
 
 create table store(
@@ -85,3 +87,11 @@ create table delete_user(
 
 select * from delete_user
 insert delete_user (default, 'adsds', 'dddd', default);
+
+desc level
+
+alter table level drop update_dt;
+
+
+update user set name='박지연' where mid='bjy1234'
+

@@ -32,6 +32,8 @@ create table product (
 	create_dt		datetime default now(),
 	primary key(product_code)
 );
+
+
 --drop table product
 SELECT * FROM INFORMATION_SCHEMA.table_constraints WHERE constraint_type="FOREIGN KEY" TABLE_NAME= 'item'
 alter table cart drop FOREIGN KEY cart_ibfk_1;
@@ -53,6 +55,7 @@ create table subcategory(
 --drop table subcategory
 select * from subcategory where category_code = 'prod-001';
 
+ALTER TABLE options ADD FOREIGN KEY (subcategory_code)  REFERENCES subcategory(subcategory_code) ON DELETE RESTRICT ON UPDATE CASCADE ;
 
 create table options (
 	option_code	varchar(20) not null,

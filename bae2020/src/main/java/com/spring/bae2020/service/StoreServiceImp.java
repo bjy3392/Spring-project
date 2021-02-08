@@ -1,7 +1,6 @@
 package com.spring.bae2020.service;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
@@ -19,9 +18,11 @@ import com.spring.bae2020.vo.CategoryVo;
 import com.spring.bae2020.vo.ItemVo;
 import com.spring.bae2020.vo.OrdersVo;
 import com.spring.bae2020.vo.ProductVo;
+import com.spring.bae2020.vo.ReorderVo;
 import com.spring.bae2020.vo.StockVo;
 import com.spring.bae2020.vo.StoreVo;
 import com.spring.bae2020.vo.TimeTableVo;
+import com.spring.bae2020.vo.UserVo;
 
 @Service
 public class StoreServiceImp implements StoreService {
@@ -174,29 +175,39 @@ public class StoreServiceImp implements StoreService {
 	@Override
 	public List<TimeTableVo> findOrderGroupByHour(String store) {
 		
-		List<TimeTableVo> timeTable = storeDao.findOrderGroupByHour(store);
+		//List<TimeTableVo> timeTable = storeDao.findOrderGroupByHour(store);
 		
-		return timeTable;			
+		return storeDao.findOrderGroupByHour(store);			
 	}
 
 	@Override
 	public List<TimeTableVo> findOrderGroupByCategory(String store) {
-		List<TimeTableVo> dataTable = storeDao.findOrderGroupByCategory(store);
+		//List<TimeTableVo> dataTable = storeDao.findOrderGroupByCategory(store);
 	
-		return dataTable;	
+		return storeDao.findOrderGroupByCategory(store);	
 	}
 
 	@Override
 	public List<CategoryVo> findPieChar(String store) {
-		List<CategoryVo> dataTable = storeDao.findPieChar(store);
+		//List<CategoryVo> dataTable = storeDao.findPieChar(store);
 	
-		return dataTable;	
+		return storeDao.findPieChar(store);	
 	}
 
 	@Override
 	public List<ProductVo> findOrderGroupByProduct(String store, String category) {
-		List<ProductVo> dataTable = storeDao.findOrderGroupByProduct(store,category);
+		//List<ProductVo> dataTable = ;
 	
-		return dataTable;
+		return storeDao.findOrderGroupByProduct(store,category);
+	}
+
+	@Override
+	public List<ReorderVo> findUserByStore(String store) {
+		return storeDao.findUserByStore(store);
+	}
+
+	@Override
+	public List<UserVo> findUserByOrderCnt(String store) {
+		return storeDao.findUserByOrderCnt(store);
 	}
 }

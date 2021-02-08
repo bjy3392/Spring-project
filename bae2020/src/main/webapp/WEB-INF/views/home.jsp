@@ -10,6 +10,17 @@
 	<!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> -->
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<script>
+		function findProductByCategoryAjax(category) {
+			$.ajax({
+				url: "${contextPath}/findProductByCategoryAjax",
+				type: "post",
+				success:function(data){		
+					location.reload();			
+				}
+			});   
+		}
+	</script>
 	<style>
 		body {
 			font-family: "Lato", sans-serif;
@@ -33,10 +44,12 @@
 		    padding: 0 0 0 0;
 		    border : 0;
 		    float: left;
-			cursor: pointer;
 		}
 		#history{
 			background-color: #fff;
+		}
+		.menuBar{
+			cursor: pointer;
 		}
 	</style>
 	<body>
@@ -55,31 +68,36 @@
 		    <img src="${contextPath }/resources/images/main.jpg" style="width:100%">
 		</div>
 		<div id="history">
-		<div class="main_list">
-			<div>
+			<div class="main_list">
 				<div>
-					<br/>
-					<img src="${contextPath }/resources/images/name.PNG" style="width:30%">
-					<div class="">
-						<c:forEach var="voC" items="${vosC }">
-							<ul>
-								<li onclick="findProductByCategoryAjax('${voC.category_code }')">${voC.category_name }&nbsp;||&nbsp;</li>
-							</ul>
-						</c:forEach>
-					</div>
-					<div class="w3-content w3-display-container">
-							<div class="menuSlides">
-								<c:forEach  var="vo" items="${vos }">
-									<img  src="${contextPath }/product/${vo.category_code }/${vo.image}" style="width:25%">
-								</c:forEach>
-							</div>
+					<div>
+						<br/>
+						<img src="${contextPath }/resources/images/name.PNG" style="width:30%">
+						<div class="menuBar">
+							<c:forEach var="voC" items="${vosC }">
+								<ul>
+									<li onclick="findProductByCategoryAjax('${voC.category_code }')">${voC.category_name }&nbsp;||&nbsp;</li>
+								</ul>
+							</c:forEach>
+						</div>
+						<div class="w3-content w3-display-container">
+							<c:forEach  var="vo" items="${vos }" >
+								<img  src="${contextPath }/product/${vo.category_code }/${vo.image}" style="width:25%;">
+							</c:forEach>
 					
-					  	<button class="w3-button w3-black w3-display-left" onclick="plusDivs(-1)">&#10094;</button>
-					  	<button class="w3-button w3-black w3-display-right" onclick="plusDivs(1)">&#10095;</button>
+								<%-- <div class="menuSlides" style="height:250px">
+									<c:set var="cnt" value="1"/>
+									<c:forEach  var="vo" items="${vos }" end="${cnt }">
+										<img  src="${contextPath }/product/${vo.category_code }/${vo.image}" style="width:25%;">
+									</c:forEach>
+								</div>
+						
+						  	<button class="w3-button w3-black w3-display-left" onclick="plusDivs(-1)">&#10094;</button>
+						  	<button class="w3-button w3-black w3-display-right" onclick="plusDivs(1)">&#10095;</button> --%>
+						</div>
 					</div>
 				</div>
-			</div>
-	  	</div>
+		  	</div>
 	  	</div>
   		<p><br></p>
   		<div class="main_list">

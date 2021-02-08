@@ -6,7 +6,7 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>mPassCheck.jsp</title>
+	<title>passwordCheck.jsp</title>
 	<style>
 		body{
 			background-color: #f6f6f6;

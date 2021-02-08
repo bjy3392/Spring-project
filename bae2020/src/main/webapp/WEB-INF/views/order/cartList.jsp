@@ -48,7 +48,8 @@
 				type: "post",
 				data: cart,
 				success:function(data){
-					changeValue(idx,price,cnt);
+					location.reload();
+					//changeValue(idx,price,cnt);
 				}
 			});   
 		}
@@ -72,8 +73,9 @@
 				url: "${contextPath}/order/updateCartAjax",
 				type: "post",
 				data: cart,
-				success:function(data){					
-					changeValue(idx,price,cnt);
+				success:function(data){		
+					location.reload();			
+					//changeValue(idx,price,cnt);
 				}
 			});   
 		}
@@ -106,10 +108,11 @@
 						data: cart,
 						success:function(data){	
 							alert("선택한 항목이 삭제 되었습니다.")
-							for(var idx in arrayCartIdx){
+							location.reload();
+							/* for(var idx in arrayCartIdx){
 								$("#cart_"+arrayCartIdx[idx]).remove();					
 							}
-							calcPrice();
+							calcPrice(); */
 						}
 					});  
 				}

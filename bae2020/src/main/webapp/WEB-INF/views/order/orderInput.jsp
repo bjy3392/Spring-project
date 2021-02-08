@@ -72,13 +72,13 @@
 		    
 		});
 		
+		//roadAddress변경 시 calcLength() 실행하기 위해서 trigger 사용
 		$(document).ready(function(){
 		    var $input = $("#roadAddress"); // readonly inputBox  
 		        $("#roadAddress").on('input', function() {
-		        	calcLength()
-		        });
-		});
-		
+		        	calcLength();
+		    });
+		});		
 		(function ($) {
 		    var originalVal = $.fn.val;
 		    $.fn.val = function (value) {
@@ -92,6 +92,7 @@
 		        return res;
 		    };
 		})(jQuery);
+		
 		
 		function resetAddress(){
 			$("#detailAddress").val(""); 
@@ -397,7 +398,7 @@
 							<tr>
 						  		<th>주문시 요청사항</th>
 						  		<td>
-						  			<input class="w3-border" type="text" name="demand" maxlength=100/>
+						  			<input class="w3-border" type="text" name="demand" maxlength=50/>
 						  		</td>
 							</tr>
 							<tr>
@@ -438,12 +439,14 @@
                         <hr style="width:100%"/>
                        	<h3 class="title">주문내역</h3>
                        	<c:if test="${fn:length(stockVos) != 0 }">
-                       	<div id="stock">
-                       		<font color='red'>재고 수량을 초과하였습니다.</font>
-                       		<c:forEach var="stock" items="${stockVos}">
-                       			<br/>주문제품 : ${stock.option_name } /주문수량 : ${stock.cnt } /재고수량 : ${stock.quantity }
-                       		</c:forEach>
-                       	</div>
+	                       	<div id="stock">
+	                       		<font color='red'>재고 수량을 초과하였습니다.</font>
+	                       		<c:forEach var="stock" items="${stockVos}">
+	                       			<c:if test="${stock.quantity !=0 }">
+	                       				<br/>주문제품 : ${stock.option_name } /주문수량 : ${stock.cnt } /재고수량 : ${stock.quantity }
+	                       			</c:if>
+	                       		</c:forEach>
+	                       	</div>
                        	</c:if>
 						<table>
 							<c:set var="total" value="0"/>
@@ -500,6 +503,7 @@
 			<c:set var="addIdx" value="${fn:join(arrayIdx,'/')}" />
 			<input type="hidden" name="addIdx" value="${addIdx }"/> 
   			<input type="hidden" name="tel"/>
+  			<input type="hidden" name="reorder_idx" value="${reorder_idx }"/>
   			<input type="hidden" name="store" value=${storeVo.store_code } />
   			<input type="hidden" name="delivery" />
   			<input type="hidden" name="distance" />
