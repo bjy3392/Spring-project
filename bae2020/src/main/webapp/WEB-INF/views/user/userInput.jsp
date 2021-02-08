@@ -11,7 +11,7 @@
 	<script src="${contextPath}/resources/js/woo.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script>
-		//아이디, 닉네임 중복검사 여부
+		//아이디 중복검사 여부
 		var idKey = 0;
 		
 		 //아이디 유효성 확인

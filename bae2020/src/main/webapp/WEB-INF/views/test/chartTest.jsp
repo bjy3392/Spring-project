@@ -10,12 +10,14 @@
 	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 	<script type="text/javascript">
 	var array3 = new Array(4);
+	var array4 = new Array();
+	
 	for (var i = 0; i < array3.length; i++) {
 		array3[i] = new Array(2);
 	}
     $( document ).ready(function() {
     	var store = {
-    		store : "STORE-001"	
+    		store : "STORE-002"	
     	}
     	$.ajax({
 			url: "${contextPath}/store/findPieChart",
@@ -77,32 +79,35 @@
 	            		category : value
 	            }
 	            
-	            var array4 = new Array();
-	    		
-	            
 	            $.ajax({
 	    			url: "${contextPath}/store/findOrderGroupByProduct",
 	    			type: "post",
 	    			data: category,
-	    			success:function(data){
-	    	        	
-	    				for(var i=0; i<data.length; i++){
-	    					array4[i] = new Array(2);
-	    					array4[i][0] = data[i].product_name;
-	    					array4[i][1] = data[i].cnt;
+	    			async:false,  //비동기식으로 진행
+	    			success:function(aa){
+	    				for(var i=0; i<aa.length; i++){
+	    					array4[i] = aa[i].product_name+"/"+aa[i].cnt
 	    				}
-	    				
 	    			}
 	    		}); 
-	            console.log(array4);
 	            
 	            google.charts.load('current', {'packages':['corechart']});
 	        	google.charts.setOnLoadCallback(drawChart4);
 
-				
 	            function drawChart4() {
-	            	//console.log(array4[0][1]);
-	        		var dataProd = google.visualization.arrayToDataTable(array4,true);
+	            	
+	        	  	var dataProd = new google.visualization.DataTable();
+	    			//하단의 등록일을 표시해 줄 컬럼
+	    			dataProd.addColumn('string', '시간대 별');
+	    			//데이터값(그래프 수치)
+	    			dataProd.addColumn('number', '판매량');   
+	    			for(var i=0; i<array4.length; i++){
+	    				var row = array4[i].split("/");
+	    				
+	    				dataProd.addRow([row[0],Number(row[1])]);
+	    			}
+	        	  	
+	        	  	
 	        	  	var options = {title:'주제 : 가장인기있는 메뉴', 'width':700, 'height':400, is3D: true};
 	        	  	var chart = new google.visualization.PieChart(document.getElementById('sub'));
 	        	  	chart.draw(dataProd, options);

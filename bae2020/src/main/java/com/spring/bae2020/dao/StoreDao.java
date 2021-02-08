@@ -9,9 +9,11 @@ import com.spring.bae2020.vo.CategoryVo;
 import com.spring.bae2020.vo.ItemVo;
 import com.spring.bae2020.vo.OrdersVo;
 import com.spring.bae2020.vo.ProductVo;
+import com.spring.bae2020.vo.ReorderVo;
 import com.spring.bae2020.vo.StockVo;
 import com.spring.bae2020.vo.StoreVo;
 import com.spring.bae2020.vo.TimeTableVo;
+import com.spring.bae2020.vo.UserVo;
 
 public interface StoreDao {
 
@@ -42,4 +44,8 @@ public interface StoreDao {
 	List<CategoryVo> findPieChar(@Param("store")String store);
 
 	List<ProductVo> findOrderGroupByProduct(@Param("store")String store, @Param("category")String category);
+
+	List<ReorderVo> findUserByStore(@Param("store")String store);
+
+	List<UserVo> findUserByOrderCnt(@Param("store")String store);
 }

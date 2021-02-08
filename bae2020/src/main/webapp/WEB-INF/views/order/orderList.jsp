@@ -28,7 +28,7 @@
       });
 //출처: https://unabated.tistory.com/entry/displaynone-과-visibilityhidden-의-차이 [랄라라] */
 
-	function deleteOrderAjax(idx){
+	/* function deleteOrderAjax(idx){
 		var res = confirm("주문을 취소하겠습니까?");
 		if(!res){
 			return;
@@ -48,7 +48,7 @@
 				}
 			});  
 		}
-	}
+	} */
 	
 	function viewCancelInput(idx) {
 		var url = "${contextPath}/store/viewCancelInput?order_idx="+idx;

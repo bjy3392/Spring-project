@@ -60,7 +60,7 @@
 		       	<a href="${contextPath }/order/viewCartList" class="w3-bar-item w3-button w3-padding-large w3-hide-small">CART</a>
 		    </li>
 		    <li class="nav-item">
-		      	<a href="" class="w3-bar-item w3-button w3-padding-large w3-hide-small">BORAD</a>
+		      	<a href="${contextPath }/board/viewBoardList?startIdx=0&sort=create_dt" class="w3-bar-item w3-button w3-padding-large w3-hide-small">BORAD</a>
 		    </li>
 		    <li class="w3-dropdown-hover w3-hide-small">
 		      	<button class="w3-padding-large w3-button" title="More">MY PAGE<i class="fa fa-caret-down"></i></button>     
@@ -119,7 +119,7 @@
 			      	<a href="${contextPath }/store/viewSalesCalendar" class="w3-bar-item w3-button w3-padding-large w3-hide-small">매출관리</a>
 			    </li>
 			    <li class="nav-item">
-			      	<a href="${contextPath }/admin/viewManagerList" class="w3-bar-item w3-button w3-padding-large w3-hide-small">고객관리</a>
+			      	<a href="${contextPath }/store/viewUserChart" class="w3-bar-item w3-button w3-padding-large w3-hide-small">고객관리</a>
 			    </li>
 			    <%-- <li class="nav-item">
 			       	<a href="${contextPath }/order/viewCartList" class="w3-bar-item w3-button w3-padding-large w3-hide-small">쿠폰관리</a>

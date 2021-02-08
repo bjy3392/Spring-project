@@ -14,6 +14,7 @@
 		var array = new Array();
 		var array2 = new Array();
 		var array3 = new Array(4);
+		var array4 = new Array();
 		for (var i = 0; i < array3.length; i++) {
 			array3[i] = new Array(2);
 		}
@@ -57,7 +58,7 @@
 						array3[i][0] = data[i].category_name;
 						array3[i][1] = data[i].cnt;
 					}
-					console.log(array3);
+					
 				}
 			}); 
 	    	
@@ -139,6 +140,48 @@
 		  	var options = {title:'주제 : 제품별', 'width':700, 'height':400};
 		  	var chart = new google.visualization.PieChart(document.getElementById('chartViewByProduct'));
 		  	chart.draw(data, options);
+		  	google.visualization.events.addListener(chart, 'select', selectHandler);
+		  	
+		  	function selectHandler(e) {
+		    	var selectedItem = chart.getSelection()[0];
+		        if (selectedItem) {
+		            var value = data.getValue(selectedItem.row, 0);
+		            var category ={
+		            		store : "${store}",
+		            		category : value
+		            }
+		            $.ajax({
+		    			url: "${contextPath}/store/findOrderGroupByProduct",
+		    			type: "post",
+		    			data: category,
+		    			async:false,  //비동기식으로 진행
+		    			success:function(aa){
+		    				for(var i=0; i<aa.length; i++){
+		    					array4[i] = aa[i].product_name+"/"+aa[i].cnt
+		    				}
+		    			}
+		    		}); 
+		            
+		            google.charts.load('current', {'packages':['corechart']});
+		        	google.charts.setOnLoadCallback(drawChart4);
+
+		            function drawChart4() {
+		        	  	var dataProd = new google.visualization.DataTable();
+		    			//하단의 등록일을 표시해 줄 컬럼
+		    			dataProd.addColumn('string', '시간대 별');
+		    			//데이터값(그래프 수치)
+		    			dataProd.addColumn('number', '판매량');   
+		    			for(var i=0; i<array4.length; i++){
+		    				var row = array4[i].split("/");
+		    				dataProd.addRow([row[0],Number(row[1])]);
+		    			}
+		        	  	var options = {title:'주제 : 가장인기있는 메뉴', 'width':700, 'height':400, is3D: true};
+		        	  	var chart = new google.visualization.PieChart(document.getElementById('sub'));
+		        	  	chart.draw(dataProd, options);
+		        	  	array4 = new Array();
+		            }
+		        }
+		    }
 		} 
 		
 	</script>
@@ -164,7 +207,11 @@
 		</div>
 		<div id="chartView"></div>
 		<div id="chartViewByCategory"></div>
-		<div id="chartViewByProduct"></div>
+		<div class="w3-row">
+			<div class="w3-col s6" id="chartViewByProduct"></div>
+			<div class="w3-col s6" id="sub"></div>
+		</div>
+		
 	</div>
 </body>
 <%@ include file="/WEB-INF/views/include/footer.jsp" %>

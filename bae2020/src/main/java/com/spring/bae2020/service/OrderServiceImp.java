@@ -89,10 +89,10 @@ public class OrderServiceImp implements OrderService {
 		return orderDao.findItemByIdx(mid, arrayIdx);
 	}
 
-	@Override
-	public void insertItemFromItem(String order_idx, String[] arrayIdx) {
-		orderDao.insertItemFromItem(order_idx,arrayIdx);
-	}
+//	@Override
+//	public void insertItemFromItem(String order_idx, String[] arrayIdx) {
+//		orderDao.insertItemFromItem(order_idx,arrayIdx);
+//	}
 
 	@Override
 	public List<ItemVo> findItem(String route, String[] arrayIdx, String order_idx,ItemVo itemVo, String store) {
@@ -159,13 +159,13 @@ public class OrderServiceImp implements OrderService {
 	}
 
 	@Override
-	public void insertItem(String route, String order_idx, String[] arrayIdx, ItemVo itemVo) {
+	public void insertItem(String route, String order_idx, String[] arrayIdx, String reorder_idx, ItemVo itemVo) {
 
 		if(route.equals("cart")) {
 			orderDao.insertItemFromCart(order_idx, arrayIdx);
 		}
 		else if(route.equals("order")) {
-			orderDao.insertItemFromItem(order_idx, arrayIdx);
+			orderDao.insertItemFromItem(order_idx, reorder_idx);
 		}
 		else {
 			itemVo.setCnt("1");
@@ -279,6 +279,7 @@ public class OrderServiceImp implements OrderService {
 		voP.setOrder_idx(vo.getOrder_idx());
 		voP.setWay("주문취소");
 		voP.setAmount(String.valueOf(-amount));
+		
 		orderDao.insertMinusPoint(voP);
 		
 		List<PointEventVo> vos = orderDao.findPointDetailByOrderIdx(vo.getOrder_idx());
@@ -287,7 +288,6 @@ public class OrderServiceImp implements OrderService {
 		
 		voP.setSave_detail_idx(voPoint.getSave_detail_idx());
 		voP.setExpiry_dt(voPoint.getExpiry_dt());
-		System.out.println(voP);
 		orderDao.insertMinusPointDetail(voP);		
 	}
 
@@ -298,6 +298,7 @@ public class OrderServiceImp implements OrderService {
 		voP.setOrder_idx(vo.getOrder_idx());
 		voP.setWay("주문취소(재적립)");
 		voP.setAmount(vo.getPoint());
+		
 		orderDao.insertPoint(voP);
 		
 		List<PointEventVo> vos = orderDao.findPointDetailByOrderIdx(vo.getOrder_idx());
@@ -310,10 +311,6 @@ public class OrderServiceImp implements OrderService {
 			orderDao.insertMinusPointDetail(voP);
 		}
 	}
-
-	
-
-	
 
 	
 }

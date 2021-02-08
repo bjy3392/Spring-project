@@ -205,7 +205,11 @@
 									<td>${vo.distance  }</td>
 									<td>${vo.demand  }</td>
 									<td>${vo.delivery  }</td>
-									<td>${vo.state_name  }</td>
+									<td>
+										<c:if test="${vo.delivery =='' }">배달대기</c:if>
+										<c:if test="${vo.delivery =='픽업' }">완료</c:if>
+										<c:if test="${vo.delivery !='' && vo.delivery !='픽업' }">${vo.state_name  }</c:if>
+									</td>
 								</tr>
 							</c:forEach>	
 						</table>

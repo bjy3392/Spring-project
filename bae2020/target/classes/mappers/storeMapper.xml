@@ -22,6 +22,7 @@
 		 where 1=1
 		   and store=#{store_code}
 		   and state in ('state-03', 'state-04')
+		   and date(orders.create_dt) = date(now())
 		 order by state, update_dt;
 	</select>
 	
@@ -136,11 +137,13 @@
 									 FROM ORDERS
 									WHERE 1=1 
 									  AND STORE=#{store}
+									  AND STATE != 'state-05'
 									  AND DATE_SUB(NOW(), INTERVAL 1 MONTH) <![CDATA[<]]> CREATE_DT) ORDERS
 						  GROUP BY ORDERS.TITLE) ORDERS
 		   ON TIME_TABLE.TITLE = ORDERS.TITLE
 		ORDER BY TIME_TABLE.TITLE;
 	</select>
+	
 	<!-- <resultMap type="map" id="hourMapList"> 
 		<result column="title" property="title"/> 
 		<result column="cnt" property="cnt"/> 
@@ -209,6 +212,7 @@
 									   ON PROD.CATEGORY_CODE = CTG.CATEGORY_CODE
 									WHERE 1=1 
 									  AND STORE=#{store}
+									  AND STATE != 'state-05'
 									  AND DATE_SUB(NOW(), INTERVAL 1 MONTH) <![CDATA[<]]>  ORDERS.CREATE_DT) ORDERS
 						  GROUP BY ORDERS.TITLE) ORDERS
 			  ON TIME_TABLE.TITLE = ORDERS.TITLE;
@@ -232,6 +236,7 @@
              ON PROD.CATEGORY_CODE = CTG.CATEGORY_CODE
           WHERE 1=1 
             AND STORE=#{store}
+            AND STATE != 'state-05'
             AND DATE_SUB(NOW(), INTERVAL 1 MONTH) <![CDATA[<]]>  ORDERS.CREATE_DT
           GROUP BY CATEGORY_NAME
           ORDER BY CNT DESC
@@ -249,9 +254,38 @@
 	       AND CTG.CATEGORY_NAME = #{category}
 	     WHERE 1=1 
 	       AND STORE=#{store}
+	       AND STATE != 'state-05'
 	       AND DATE_SUB(NOW(), INTERVAL 1 MONTH) <![CDATA[<]]> ORDERS.CREATE_DT
 	     GROUP BY PROD.PRODUCT_NAME
 	     ORDER BY CNT DESC
+	</select>
+	
+	<select id="findUserByStore" resultType="com.spring.bae2020.vo.ReorderVo">
+		SELECT IF(CNT != 1 ,'REORDER','FIRST') AS 'USER_GROUP' , COUNT(*) AS CNT
+    	  FROM (SELECT MID, COUNT(*) AS CNT
+    	    	  FROM ORDERS 
+    	   	  	 WHERE 1=1
+    	   	  	   AND STORE = #{store}
+    	   	  	   AND STATE != 'state-05'
+    	   	  	   AND DATE_SUB(NOW(), INTERVAL 1 MONTH) <![CDATA[<]]> ORDERS.CREATE_DT
+    	   	  	 GROUP BY MID ) ORDERS 
+  	   	  GROUP BY USER_GROUP 
+	      ORDER BY USER_GROUP DESC;  
+	</select>
+	
+	<select id="findUserByOrderCnt" resultType="com.spring.bae2020.vo.UserVo">
+		SELECT CONCAT(NAME,'(', FORMAT(SUM(TOTAL) , 0),'원',')') AS MID
+		     , COUNT(*) AS CNT
+		  FROM ORDERS 
+		 INNER JOIN USER
+		    ON ORDERS.MID = USER.MID  
+		   AND USER.MID != 'admin'
+		 WHERE 1=1
+		   AND STORE = #{store}
+		   AND STATE != 'state-05'
+		   AND DATE_SUB(NOW(), INTERVAL 1 MONTH) <![CDATA[<]]> ORDERS.CREATE_DT
+		 GROUP BY ORDERS.MID 
+		 ORDER BY CNT DESC;
 	</select>
 	
 </mapper>

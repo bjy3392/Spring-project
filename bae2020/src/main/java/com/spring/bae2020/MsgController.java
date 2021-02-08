@@ -49,6 +49,10 @@ public class MsgController {
 			model.addAttribute("msg", "품절된 상품을 포함하고 있습니다.");
 			model.addAttribute("url", "order/viewCartList");
 		}
+		else if(msgFlag.equals("useNo")) {
+			model.addAttribute("msg", "로그인 후 사용 가능합니다.");
+			model.addAttribute("url", "user/userLogin");
+		}
 		return "include/msg";
 	}	
 }

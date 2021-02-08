@@ -39,4 +39,53 @@
 		<beans:property name="defaultEncoding" value="utf-8"/>
 	</beans:bean>
 	
+	<beans:bean id="orderInterceptor" class="com.spring.bae2020.interceptor.OrderInterceptor"></beans:bean>
+	<beans:bean id="userInterceptor" class="com.spring.bae2020.interceptor.UserInterceptor"></beans:bean>
+	<beans:bean id="boardInterceptor" class="com.spring.bae2020.interceptor.BoardInterceptor"></beans:bean>
+	<beans:bean id="adminInterceptor" class="com.spring.bae2020.interceptor.AdminInterceptor"></beans:bean>
+	<beans:bean id="storeInterceptor" class="com.spring.bae2020.interceptor.StoreInterceptor"></beans:bean>
+	<interceptors>
+		<interceptor>
+			<mapping path="/order/**"/>
+			<beans:ref bean="orderInterceptor"/>
+		</interceptor>
+		<interceptor>
+			<mapping path="/user/viewPasswordCheck"/>
+			<mapping path="/user/viewPointList"/>
+			<mapping path="/user/viewUserDelete"/>
+			<mapping path="/user/viewManagerInput"/>
+			<mapping path="/user/viewManagerPassOk"/>
+			<beans:ref bean="userInterceptor"/>
+		</interceptor>
+		<interceptor>
+			<mapping path="/board/**"/>
+			<beans:ref bean="boardInterceptor"/>
+		</interceptor>
+		<interceptor>
+			<mapping path="/admin/**"/>
+			<beans:ref bean="adminInterceptor"/>
+		</interceptor>
+		<interceptor>
+			<mapping path="/store/**"/>
+			<beans:ref bean="storeInterceptor"/>
+		</interceptor>
+	</interceptors>
+	
 </beans:beans>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

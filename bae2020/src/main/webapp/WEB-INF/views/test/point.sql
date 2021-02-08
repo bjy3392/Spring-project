@@ -23,6 +23,11 @@ create table point_detail(
 	primary key(detail_idx)
 );
 
+ALTER TABLE point_event ADD FOREIGN KEY (mid)  REFERENCES user(mid) ON DELETE RESTRICT ON UPDATE CASCADE ;
+ALTER TABLE point_event ADD FOREIGN KEY (order_idx)  REFERENCES orders(order_idx) ON DELETE RESTRICT ON UPDATE CASCADE ;
+ALTER TABLE point_event ADD FOREIGN KEY (order_idx)  REFERENCES orders(order_idx) ON DELETE RESTRICT ON UPDATE CASCADE ;
+ALTER TABLE point_detail ADD FOREIGN KEY (original_idx)  REFERENCES point_event(event_idx) ON DELETE RESTRICT ON UPDATE CASCADE ;
+
 --drop table point_event;
 
 select date(date_add(now(), interval 7 day))
@@ -105,4 +110,17 @@ ORDER BY HOUR(create_dt) DESC
 
 SELECT * FROM ORDERS
         
-        
+select  sum(amount)  as amount,  expiry_dt
+		  from (select sum(amount)  as amount, save_detail_idx, expiry_dt
+				  		from point_detail
+				 		where mid='bjy1234'
+				 		group by save_detail_idx
+				 		order by event_dt) point_detail
+		 where amount != 0
+		   and expiry_dt >= date(now())
+		   
+		group by expiry_dt
+		   
+select * from point_event where event_idx = 14	   
+select * from 	point_detail
+where save_detail_idx in (5,11)

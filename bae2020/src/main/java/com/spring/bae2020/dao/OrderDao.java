@@ -42,7 +42,7 @@ public interface OrderDao {
 
 	List<ItemVo> findItemByIdx(@Param("mid")String mid, @Param("arrayIdx")String[] arrayIdx);
 
-	void insertItemFromItem(@Param("order_idx")String order_idx, @Param("arrayIdx")String[] arrayIdx);
+	void insertItemFromItem(@Param("order_idx")String order_idx, @Param("reorder_idx")String reorder_idx);
 
 	void deleteCartByMid(@Param("mid")String mid);
 

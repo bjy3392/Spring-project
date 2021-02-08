@@ -18,9 +18,11 @@ import com.spring.bae2020.vo.CategoryVo;
 import com.spring.bae2020.vo.ItemVo;
 import com.spring.bae2020.vo.OrdersVo;
 import com.spring.bae2020.vo.ProductVo;
+import com.spring.bae2020.vo.ReorderVo;
 import com.spring.bae2020.vo.StockVo;
 import com.spring.bae2020.vo.StoreVo;
 import com.spring.bae2020.vo.TimeTableVo;
+import com.spring.bae2020.vo.UserVo;
 
 @Controller
 @RequestMapping("/store")
@@ -175,8 +177,8 @@ public class StoreController {
 	  	return "store/cancelInput";
 	}
 	
-	@RequestMapping(value="/viewChart", method = RequestMethod.GET)
-	public String viewChartTestGet(HttpSession session, Model model) {
+	@RequestMapping(value="/viewAnalysisChart", method = RequestMethod.GET)
+	public String viewAnalysisChartGet(HttpSession session, Model model) {
 		String mid = (String)session.getAttribute("smid");
 		StoreVo vo = storeService.findStoreByMid(mid);
 		
@@ -216,8 +218,33 @@ public class StoreController {
 	@RequestMapping(value="/findOrderGroupByProduct", method = RequestMethod.POST)
 	@ResponseBody
 	public List<ProductVo> findOrderGroupByProductPost(String store, String category) {
-		List<ProductVo> dataTable = storeService.findOrderGroupByProduct("STORE-002", category);
+		List<ProductVo> dataTable = storeService.findOrderGroupByProduct(store, category);
 		
+		return dataTable;
+	}
+	
+	@RequestMapping(value="/viewUserChart", method = RequestMethod.GET)
+	public String viewUserChartGet(HttpSession session, Model model) {
+		String mid = (String)session.getAttribute("smid");
+		StoreVo vo = storeService.findStoreByMid(mid);
+		
+		model.addAttribute("store", vo.getStore_code());
+		
+		return "store/userChart";
+	}
+	
+	@RequestMapping(value="/findUserByStore", method = RequestMethod.POST)
+	@ResponseBody
+	public List<ReorderVo> findUserByStorePost(String store) {
+		List<ReorderVo> dataTable = storeService.findUserByStore(store);
+		
+		return dataTable;
+	}
+	
+	@RequestMapping(value="/findUserByOrderCnt", method = RequestMethod.POST)
+	@ResponseBody
+	public List<UserVo> findUserByOrderCntPost(String store) {
+		List<UserVo> dataTable = storeService.findUserByOrderCnt(store);
 		
 		return dataTable;
 	}

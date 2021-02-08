@@ -124,7 +124,7 @@
 			<!-- 상단 제목 -->
 			<div class="main_title">
 				<p></p>
-				<h2>주문확인</h2>
+				<h2>포인트</h2>
 				<p><br/><br/></p>
 			</div>
 			<div class="list_start">

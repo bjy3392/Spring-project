@@ -43,7 +43,7 @@
         <button class="btn btn-secondary btn-sm" onclick="location.href='${contextPath }/store/viewSalesCalendar?yy=${yy+1}&mm=${mm}'" title="다음년도">▷▷</button>
         &nbsp; &nbsp;
         <button class="btn btn-secondary" onclick="location.href='${contextPath }/store/viewSalesCalendar'" title="오늘날짜"><i class="fa fa-home"></i></button>
-        <button class="btn btn-secondary" onclick="location.href='${contextPath }/store/viewChart'">그래프 보기</button>
+        <button class="btn btn-secondary" onclick="location.href='${contextPath }/store/viewAnalysisChart'">그래프 보기</button>
       </div>
     </div>
     <div class="col-sm-12">

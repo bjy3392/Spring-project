@@ -135,10 +135,10 @@ public class OrderController {
 	
 	@RequestMapping(value="/viewOrderInput/{route}", method = RequestMethod.POST)
 	public String viewOrderInputPost(@PathVariable String route, Model model,HttpSession session,
-									@RequestParam(value="arrayIdx[]", required = false) String[] arrayIdx,
-									@RequestParam(value="order_idx", required = false) String order_idx,
-									@ModelAttribute(value="itemVo") ItemVo itemVo,
-									String store) {
+									 @RequestParam(value="arrayIdx[]", required = false) String[] arrayIdx,
+									 @RequestParam(value="order_idx", required = false) String order_idx,
+									 @ModelAttribute(value="itemVo") ItemVo itemVo,
+									 String store) {
 		
 		if(arrayIdx==null && order_idx==null && itemVo==null) {
 			msgFlag= "notProduct";
@@ -152,22 +152,17 @@ public class OrderController {
 		
 		String point = orderService.findPointByMid(mid);
 		
-		if(vos==null) {
-			msgFlag= "notOption";
-			return "redirect:/msg/" + msgFlag;
-		}
-		
 		StoreVo storeVo = adminService.findStoreByCode(store);
 	  	
-		if(arrayIdx==null && vos!=null){
-		  	arrayIdx = new String[vos.size()];
-			for(int i=0; i<vos.size(); i++) {
-				ItemVo vo = vos.get(i);
-				arrayIdx[i] = vo.getItem_idx();
-			}
-		}
+//		if(arrayIdx==null && vos!=null){
+//		  	arrayIdx = new String[vos.size()];
+//			for(int i=0; i<vos.size(); i++) {
+//				ItemVo vo = vos.get(i);
+//				arrayIdx[i] = vo.getItem_idx();
+//			}
+//		}
 		
-		if(vos.size()<1 && itemVo==null) {
+		if(vos.size()<1 || vos==null) {
 			msgFlag= "notProduct";
 			return "redirect:/msg/" + msgFlag;
 		}
@@ -176,6 +171,7 @@ public class OrderController {
 		  	model.addAttribute("stockVos", stockVos);	
 		  	model.addAttribute("route", route);
 		  	model.addAttribute("arrayIdx", arrayIdx);
+		  	model.addAttribute("reorder_idx", order_idx);
 		  	model.addAttribute("storeVo", storeVo);
 		  	model.addAttribute("point", point);	
 		}
@@ -184,9 +180,12 @@ public class OrderController {
 	}
 	
 	@RequestMapping(value="/insertOrder/{route}", method = RequestMethod.POST)
-	public String insertOrderPost(@PathVariable String route, Model model,HttpSession session, OrdersVo vo, String addIdx,
+	public String insertOrderPost(@PathVariable String route, Model model,HttpSession session, OrdersVo vo, 
+							      @RequestParam(value="addIdx", required = false) String addIdx,
+			 					  @RequestParam(value="reorder_idx", required = false) String reorder_idx,
 								  @ModelAttribute(value="itemVo") ItemVo itemVo) {
-		if(addIdx==null || addIdx.equals("")) {
+		
+		if((addIdx==null || addIdx.equals("")) && reorder_idx==null && itemVo==null) {
 			msgFlag= "notProduct";
 			return "redirect:/msg/" + msgFlag;
 		}
@@ -200,7 +199,7 @@ public class OrderController {
 		orderService.insertOrders(vo);
 		String order_idx = vo.getOrder_idx();
 		
-		orderService.insertItem(route,order_idx,arrayIdx,itemVo);
+		orderService.insertItem(route,order_idx,arrayIdx,reorder_idx,itemVo);
 		
 		if(vo.getPoint().equals("0") && Integer.parseInt(vo.getTotal()) >= 10000) {
 			orderService.insertPoint(vo);			
@@ -242,16 +241,16 @@ public class OrderController {
 		return "order/orderList";
 	}
 	
-	@RequestMapping(value="/deleteOrderAjax", method = RequestMethod.POST)
-	@ResponseBody
-	public String deleteOrderAjaxPost(HttpSession session, String order_idx) {
-		String mid = (String)session.getAttribute("smid");
-				
-		orderService.deleteItemByIdx(order_idx);
-		orderService.deleteOrderByIdx(mid, order_idx);
-		
-		return "";
-	}
+//	@RequestMapping(value="/deleteOrderAjax", method = RequestMethod.POST)
+//	@ResponseBody
+//	public String deleteOrderAjaxPost(HttpSession session, String order_idx) {
+//		String mid = (String)session.getAttribute("smid");
+//				
+//		orderService.deleteItemByIdx(order_idx);
+//		orderService.deleteOrderByIdx(mid, order_idx);
+//		
+//		return "";
+//	}
 
 	
 	@RequestMapping(value="/viewOrderEndList", method = RequestMethod.GET)

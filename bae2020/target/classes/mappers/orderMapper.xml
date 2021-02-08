@@ -45,19 +45,19 @@
 	</select>
 	
 	<select id="findItemByOrderIdx"  resultType="com.spring.bae2020.vo.ItemVo">
-	select item.* , prod.product_name, st.quantity
-	  from item
-	  inner join product prod
-	    on item.product = prod.product_code
-	  left outer join stock st
-	    on substring_index(item.option_unit,'/',1) = st.option_name
-	   and st.subcategory_code = 'opt-001'  
-	   and st.store=#{store_code}
-	 where 1=1
-	   and item.order_idx in 
-	   <foreach collection="arrayOrderIdx" item="order_idx" index="index" open="(" separator="," close=")">
-  	    	#{order_idx}
-  	   </foreach>   
+		select item.* , prod.product_name, st.quantity
+		  from item
+		  inner join product prod
+		    on item.product = prod.product_code
+		  left outer join stock st
+		    on substring_index(item.option_unit,'/',1) = st.option_name
+		   and st.subcategory_code = 'opt-001'  
+		   and st.store=#{store_code}
+		 where 1=1
+		   and item.order_idx in 
+		   <foreach collection="arrayOrderIdx" item="order_idx" index="index" open="(" separator="," close=")">
+	  	    	#{order_idx}
+	  	   </foreach>   
 	</select>
 	
 	
@@ -88,11 +88,8 @@
 	<insert id="insertItemFromItem">
 		insert into item (order_idx , mid,product, option_unit, add_unit, meat_unit, price, price_add,price_meat, cnt, create_dt )
 			(select #{order_idx} as order_idx,mid, product, option_unit, add_unit, meat_unit, price, price_add,price_meat, cnt, now() 
-		  	from item 
-		  	where item_idx in 
-		  	<foreach collection="arrayIdx" item="item_idx" index="index" open="(" separator="," close=")">
-       			#{item_idx}
-       	  	</foreach> )
+		  	   from item 
+		  	  where order_idx =  #{reorder_idx} )
        	 <!-- 이렇게 한번에 여러값을 insert 할 경우 auto_increment가 값을 건너뛰고 들어갈수도 있다. --> 	
 	</insert>
 	
@@ -124,13 +121,13 @@
 	</select>
 	
 
-	<delete id="deleteOrderByIdx">
+	<!-- <delete id="deleteOrderByIdx">
 		delete from orders where mid=#{mid} and order_idx=#{order_idx};	
 	</delete>
 	
 	<delete id="deleteItemByIdx">
 		delete from item where order_idx=#{order_idx};	
-	</delete>
+	</delete> -->
 
 	<delete id="deleteCartByMid">
 		delete from cart where mid = #{mid}
@@ -176,15 +173,15 @@
 	
 	<select id="findItemStockByOption" resultType="com.spring.bae2020.vo.StockVo">
 		select item.order_idx, item.option_name, item.cnt, stock.quantity 
-		  from (select item.order_idx, item.option_name, sum(item.cnt) as cnt
-		  		  from (select order_idx, substring_index(item.option_unit,'/',1) as option_name, cnt 
-		  		          from item 
-		  		         where 1=1
-		  		           and order_idx in 
-					   <foreach collection="arrayOrderIdx" item="order_idx" index="index" open="(" separator="," close=")">
-				  	    	#{order_idx}
-				  	   </foreach> )item
-		 		 group by item.option_name, item.order_idx) item
+		  from (select order_idx, substring_index(item.option_unit,'/',1) as option_name, sum(item.cnt) as cnt
+  		          from item 
+  		         where 1=1
+  		           and order_idx in 
+			   <foreach collection="arrayOrderIdx" item="order_idx" index="index" open="(" separator="," close=")">
+		  	    	#{order_idx}
+		  	   </foreach> 
+		  	       and substring_index(item.product,'-',1)='SAND'
+		  	     group by option_name, item.order_idx) item
 		  inner join stock 
 		     on item.option_name = stock.option_name
 		    and stock.store = #{store}
@@ -194,15 +191,15 @@
 	
 	<select id="findCartStockByOption" resultType="com.spring.bae2020.vo.StockVo">
 	 	select cart.option_name, cart.cnt, stock.quantity 
-		  from (select cart.option_name, sum(cart.cnt) as cnt
-		  		  from (select substring_index(cart.option_unit,'/',1) as option_name, cnt 
-		  		          from cart 
-		  		         where 1=1
-		  		         and cart_idx in
-							<foreach collection="arrayIdx" item="cart_idx" index="index" open="(" separator="," close=")">
-					       		#{cart_idx}
-					       	</foreach>  )cart
-		 		 group by cart.option_name) cart
+		  from (select substring_index(cart.option_unit,'/',1) as option_name, sum(cart.cnt) as cnt 
+  		          from cart 
+  		         where 1=1
+  		           and cart_idx in
+					<foreach collection="arrayIdx" item="cart_idx" index="index" open="(" separator="," close=")">
+			       		#{cart_idx}
+			       	</foreach> 
+			       and substring_index(cart.product,'-',1)='SAND'	
+			     group by option_name )cart
 		  inner join stock 
 		     on cart.option_name = stock.option_name
 		    and stock.store = #{store} 
@@ -286,14 +283,15 @@
 	</select>
 	
 	<select id="findPointDetailByExpiry" resultType="com.spring.bae2020.vo.PointEventVo">
-		select *
+		select sum(amount)  as amount,  expiry_dt
 		  from (select sum(amount)  as amount, save_detail_idx, expiry_dt
 				  		from point_detail
 				 		where mid=#{mid}
 				 		group by save_detail_idx
 				 		order by event_dt) point_detail
 		 where amount != 0
-		   and expiry_dt > date(now())
+		   and expiry_dt <![CDATA[>=]]> date(now())
+		 group by expiry_dt
 		 limit 1
 	</select>
 	
