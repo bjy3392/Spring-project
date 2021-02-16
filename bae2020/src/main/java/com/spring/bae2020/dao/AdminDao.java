@@ -72,5 +72,9 @@ public interface AdminDao {
 
 	void insertStockinit(@Param("vo")StoreVo vo);
 
+	List<UserVo> findBoardByPage(@Param("startNo")int startNo, @Param("pageSize")int pageSize);
+
+	int totBoardRecCnt();
+
 	
 }

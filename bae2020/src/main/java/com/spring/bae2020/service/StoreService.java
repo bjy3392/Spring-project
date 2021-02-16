@@ -41,5 +41,7 @@ public interface StoreService {
 
 	List<UserVo> findUserByOrderCnt(String store);
 
+	void updateOrderByDelivery(String order_idx, String mid);
+
 
 }

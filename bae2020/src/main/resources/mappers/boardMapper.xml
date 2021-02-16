@@ -3,7 +3,7 @@
 <mapper namespace="com.spring.bae2020.dao.BoardDao">
 
 	<select id="findBoard" resultType="com.spring.bae2020.vo.BoardVo">
-		select rc.*, prod.product_name 
+		select rc.*, prod.product_name, prod.category_code, prod.image
 		  from recommand rc
 		 inner join product prod
 		    on rc.product = prod.product_code
@@ -11,7 +11,7 @@
 		  <if test="product != '전체'">
 		   and rc.product =#{product}
 		   </if>
-		 order by #{sort} desc
+		 order by ${sort} desc
 		 limit #{startIdx},5; 
 	</select>
 	
@@ -20,8 +20,25 @@
 	</insert>
 	
 	<select id="findBoardByIdx" resultType="com.spring.bae2020.vo.BoardVo">
-		select * from board where idx=#{idx};
+		select rc.*, prod.product_name, prod.category_code, prod.image
+		  from recommand rc
+		 inner join product prod
+		    on rc.product = prod.product_code
+         where idx=#{idx};
 	</select>
+	
+	<update id="updateBoard">
+		update recommand set product=#{vo.product}, option_unit=#{vo.option_unit}, add_unit=#{vo.add_unit}, meat_unit=#{vo.meat_unit}, price=#{vo.price}, price_add=#{vo.price_add},  price_meat=#{vo.price_meat} where idx=#{idx};
+	</update>
+	
+	<delete id="deleteBoard">
+		delete from recommand where idx=#{idx};
+	</delete>
+	
+	<update id="updateBoardByGood">
+		update recommand set good= good+1 where idx=#{idx};
+	</update>
+	
 </mapper>
 
 

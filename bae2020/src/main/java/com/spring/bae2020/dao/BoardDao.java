@@ -14,4 +14,10 @@ public interface BoardDao {
 
 	BoardVo findBoardByIdx(@Param("idx")String idx);
 
+	void updateBoard(@Param("vo")BoardVo vo, @Param("idx")String idx);
+
+	void deleteBoard(@Param("idx")String idx);
+
+	void updateBoardByGood(@Param("idx")String idx);
+
 }

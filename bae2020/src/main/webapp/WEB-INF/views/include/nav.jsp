@@ -8,7 +8,11 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<script>
+	
+
+</script>
 <style>
 	.w3-top{
 		background-color: #fff;
@@ -40,6 +44,16 @@
 	#admin_bar{
 	    background-color: #009223;
 	}
+	
+	#mobile{
+		display: none;
+	}
+	
+	@media(max-width: 576px){
+		#mobile{
+			 display: block;
+		}
+	}
 </style>
 
 <!-- Navbar -->
@@ -47,8 +61,7 @@
 	<div style="height:100%; line-height:100px; vertical-align:middle;">
 		<img id="subway" src="${contextPath }/resources/images/SUBWAY.jpg" onclick="location.href='${contextPath }'" style="width:150px;">
 	</div>
-	<div>
-	<nav class="navbar navbar-expand-sm bg-white justify-content-center">
+	<nav class="navbar navbar-expand-sm bg-white justify-content-center w3-mobile">
   		<ul class="navbar-nav" >
     		<li class="nav-item">
 		      	<a href="${contextPath }" class="w3-bar-item w3-button w3-padding-large">HOME</a>
@@ -60,10 +73,10 @@
 		       	<a href="${contextPath }/order/viewCartList" class="w3-bar-item w3-button w3-padding-large w3-hide-small">CART</a>
 		    </li>
 		    <li class="nav-item">
-		      	<a href="${contextPath }/board/viewBoardList?startIdx=0&sort=create_dt" class="w3-bar-item w3-button w3-padding-large w3-hide-small">BORAD</a>
+		      	<a href="${contextPath }/board/viewBoardList?sort=create_dt" class="w3-bar-item w3-button w3-padding-large w3-hide-small">BORAD</a>
 		    </li>
 		    <li class="w3-dropdown-hover w3-hide-small">
-		      	<button class="w3-padding-large w3-button" title="More">MY PAGE<i class="fa fa-caret-down"></i></button>     
+		      	<button  class="w3-padding-large w3-button" title="More">MY PAGE<i class="fa fa-caret-down"></i></button>     
 					<div class="w3-dropdown-content w3-bar-block w3-card-4">
 						<a href="${contextPath }/user/viewPasswordCheck" class="w3-bar-item w3-button">정보수정</a>
 						<a href="${contextPath }/user/viewPointList?month=1" class="w3-bar-item w3-button">포인트</a>
@@ -76,13 +89,13 @@
 			    </li>
 		    </c:if>
 		    <c:if test="${!empty slevel }">
-			    <li class="nav-item">
+			    <li>
 			      	<a href="${contextPath }/user/userLogout" class="w3-bar-item w3-button w3-padding-large w3-hide-small">LOGOUT</a>
 	    			${sname} 님 반갑습니다.
 			    </li>
-    		 </c:if>	    
+    		</c:if>	    
   		</ul>
-	</nav>
+	</nav>	
 	<c:if test="${slevel eq 'level-06' }">
 		<nav class="navbar navbar-expand-sm justify-content-center" id="admin_bar">
 			<div class="navbar-brand" >관리자 메뉴</div>
@@ -100,7 +113,7 @@
 			      	<a href="${contextPath }/admin/viewStoreList" class="w3-bar-item w3-button w3-padding-large w3-hide-small">점포관리</a>
 			    </li>
 			    <li class="nav-item">
-			       	<a href="${contextPath }/order/viewCartList" class="w3-bar-item w3-button w3-padding-large w3-hide-small">게시판관리</a>
+			       	<a href="${contextPath }/admin/viewBoardAdminList" class="w3-bar-item w3-button w3-padding-large w3-hide-small">게시판관리</a>
 			    </li>
 	  		</ul>
 		</nav>
@@ -127,52 +140,23 @@
 	  		</ul>
 		</nav>
 	</c:if>
-	  <%-- <div class="bar" style="text-align:center;">
-		    <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
-		    <a href="${contextPath }" class="w3-bar-item w3-button w3-padding-large">HOME</a>
-		    <a href="${contextPath }/order/viewProductList" class="w3-bar-item w3-button w3-padding-large w3-hide-small">ORDER</a>
-		    <a href="${contextPath }/order/viewCartList" class="w3-bar-item w3-button w3-padding-large w3-hide-small">CART</a>
-		    <a href="" class="w3-bar-item w3-button w3-padding-large w3-hide-small">BORAD</a>
-		    <div class="w3-dropdown-hover w3-hide-small">
-				<button class="w3-padding-large w3-button" title="More">MY PAGE<i class="fa fa-caret-down"></i></button>     
-				<div class="w3-dropdown-content w3-bar-block w3-card-4">
-					<a href="${contextPath }/member/mPassCheck" class="w3-bar-item w3-button">정보수정</a>
-					<a href="#" class="w3-bar-item w3-button">회원탈퇴</a>
-					<a href="${contextPath }/order/viewOrderList" class="w3-bar-item w3-button">주문확인</a>
-					<a href="${contextPath }/admin/adminMenu" class="w3-bar-item w3-button">관리자</a>
-				</div>
-			</div>
-	    
-	    <c:if test="${empty slevel }">
-	    	<a href="${contextPath }/user/userLogin" class="w3-bar-item w3-button w3-padding-large w3-hide-small">LOGIN</a>
+	<div class="w3-white" id="mobile" >
+		<c:if test="${empty slevel }">
+			<a href="${contextPath }/user/userLogin">LOGIN</a>
 	    </c:if>
-	    <c:if test="${!empty slevel }">
-	    	<a href="${contextPath }/user/userLogout" class="w3-bar-item w3-button w3-padding-large w3-hide-small">LOGOUT</a>
-	    	<a class="w3-bar-item w3-padding-large w3-hide-small">${smid} 님 반갑습니다.</a>
-	    </c:if>
-	  </div>
-	  
-	   --%>
-	  
-	  <%-- <c:if test="${sgroup eq 'group-a' }">
-		  	<div class="bar" style="text-align:center;">
-			    <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
-			    <a href="${contextPath }" class="w3-bar-item w3-button w3-padding-large">HOME</a>
-			    <a href="${contextPath }/order/viewProductList" class="w3-bar-item w3-button w3-padding-large w3-hide-small">ORDER</a>
-			    <a href="${contextPath }/order/viewCartList" class="w3-bar-item w3-button w3-padding-large w3-hide-small">CART</a>
-			    <a href="" class="w3-bar-item w3-button w3-padding-large w3-hide-small">BORAD</a>
-			    <div class="w3-dropdown-hover w3-hide-small">
-					<button class="w3-padding-large w3-button" title="More">MY PAGE<i class="fa fa-caret-down"></i></button>     
-					<div class="w3-dropdown-content w3-bar-block w3-card-4">
-						<a href="${contextPath }/member/mPassCheck" class="w3-bar-item w3-button">정보수정</a>
-						<a href="#" class="w3-bar-item w3-button">회원탈퇴</a>
-						<a href="${contextPath }/order/viewOrderList" class="w3-bar-item w3-button">주문확인</a>
-						<a href="${contextPath }/admin/adminMenu" class="w3-bar-item w3-button">관리자</a>
-					</div>
-				</div>
-	 	 	</div>
-	  	</c:if> --%>
 	</div>
+	<c:if test="${slevel eq 'level-07' }">
+		<nav class="navbar navbar-expand-sm justify-content-center" id="admin_bar">
+	  		<ul class="navbar-nav" >
+	  			<li>
+			      	<a class="nav-link" href="${contextPath }/user/userLogout" class="w3-bar-item w3-button w3-padding-large w3-hide-small">LOGOUT</a>
+			    </li>	    
+	  			<li class="nav-item">
+			      	<a class="nav-link" href="${contextPath }/delivery/viewDeliveryList/state-03" >배달현황</a>
+			    </li>
+			</ul>
+		</nav>
+	</c:if>
 </div>
 
 

@@ -16,7 +16,7 @@ public class StoreInterceptor extends HandlerInterceptorAdapter{
 		String level = session.getAttribute("slevel")==null ? "No" : (String)session.getAttribute("slevel");
 		
 		if(!level.equals("level-05")) {
-			response.sendRedirect(request.getContextPath()+"/msg/useNo");
+			response.sendRedirect(request.getContextPath()+"/msg/useOnlyManager");
 		}
 		
 		return true;

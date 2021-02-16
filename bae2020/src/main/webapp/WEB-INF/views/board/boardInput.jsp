@@ -139,7 +139,10 @@
 		            	meat_unit += name  +"/";
 		            }
 		        }
-		        
+
+		        myform.option_unit.value = option_unit;
+		        myform.add_unit.value = add_unit;
+		        myform.meat_unit.value = meat_unit;
 		        myform.submit();
 			}
 		}
@@ -344,28 +347,11 @@
 				</div>
 			</div> 
 			<div class="w3-row w3-padding-10 w3-white">
-				<%-- <div class="w3-col l8 w3-padding-small">
-			  		  총 주문 금액 <strong style="font-size: 40px; color:#ff8300"><span id="totPrice"><fmt:formatNumber value="${voP.price}" pattern="#,###" /></span></strong> 원
-			 	</div> --%>
 			    <div class="w3-padding-small" >
-					<button class="w3-round-xlarge w3-right" id="btn" type="reset" onclick="findCartStoreByMidAjax()">다시선택</button>
+					<button class="w3-round-xlarge w3-right" id="btn" type="reset">다시선택</button>
 					<button class="w3-round-xlarge w3-right" id="btn" type="button" onclick="unionItem()">작성하기</button> 
-					<%-- <input name="product" type="hidden" value="${prod.product_code }"/>
-					<input name="totPriceVal" type="hidden" value="${prod.price }"/> --%>
 				</div>
 	        </div>
-	        <%-- <div class="w3-row w3-padding-10 w3-light-gray">
-	        	<div class="w3-col l2 w3-padding-small">
-			  		 메뉴....................................<br/>
-			  		 추가....................................<br/>
-			  		 미트....................................<br/>
-			 	</div>
-			    <div class="w3-col l10 w3-padding-small" >
-					<fmt:formatNumber value="${voP.price}" pattern="#,###" /><br/>
-					<span id="addPrice"></span><br/>
-					<span id="meatPrice"></span><br/>
-				</div>
-	        </div> --%>
 	        <form id="myform" method="post" action="${contextPath }/board/insertBoard">
 				<input type="hidden" id="product" name="product" value=""/>
 				<input type="hidden" name="option_unit" value=""/>

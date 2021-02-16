@@ -10,18 +10,24 @@
 		update orders set state=#{state} , update_dt=now() where order_idx=#{order_idx};
 	</update>
 	
+	<update id="updateOrderByDelivery">
+		update orders set delivery=#{mid} where order_idx=#{order_idx};
+	</update>
+	
 	<update id="updateStoreByOpen">
 		update store set open_yn=#{open_yn} where store_code=#{store_code};
 	</update>
 	
 	<select id="findOrderByDeliveryState" resultType="com.spring.bae2020.vo.OrdersVo">
-		select orders.*, state.state_name
+		select orders.*, state.state_name, user.name
 		  from orders
 		 inner join state 
 		    on orders.state = state.state_code
+		  left outer join user
+		    on orders.delivery = user.mid
 		 where 1=1
 		   and store=#{store_code}
-		   and state in ('state-03', 'state-04')
+		   and state in ('state-03', 'state-04','state-05')
 		   and date(orders.create_dt) = date(now())
 		 order by state, update_dt;
 	</select>
@@ -137,7 +143,7 @@
 									 FROM ORDERS
 									WHERE 1=1 
 									  AND STORE=#{store}
-									  AND STATE != 'state-05'
+									  AND STATE != 'state-06'
 									  AND DATE_SUB(NOW(), INTERVAL 1 MONTH) <![CDATA[<]]> CREATE_DT) ORDERS
 						  GROUP BY ORDERS.TITLE) ORDERS
 		   ON TIME_TABLE.TITLE = ORDERS.TITLE
@@ -212,7 +218,7 @@
 									   ON PROD.CATEGORY_CODE = CTG.CATEGORY_CODE
 									WHERE 1=1 
 									  AND STORE=#{store}
-									  AND STATE != 'state-05'
+									  AND STATE != 'state-06'
 									  AND DATE_SUB(NOW(), INTERVAL 1 MONTH) <![CDATA[<]]>  ORDERS.CREATE_DT) ORDERS
 						  GROUP BY ORDERS.TITLE) ORDERS
 			  ON TIME_TABLE.TITLE = ORDERS.TITLE;
@@ -236,7 +242,7 @@
              ON PROD.CATEGORY_CODE = CTG.CATEGORY_CODE
           WHERE 1=1 
             AND STORE=#{store}
-            AND STATE != 'state-05'
+            AND STATE != 'state-06'
             AND DATE_SUB(NOW(), INTERVAL 1 MONTH) <![CDATA[<]]>  ORDERS.CREATE_DT
           GROUP BY CATEGORY_NAME
           ORDER BY CNT DESC
@@ -254,7 +260,7 @@
 	       AND CTG.CATEGORY_NAME = #{category}
 	     WHERE 1=1 
 	       AND STORE=#{store}
-	       AND STATE != 'state-05'
+	       AND STATE != 'state-06'
 	       AND DATE_SUB(NOW(), INTERVAL 1 MONTH) <![CDATA[<]]> ORDERS.CREATE_DT
 	     GROUP BY PROD.PRODUCT_NAME
 	     ORDER BY CNT DESC
@@ -266,7 +272,7 @@
     	    	  FROM ORDERS 
     	   	  	 WHERE 1=1
     	   	  	   AND STORE = #{store}
-    	   	  	   AND STATE != 'state-05'
+    	   	  	   AND STATE != 'state-06'
     	   	  	   AND DATE_SUB(NOW(), INTERVAL 1 MONTH) <![CDATA[<]]> ORDERS.CREATE_DT
     	   	  	 GROUP BY MID ) ORDERS 
   	   	  GROUP BY USER_GROUP 
@@ -282,7 +288,7 @@
 		   AND USER.MID != 'admin'
 		 WHERE 1=1
 		   AND STORE = #{store}
-		   AND STATE != 'state-05'
+		   AND STATE != 'state-06'
 		   AND DATE_SUB(NOW(), INTERVAL 1 MONTH) <![CDATA[<]]> ORDERS.CREATE_DT
 		 GROUP BY ORDERS.MID 
 		 ORDER BY CNT DESC;

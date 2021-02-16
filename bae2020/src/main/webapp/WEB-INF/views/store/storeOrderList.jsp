@@ -214,7 +214,14 @@
 									<td>${vo.create_dt}</td>
 									<td><fmt:formatNumber value="${vo.total }" pattern="#,###" /></td>
 									<td>${vo.payment }</td>
-									<td>${vo.distance  }</td>
+									<td>
+										<c:if test="${vo.delivery == '픽업'}">
+											${vo.delivery  }
+										</c:if>
+										<c:if test="${vo.delivery != '픽업'}">
+											${vo.distance  }
+										</c:if>
+									</td>
 									<td>${vo.demand  }</td>
 									<td rowspan="2">
 										<c:if test="${state == 'state-01'}">
@@ -222,7 +229,12 @@
 											<button class="w3-round-xlarge btn_str" type="button" onclick="viewCancelInput('${vo.order_idx}')">취소</button>
 										</c:if>
 										<c:if test="${state == 'state-02'}">
-											<button class="w3-round-xlarge btn_str" type="button" onclick="updateOrderByStateAjax('${vo.order_idx}','state-03')">준비완료</button>
+											<c:if test="${vo.delivery == '픽업'}">
+												<button class="w3-round-xlarge btn_str" type="button" onclick="updateOrderByStateAjax('${vo.order_idx}','state-05')">준비완료</button>
+											</c:if>
+											<c:if test="${vo.delivery != '픽업'}">
+												<button class="w3-round-xlarge btn_str" type="button" onclick="updateOrderByStateAjax('${vo.order_idx}','state-03')">준비완료</button>
+											</c:if>
 										</c:if>	
 									</td>
 								</tr>
@@ -243,9 +255,9 @@
 													<span class="w3-text-grey prod">${voItem.product_name }</span>
 													<span class="w3-text-grey">${voItem.cnt }개&nbsp;<fmt:formatNumber value="${(voItem.price+voItem.price_add+voItem.price_meat) * voItem.cnt }" pattern="#,###" /></span><br/>
 													<c:if test="${voItem.quantity ==0 && state == 'state-01'}"><font color='red'>품절 상품을 포함하고 있습니다.</font><br/></c:if> 
-													<span class="w3-text-grey opt">옵션:${voItem.option_unit }</span><br/>
-													<span class="w3-text-grey opt">추가:${voItem.add_unit }</span><br/> 
-													<span class="w3-text-grey opt">미트:${voItem.meat_unit }</span><br/>  
+													<c:if test="${voItem.option_unit !=''}"><span class="w3-text-grey opt">옵션:${voItem.option_unit }</span><br/></c:if> 
+													<c:if test="${voItem.add_unit !=''}"><span class="w3-text-grey opt">추가:${voItem.add_unit }</span><br/></c:if> 
+													<c:if test="${voItem.meat_unit !=''}"><span class="w3-text-grey opt">미트:${voItem.meat_unit }</span><br/></c:if>   
 													<p></p>
 												</div>
 											</c:if>

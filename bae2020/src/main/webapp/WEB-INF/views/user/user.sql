@@ -93,5 +93,32 @@ desc level
 alter table level drop update_dt;
 
 
-update user set name='박지연' where mid='bjy1234'
+update user set level='level-07' where mid='delivery1'
+
+select * from user
+where mid= 'delivery1'
+
+insert into level value ('level-07','배달','배달','admin',default)
+
+select * from state
+
+insert into state value ('state-06','주문취소','admin',default)
+update state set state_name='픽업준비' where state_code='state-03'
+
+select * from orders
+update orders set state='state-05' where order_idx=118
+
+
+select orders.*, state.state_name, user.name
+  from orders
+ inner join state 
+    on orders.state = state.state_code
+  left outer join user
+    on orders.delivery = user.mid
+ where 1=1
+   and state ='state-04'
+   and date(orders.create_dt) = date(now())
+ order by state, update_dt;
+		 
+   and delivery != '픽업'
 

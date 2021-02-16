@@ -210,4 +210,9 @@ public class StoreServiceImp implements StoreService {
 	public List<UserVo> findUserByOrderCnt(String store) {
 		return storeDao.findUserByOrderCnt(store);
 	}
+
+	@Override
+	public void updateOrderByDelivery(String order_idx, String mid) {
+		storeDao.updateOrderByDelivery(order_idx,mid);		
+	}
 }

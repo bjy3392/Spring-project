@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spring.bae2020.dao.DeliveryDao">
+	<select id="findOrderByOnlyDelivery" resultType="com.spring.bae2020.vo.OrdersVo">
+		select orders.*, state.state_name, store.store_name, user.name
+		  from orders
+		 inner join state 
+		    on orders.state = state.state_code
+		 inner join store
+		    on orders.store = store.store_code
+		  left outer join user
+		    on orders.delivery = user.mid
+		 where 1=1
+		   and orders.state =#{state}
+		   and ifnull(orders.delivery,'') != '픽업'
+		   and date(orders.create_dt) = date(now())
+		   <if test="state == 'state-04'">
+		   and orders.delivery = #{mid} 
+		   </if>
+		 order by state, update_dt;
+	</select>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+

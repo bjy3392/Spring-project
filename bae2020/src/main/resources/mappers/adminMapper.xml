@@ -169,6 +169,19 @@
 		limit #{startNo}, #{pageSize}
 	</select> 
 	
+	<select id="findBoardByPage" resultType="com.spring.bae2020.vo.BoardVo">
+		select rc.idx, rc.mid, rc.create_dt, prod.product_name, concat(option_unit, add_unit, meat_unit) as options
+		  from recommand rc
+		 inner join product prod
+		    on rc.product = prod.product_code
+		 order by create_dt desc 
+		 limit #{startNo}, #{pageSize};
+	</select>
+	
+	<select id="totBoardRecCnt" resultType="int">
+		select count(*) from recommand;
+	</select>
+	
 </mapper>
 
 

@@ -16,7 +16,7 @@ public class AdminInterceptor extends HandlerInterceptorAdapter{
 		String level = session.getAttribute("slevel")==null ? "No" : (String)session.getAttribute("slevel");
 		
 		if(!level.equals("level-06")) {
-			response.sendRedirect(request.getContextPath()+"/msg/useNo");
+			response.sendRedirect(request.getContextPath()+"/msg/useOnlyAdmin");
 		}
 		
 		return true;

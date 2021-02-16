@@ -48,4 +48,6 @@ public interface StoreDao {
 	List<ReorderVo> findUserByStore(@Param("store")String store);
 
 	List<UserVo> findUserByOrderCnt(@Param("store")String store);
+
+	void updateOrderByDelivery(@Param("order_idx")String order_idx, @Param("mid")String mid);
 }

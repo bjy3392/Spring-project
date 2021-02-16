@@ -12,4 +12,10 @@ public interface BoardService {
 
 	BoardVo findBoardByIdx(String idx);
 
+	void updateBoard(BoardVo vo, String idx);
+
+	void deleteBoard(String idx);
+
+	void updateBoardByGood(String idx);
+
 }

@@ -76,7 +76,7 @@ public class OrderController {
 	}
 
 	
-	@RequestMapping(value="/insertCartAjax", method = RequestMethod.POST)
+	@RequestMapping(value="/insertCart", method = RequestMethod.POST)
 	@ResponseBody
 	public String insertCartAjaxPost(HttpSession session, CartVo vo) {
 		String mid = (String)session.getAttribute("smid");
@@ -220,7 +220,7 @@ public class OrderController {
 		String mid = (String)session.getAttribute("smid");
 		
 		//당일 데이터만 가져온다.
-		List<OrdersVo> vos = orderService.findOrdersGroupByIdx("mid",mid,"not","state-04");
+		List<OrdersVo> vos = orderService.findOrdersGroupByIdx("mid",mid,"not","state-05");
 		
 		
 		if(vos.size() != 0) {

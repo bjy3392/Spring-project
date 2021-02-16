@@ -270,6 +270,16 @@ public class AdminServiceImp implements AdminService{
 		adminDao.insertStockinit(vo);		
 	}
 
+	@Override
+	public List<UserVo> findBoardByPage(int startNo, int pageSize) {
+		return adminDao.findBoardByPage(startNo,pageSize);
+	}
+
+	@Override
+	public int totBoardRecCnt() {
+		return adminDao.totBoardRecCnt();
+	}
+
 
 }
 
