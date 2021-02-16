@@ -202,13 +202,18 @@
 									<td class="opt_td">${vo.update_dt}</td>
 									<td><fmt:formatNumber value="${vo.total }" pattern="#,###" /></td>
 									<td>${vo.payment }</td>
-									<td>${vo.distance  }</td>
-									<td>${vo.demand  }</td>
-									<td>${vo.delivery  }</td>
 									<td>
-										<c:if test="${vo.delivery =='' }">배달대기</c:if>
-										<c:if test="${vo.delivery =='픽업' }">완료</c:if>
-										<c:if test="${vo.delivery !='' && vo.delivery !='픽업' }">${vo.state_name  }</c:if>
+										<c:if test="${vo.delivery == '픽업'}">
+											${vo.delivery  }
+										</c:if>
+										<c:if test="${vo.delivery != '픽업'}">
+											${vo.distance  }
+										</c:if>
+									</td>
+									<td>${vo.demand  }</td>
+									<td>${vo.name  }</td>
+									<td>
+										${vo.state_name  }
 									</td>
 								</tr>
 							</c:forEach>	

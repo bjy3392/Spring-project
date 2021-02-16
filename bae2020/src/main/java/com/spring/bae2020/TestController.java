@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.spring.bae2020.service.AdminService;
 import com.spring.bae2020.service.StoreService;
+import com.spring.bae2020.vo.TestVo;
 import com.spring.bae2020.vo.TimeTableVo;
 
 @Controller
@@ -62,6 +63,15 @@ public class TestController {
 		
 		
 		return dataTable;
+	}
+	
+	@RequestMapping(value="/t1", method = RequestMethod.GET)
+	public String t1Get() {
+		TestVo vo = new TestVo();
+		
+		System.out.println(vo);
+		
+		return "";
 	}
 	
 

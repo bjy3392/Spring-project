@@ -22,16 +22,26 @@
 		}
 	</script>
 	<style>
+		#content{
+			max-width:2000px;
+			margin-top:160px;
+		}
 		body {
 			font-family: "Lato", sans-serif;
 			background-color: #f6f6f6;
 		}
 		.mySlides {
 			display: none
-			}
+		}
+		.menu {
+			width: 1000px;
+			margin: 0 auto;
+			background-color: #f6f6f6;
+		}
 		.main_list {
 			width: 1000px;
 			margin: 0 auto;
+			background-color: #f6f6f6;
 		}
 		ul {
 		   list-style:none;
@@ -51,10 +61,26 @@
 		.menuBar{
 			cursor: pointer;
 		}
+		@media(max-width: 576px){
+			.menu {
+				width: 300px;
+				margin: 0 auto;
+				background-color: #fff;
+			}
+			.main_list {
+				width: 300px;
+				margin: 0 auto;
+				background-color: #f6f6f6;
+			}
+			#content{
+				max-width:2000px;
+				margin-top:300px;
+			}
+    	}
 	</style>
 	<body>
 	<!-- Page content -->
-	<div class="w3-content" style="max-width:2000px;margin-top:160px">
+	<div class="w3-content"  id="content">
 		<div class="mySlides w3-display-container w3-center">
 		    <img src="${contextPath }/resources/images/subway1.jpg" style="width:100%">
 		</div>
@@ -67,37 +93,20 @@
 		<div class="mySlides w3-display-container w3-center">
 		    <img src="${contextPath }/resources/images/main.jpg" style="width:100%">
 		</div>
-		<div id="history">
-			<div class="main_list">
-				<div>
-					<div>
-						<br/>
-						<img src="${contextPath }/resources/images/name.PNG" style="width:30%">
-						<div class="menuBar">
-							<c:forEach var="voC" items="${vosC }">
-								<ul>
-									<li onclick="findProductByCategoryAjax('${voC.category_code }')">${voC.category_name }&nbsp;||&nbsp;</li>
-								</ul>
-							</c:forEach>
-						</div>
-						<div class="w3-content w3-display-container">
-							<c:forEach  var="vo" items="${vos }" >
-								<img  src="${contextPath }/product/${vo.category_code }/${vo.image}" style="width:25%;">
-							</c:forEach>
-					
-								<%-- <div class="menuSlides" style="height:250px">
-									<c:set var="cnt" value="1"/>
-									<c:forEach  var="vo" items="${vos }" end="${cnt }">
-										<img  src="${contextPath }/product/${vo.category_code }/${vo.image}" style="width:25%;">
-									</c:forEach>
-								</div>
-						
-						  	<button class="w3-button w3-black w3-display-left" onclick="plusDivs(-1)">&#10094;</button>
-						  	<button class="w3-button w3-black w3-display-right" onclick="plusDivs(1)">&#10095;</button> --%>
-						</div>
-					</div>
+		<br/>
+		<div class="menu">
+			<div>
+				<img src="${contextPath }/resources/images/name.PNG" style="width:30%">
+				<div class="menuSlides w3-display-container w3-center">
+				    <img src="${contextPath }/resources/images/menu1.PNG" style="width:100%">
 				</div>
-		  	</div>
+				  <div class="menuSlides w3-display-container w3-center">
+				    <img src="${contextPath }/resources/images/menu2.PNG" style="width:100%">
+				</div>
+				<div class="menuSlides w3-display-container w3-center">
+				    <img src="${contextPath }/resources/images/menu3.PNG" style="width:100%">
+				</div>
+			</div>
 	  	</div>
   		<p><br></p>
   		<div class="main_list">
@@ -129,7 +138,22 @@
 		  setTimeout(carousel, 3000);    
 		}
 		
-		var slideIndex = 1;
+		var menuIndex = 0;
+		menuCarousel();
+		
+		function menuCarousel() {
+		  var i;
+		  var x = document.getElementsByClassName("menuSlides");
+		  for (i = 0; i < x.length; i++) {
+		    x[i].style.display = "none";  
+		  }
+		  menuIndex++;
+		  if (menuIndex > x.length) {menuIndex = 1}    
+		  x[menuIndex-1].style.display = "block";  
+		  setTimeout(menuCarousel, 3000);    
+		}
+		
+		/* var slideIndex = 1;
 		showDivs(slideIndex);
 
 		function plusDivs(n) {
@@ -161,7 +185,7 @@
 						location.reload();
 					}
 				});   	
-		}
+		} */
 	</script>
 </body>
 </html>

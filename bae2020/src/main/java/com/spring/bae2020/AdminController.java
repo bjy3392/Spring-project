@@ -6,7 +6,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.spring.bae2020.service.AdminService;
+import com.spring.bae2020.service.BoardService;
 import com.spring.bae2020.service.UserService;
 import com.spring.bae2020.vo.AskManagerVo;
 import com.spring.bae2020.vo.CategoryVo;
@@ -34,6 +34,9 @@ public class AdminController {
 	
 	@Autowired
 	UserService userService;
+
+	@Autowired
+	BoardService boardService;
 	
 	@RequestMapping(value="/viewCategoryEdit", method = RequestMethod.GET)
 	public String viewCategoryEditGet(Model model) {
@@ -331,6 +334,39 @@ public class AdminController {
 		model.addAttribute("curScrNo", curScrNo);
 		
 		return "admin/user/userList";
+	}
+	
+	@RequestMapping(value="/viewBoardAdminList", method = RequestMethod.GET)
+	public String viewBoardAdminListGet(HttpServletRequest request, Model model) {
+		// 페이징처리 준비 시작...
+		int totRecCnt = adminService.totBoardRecCnt();  // 총레코드건수 구하기
+		int pageSize = request.getParameter("pageSize")==null ? 5 : Integer.parseInt(request.getParameter("pageSize")); // 한페이지 분량
+		int blockSize = 3; // 한개 블록의 크기는 3으로 지정
+		int pag = request.getParameter("pag")==null ? 1 : Integer.parseInt(request.getParameter("pag"));  // 현재 페이지 번호
+		int totPage = (totRecCnt % pageSize)==0 ? totRecCnt/pageSize : (int)(totRecCnt/pageSize) + 1; // 총페이지 수
+		int startNo = (pag - 1) * pageSize; // 시작 인덱스 번호
+		int curScrNo = totRecCnt - startNo; // 해당 페이지의 시작문항의 번호
+		// 이까지 페이징 처리 준비 완료..
+		
+		
+		List<UserVo> vos = adminService.findBoardByPage(startNo,pageSize);
+		
+		model.addAttribute("vos", vos);
+		model.addAttribute("pageSize", pageSize);
+		model.addAttribute("blockSize", blockSize);
+		model.addAttribute("pag", pag);
+		model.addAttribute("totPage", totPage);
+		model.addAttribute("curScrNo", curScrNo);
+		
+		return "admin/user/boardAdminList";
+	}
+	
+	@RequestMapping(value="/deleteBoard", method = RequestMethod.POST)
+	@ResponseBody
+	public String deleteBoardGet(String idx) {
+		boardService.deleteBoard(idx);
+		
+		return "";
 	}
 }
 

@@ -22,6 +22,7 @@ public class OrdersVo {
 	private String product_name;
 	private String store_name;
 	private String cnt;
+	private String name;
 	public String getOrder_idx() {
 		return order_idx;
 	}
@@ -84,6 +85,9 @@ public class OrdersVo {
 	}
 	public String getCnt() {
 		return cnt;
+	}
+	public String getName() {
+		return name;
 	}
 	public void setOrder_idx(String order_idx) {
 		this.order_idx = order_idx;
@@ -148,6 +152,9 @@ public class OrdersVo {
 	public void setCnt(String cnt) {
 		this.cnt = cnt;
 	}
+	public void setName(String name) {
+		this.name = name;
+	}
 	@Override
 	public String toString() {
 		return "OrdersVo [order_idx=" + order_idx + ", mid=" + mid + ", total=" + total + ", payment=" + payment
@@ -155,8 +162,9 @@ public class OrdersVo {
 				+ ", tel=" + tel + ", demand=" + demand + ", store=" + store + ", cancel=" + cancel + ", delivery="
 				+ delivery + ", distance=" + distance + ", point=" + point + ", create_dt=" + create_dt + ", update_dt="
 				+ update_dt + ", state=" + state + ", state_name=" + state_name + ", product_name=" + product_name
-				+ ", store_name=" + store_name + ", cnt=" + cnt + "]";
+				+ ", store_name=" + store_name + ", cnt=" + cnt + ", name=" + name + "]";
 	}
+	
 		
 	
 	

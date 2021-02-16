@@ -44,6 +44,7 @@
 	<beans:bean id="boardInterceptor" class="com.spring.bae2020.interceptor.BoardInterceptor"></beans:bean>
 	<beans:bean id="adminInterceptor" class="com.spring.bae2020.interceptor.AdminInterceptor"></beans:bean>
 	<beans:bean id="storeInterceptor" class="com.spring.bae2020.interceptor.StoreInterceptor"></beans:bean>
+	<beans:bean id="deliveryInterceptor" class="com.spring.bae2020.interceptor.DeliveryInterceptor"></beans:bean>
 	<interceptors>
 		<interceptor>
 			<mapping path="/order/**"/>
@@ -66,8 +67,17 @@
 			<beans:ref bean="adminInterceptor"/>
 		</interceptor>
 		<interceptor>
-			<mapping path="/store/**"/>
+			<mapping path="/store/viewStoreOrderList"/>
+			<mapping path="/store/viewDeliveryOrderList"/>
+			<mapping path="/store/viewStockEdit"/>
+			<mapping path="/store/viewAnalysisChart"/>
+			<mapping path="/store/viewUserChart"/>
+			<mapping path="/store/viewSalesCalendar"/>
 			<beans:ref bean="storeInterceptor"/>
+		</interceptor>
+		<interceptor>
+			<mapping path="/delivery/**"/>
+			<beans:ref bean="deliveryInterceptor"/>
 		</interceptor>
 	</interceptors>
 	

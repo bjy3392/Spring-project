@@ -67,7 +67,7 @@
 		            }
 		        }
 		        
-				totPrice = addComma(addVal+meatVal+${voP.price});
+				totPrice = addComma(addVal+meatVal+Number('${voP.price}'));
 				
 				$("#totPrice").html(totPrice);
 				$("#addPrice").html(addComma(addVal));
@@ -198,7 +198,7 @@
 		        var formData = new FormData($('#myform')[0]);
 		        
 	         	$.ajax({
-					url: "${contextPath}/order/insertCartAjax",
+					url: "${contextPath}/order/insertCart",
 					type: "post",
 					data: formData,
 					processData: false, 

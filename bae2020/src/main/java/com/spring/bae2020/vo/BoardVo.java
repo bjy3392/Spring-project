@@ -13,6 +13,9 @@ public class BoardVo {
 	private String price_meat;
 	private String create_dt;
 	private String good;
+	private String category_code;
+	private String image;
+	private String options;
 	public String getIdx() {
 		return idx;
 	}
@@ -48,6 +51,12 @@ public class BoardVo {
 	}
 	public String getGood() {
 		return good;
+	}
+	public String getCategory_code() {
+		return category_code;
+	}
+	public String getImage() {
+		return image;
 	}
 	public void setIdx(String idx) {
 		this.idx = idx;
@@ -85,12 +94,27 @@ public class BoardVo {
 	public void setGood(String good) {
 		this.good = good;
 	}
+	public void setCategory_code(String category_code) {
+		this.category_code = category_code;
+	}
+	public void setImage(String image) {
+		this.image = image;
+	}
+	public String getOptions() {
+		return options;
+	}
+	public void setOptions(String options) {
+		this.options = options;
+	}
 	@Override
 	public String toString() {
 		return "BoardVo [idx=" + idx + ", mid=" + mid + ", product=" + product + ", product_name=" + product_name
 				+ ", option_unit=" + option_unit + ", add_unit=" + add_unit + ", meat_unit=" + meat_unit + ", price="
 				+ price + ", price_add=" + price_add + ", price_meat=" + price_meat + ", create_dt=" + create_dt
-				+ ", good=" + good + "]";
+				+ ", good=" + good + ", category_code=" + category_code + ", image=" + image + ", options=" + options
+				+ "]";
 	}
+	
+	
 	
 }

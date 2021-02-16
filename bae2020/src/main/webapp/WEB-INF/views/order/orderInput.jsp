@@ -160,7 +160,7 @@
 			    	myform.detailAddress.focus();
 					return false;
 				}
-			    else if($("#total").val()<=15000){
+			    else if($("#total").val()<15000){
 					alert("15,000 이상 배달 가능합니다.");
 					return false;
 			    }

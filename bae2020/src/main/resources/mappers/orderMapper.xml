@@ -149,7 +149,7 @@
   		    on item.product = prod.product_code
 	     where 1=1
 	       and orders.mid = #{mid}
-	       and orders.state in ('state-04','state-05')
+	       and orders.state in ('state-05','state-06')
 	       and date_sub(now(), interval #{month} month) <![CDATA[<]]> orders.create_dt
 	     order by orders.create_dt desc;
 	</select>

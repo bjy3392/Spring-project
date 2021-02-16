@@ -26,6 +26,21 @@ public class BoardServiceImp implements BoardService {
 	@Override
 	public BoardVo findBoardByIdx(String idx) {
 		return boardDao.findBoardByIdx(idx);
+	}
+
+	@Override
+	public void updateBoard(BoardVo vo, String idx) {
+		boardDao.updateBoard(vo, idx);
+	}
+
+	@Override
+	public void deleteBoard(String idx) {
+		boardDao.deleteBoard(idx);		
+	}
+
+	@Override
+	public void updateBoardByGood(String idx) {
+		boardDao.updateBoardByGood(idx);			
 	}	
 	
 }

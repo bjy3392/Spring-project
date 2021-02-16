@@ -68,6 +68,10 @@ public interface AdminService {
 
 	void insertStockinit(StoreVo vo);
 
+	List<UserVo> findBoardByPage(int startNo, int pageSize);
+
+	int totBoardRecCnt();
+
 
 
 }

@@ -319,9 +319,9 @@
 				    		<div class="w3-col l6 w3-padding-large">
 				    			<p></p>
 				      			<input type="checkbox" id="chkProd_${vo.cart_idx }" name="chkProd" value="${(vo.price+vo.price_add+vo.price_meat ) * vo.cnt }/${vo.cart_idx }" onclick="checkEach();" style="float:left;"><h2 class="w3-center">${vo.product_name }</h2><br>
-				      			<p class="w3-text-grey">옵션: ${vo.option_unit }</p>
-				      			<p class="w3-text-grey">추가: ${vo.add_unit }</p>
-				      			<p class="w3-text-grey">미트: ${vo.meat_unit }</p><br/>
+				      			<c:if test="${vo.option_unit !=''}"><p class="w3-text-grey">옵션: ${vo.option_unit }</p></c:if><c:if test="${vo.option_unit ==''}"><p><br/></p></c:if> 
+				      			<c:if test="${vo.add_unit !=''}"><p class="w3-text-grey">추가: ${vo.add_unit }</p></c:if><c:if test="${vo.add_unit ==''}"><p><br/></p></c:if> 
+				      			<c:if test="${vo.meat_unit !=''}"><p class="w3-text-grey">미트: ${vo.meat_unit }</p><br/></c:if><c:if test="${vo.meat_unit ==''}"><p><br/></p></c:if>
 				      			<div style="font-size: 30px; color:#009223; width:200px; ">
 							      	<button id="icon_btn" onclick="deleteOrderAjax('${vo.cart_idx }');"><i class="fas fa-minus-circle"></i></button>
 							      	<span id="txtCnt_${vo.cart_idx }">${vo.cnt }</span>

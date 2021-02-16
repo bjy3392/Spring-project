@@ -76,9 +76,13 @@ public class StoreController {
 	
 	@RequestMapping(value="/updateOrderByStateAjax", method = RequestMethod.POST)
 	@ResponseBody
-	public String updateOrderByStateAjaxPost(String order_idx, String state) {
+	public String updateOrderByStateAjaxPost(HttpSession session, String order_idx, String state) {
 		
 		storeService.updateOrderByState(order_idx, state);
+		if(state.equals("state-04")) {
+			String mid = (String)session.getAttribute("smid");
+			storeService.updateOrderByDelivery(order_idx, mid);
+		}
 		
 		return "";
 	}
@@ -161,7 +165,7 @@ public class StoreController {
 	@RequestMapping(value="/insertCancel", method=RequestMethod.POST)
 	public String insertCancelPost(String order_idx, String cancel) {
 		
-		storeService.updateOrderByState(order_idx, "state-05"); 
+		storeService.updateOrderByState(order_idx, "state-06"); 
 		storeService.updateOrderByCancel(order_idx, cancel);
 
 		OrdersVo vo = orderService.findOrderByIdx(order_idx);

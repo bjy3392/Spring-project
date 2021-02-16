@@ -53,6 +53,18 @@ public class MsgController {
 			model.addAttribute("msg", "로그인 후 사용 가능합니다.");
 			model.addAttribute("url", "user/userLogin");
 		}
+		else if(msgFlag.equals("useOnlyManager")) {
+			model.addAttribute("msg", "매니저만 접근 가능합니다.");
+			model.addAttribute("url", "/");
+		}
+		else if(msgFlag.equals("useOnlyAdmin")) {
+			model.addAttribute("msg", "관리자만 접근 가능합니다.");
+			model.addAttribute("url", "/");
+		}
+		else if(msgFlag.equals("useOnlyDelivery")) {
+			model.addAttribute("msg", "배달자만 접근 가능합니다.");
+			model.addAttribute("url", "/");
+		}
 		return "include/msg";
 	}	
 }

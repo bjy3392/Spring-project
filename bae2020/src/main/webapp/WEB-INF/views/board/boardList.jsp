@@ -15,9 +15,43 @@
 	function selectSearch(){
 		var product = myform.product.value;
 		var sort = myform.sort.value;
-		location.href ="${contextPath }/board/viewBoardList?startIdx=0&sort="+sort+"&product="+product;
+		location.href ="${contextPath }/board/viewBoardList?sort="+sort+"&product="+product;
 	}
 
+	function moreList(lastIdx){
+		var product = myform.product.value;
+		var sort = myform.sort.value;
+	    $.ajax({
+	        url :"${contextPath}/board/viewBoardListMore?sort="+sort+"&product="+product ,
+	        type :"POST",
+	        data :{
+	        	lastIdx : lastIdx
+	        },
+	        success :function(data){
+	            var content="";
+	            for(var i=0; i<data.length; i++){
+	                content +=
+	                "<li class='w3-padding-16' onclick='location.href=\"${contextPath}/board/viewBoardContent?idx="+data[i].idx+"&sort=${sort }&product=${product }\"'>"+
+						"<img src='${contextPath }/product/"+data[i].category_code+"/"+data[i].image+"' alt='Image' class='w3-left w3-margin-right' style='width: 100px'>"+
+						"<span>작성자 : "+data[i].mid +"</span> <br>"+ 
+						"<span>메뉴&nbsp;&nbsp;&nbsp;&nbsp; : "+data[i].product_name +"</span> <br>"+ 
+						"<span>작성일 : "+data[i].create_dt +"</span> <br>"+ 
+						"<span>좋아요 : "+data[i].good +"</span>"+
+	                "</li>";
+	            }
+	            if(data.length < 5){
+                	content+= "<p>마지막 글입니다</p>"
+	            }
+	            else{
+		            content+= "<button class='w3-button w3-white w3-margin' style='width:100%;' id='addbtn' onclick='javascript:moreList("+(lastIdx+5)+")'>더보기</button>";	
+	            	
+	            }	
+	            	            
+	            $("#addbtn").remove();//remove btn
+	            $(content).appendTo("#list");
+	        }
+	    });
+	} 
 </script>
 
 <style>
@@ -91,20 +125,26 @@
 					<button class="w3-round-xlarge btn_str w3-right" onclick="location.href ='${contextPath }/board/viewBoardInput'">글쓰기</button>
 					<p><br/></p>                        
 					<table class="w3-table w3-bordered">
-						<tr>
-							<th>글쓴이</th>
-							<th>메뉴</th>
-							<th>날짜</th>
-							<th>좋아요</th>
-						</tr>
-						<c:forEach var="vo" items="${vos }">
+						<ul class="w3-ul w3-white" id="list">
+							<c:forEach var="vo" items="${vos }">
+								<li class="w3-padding-16" onclick="location.href='${contextPath}/board/viewBoardContent?idx=${vo.idx }&sort=${sort }&product=${product }'">
+									<img src="${contextPath }/product/${vo.category_code }/${vo.image}" alt="Image" class="w3-left w3-margin-right" style="width: 100px">
+									<span>작성자 : ${vo.mid }</span> <br> 
+									<span>메뉴&nbsp;&nbsp;&nbsp;&nbsp; : ${vo.product_name }</span> <br> 
+									<span>작성일 : ${vo.create_dt }</span> <br> 
+									<span>좋아요 : ${vo.good }</span>
+								</li>
+							</c:forEach>
+						</ul>
+						<button class="w3-button w3-white w3-margin" style="width:100%;" id="addbtn" onclick="moreList(${lastIdx})">더보기</button>
+						<%-- <c:forEach var="vo" items="${vos }">
 							<tr onclick="location.href='${contextPath}/board/viewBoardContent?idx=${vo.idx }'">
 								<td>${vo.mid}</td>
 								<td>${vo.product_name }</td>
 								<td>${vo.create_dt }</td>
 								<td>${vo.good}</td>
 							</tr>
-						</c:forEach>	
+						</c:forEach> --%>	
 					</table>	
 					<p></p>
 				</div>
