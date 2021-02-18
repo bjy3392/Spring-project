@@ -8,7 +8,7 @@
 		 inner join product prod
 		    on rc.product = prod.product_code
 		 where 1=1
-		  <if test="product != '전체'">
+		  <if test="product != 'all'">
 		   and rc.product =#{product}
 		   </if>
 		 order by ${sort} desc

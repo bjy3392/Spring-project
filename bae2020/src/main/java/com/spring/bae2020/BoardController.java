@@ -34,7 +34,7 @@ public class BoardController {
 	
 	@RequestMapping(value="/viewBoardList", method = RequestMethod.GET)
 	public String viewBoardListGet(Model model, @RequestParam(value="product", required = false) String product, String sort) {
-		product = product==null ? "전체":  product;
+		product = product==null ? "all":  product;
 		
 		List<BoardVo> vos =  boardService.findBoard(0, product, sort);
 		List<ProductVo> vosP = adminService.findProductByCategory("PROD-001");

@@ -136,7 +136,7 @@
 			<div class="list_start">
 				<div class="list_detail">
 					<h3 class="title">주문내역</h3>
-					<c:if test="${orderVo.state =='state-05'}"><span id="cancel"><font color='red'>취소사유:${orderVo.cancel }</font></span><br/></c:if>
+					<c:if test="${orderVo.state =='state-06'}"><span id="cancel"><font color='red'>취소사유:${orderVo.cancel }</font></span><br/></c:if>
 					<table>
 						<c:set var="total" value="0"/>
 						<c:forEach var="vo" items="${vos }">

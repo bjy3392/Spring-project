@@ -137,7 +137,7 @@ public class OrderServiceImp implements OrderService {
 				String option = itemVo.getOption_unit();
 				String bread = option.substring(0,option.indexOf("/"));
 				String quantity = orderDao.checkStockByName(bread, store);
-				if(Integer.parseInt(quantity) <= 0 ) {
+				if(Integer.parseInt(quantity) < 0 ) {
 					stockVo.setOption_name(bread);
 					stockVo.setCnt("1");
 					stockVo.setQuantity(quantity);

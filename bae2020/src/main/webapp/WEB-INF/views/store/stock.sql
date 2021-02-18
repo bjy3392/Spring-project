@@ -58,6 +58,20 @@ select cart.*, prod.product_name, st.quantity
     on opt.option_code = st.option_code
    and st.store='store-001'
    
-   select * from state
+   select * from user
    
+select * from orders where mid= 'lmj1234'
    
+select cart.option_name, cart.cnt, stock.quantity 
+		  from (select substring_index(cart.option_unit,'/',1) as option_name, sum(cart.cnt) as cnt 
+  		          from cart 
+  		         where 1=1
+  		           and cart_idx in ()
+			       and substring_index(cart.product,'-',1)='SAND'	
+			     group by option_name )cart
+		  inner join stock 
+		     on cart.option_name = stock.option_name
+		    and stock.store = #{store} 
+		 	and stock.subcategory_code = 'opt-001'
+		  where stock.quantity != 0
+		    and cart.cnt > stock.quantity

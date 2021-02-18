@@ -110,9 +110,9 @@
 			</div>
 			<div class="list_start">
 				<div class="list_detail">
-					<form if="myform" name="myform">
+					<form id="myform" name="myform">
 						<select id="product" size=1 onchange="selectSearch()">
-							<option value="전체"  ${part=='전체' ? 'selected' :'' }>전체</option>
+							<option value="all"  ${part=='all' ? 'selected' :'' }>전체</option>
 							<c:forEach var="vo" items="${vosP }">
 								<option value="${vo.product_code }"  ${product==vo.product_code  ? 'selected' :'' }>${vo.product_name }</option>
 							</c:forEach>

@@ -186,7 +186,8 @@
 		     on item.option_name = stock.option_name
 		    and stock.store = #{store}
 		 	and stock.subcategory_code = 'opt-001'
-		  where item.cnt > stock.quantity
+		  where stock.quantity != 0
+		    and item.cnt > stock.quantity
 	</select>
 	
 	<select id="findCartStockByOption" resultType="com.spring.bae2020.vo.StockVo">
@@ -204,7 +205,8 @@
 		     on cart.option_name = stock.option_name
 		    and stock.store = #{store} 
 		 	and stock.subcategory_code = 'opt-001'
-		  where cart.cnt > stock.quantity
+		  where stock.quantity != 0
+		    and cart.cnt > stock.quantity
 	</select>
 	
 	<insert id="insertPoint" parameterType="com.spring.bae2020.vo.PointEventVo" useGeneratedKeys="true" keyProperty="voP.event_idx" keyColumn="event_idx">

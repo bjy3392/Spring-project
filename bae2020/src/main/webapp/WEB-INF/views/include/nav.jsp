@@ -76,7 +76,7 @@
 		      	<a href="${contextPath }/board/viewBoardList?sort=create_dt" class="w3-bar-item w3-button w3-padding-large w3-hide-small">BORAD</a>
 		    </li>
 		    <li class="w3-dropdown-hover w3-hide-small">
-		      	<button  class="w3-padding-large w3-button" title="More">MY PAGE<i class="fa fa-caret-down"></i></button>     
+		      	<button  class="w3-padding-large w3-button" title="More" style="background-color:#fff">MY PAGE<i class="fa fa-caret-down"></i></button>     
 					<div class="w3-dropdown-content w3-bar-block w3-card-4">
 						<a href="${contextPath }/user/viewPasswordCheck" class="w3-bar-item w3-button">정보수정</a>
 						<a href="${contextPath }/user/viewPointList?month=1" class="w3-bar-item w3-button">포인트</a>
